@@ -1,0 +1,332 @@
+[
+  {
+    "no": 1,
+    "q": "Which plan type outlines alternative courses of action that may be taken if primary plans are disrupted?",
+    "a": [
+      "Operational Plan",
+      "Tactical Plan",
+      "Contingency Plan",
+      "Strategic Plan"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 2,
+    "q": "Which three roles form Mintzberg's Interpersonal category?",
+    "a": [
+      "Figurehead, Leader, Liaison",
+      "Entrepreneur, Disturbance Handler, Negotiator",
+      "Planner, Organizer, Controller",
+      "Monitor, Disseminator, Spokesperson"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 3,
+    "q": "According to the Open Systems model, which of the following lists correctly identifies the resource inputs supplied by the environment?",
+    "a": [
+      "Man, Machine, Material, Method, and Measurement",
+      "Goods, Services, Customer Feedback, Profits, and Sales",
+      "People, Money, Materials, Technology, and Information",
+      "Planning, Organizing, Leading, Controlling, and Directing"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 4,
+    "q": "Which theorist defined management as \"the art of getting things done through people\"?",
+    "a": [
+      "Mary Parker Follett",
+      "Henry Fayol",
+      "Harold Koontz",
+      "Peter Drucker"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 5,
+    "q": "Which modern managerial challenge involves leading employees with varying cultural, generational, and skill-set differences?",
+    "a": [
+      "Handling Performance Issues",
+      "Managing Diverse Teams",
+      "Balancing Team Goals",
+      "Adapting to Change"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 6,
+    "q": "Which of the following represents the correct sequence of steps in the Controlling cycle?",
+    "a": [
+      "Compare Performance → Set Standards → Measure Performance → Take Corrective Action",
+      "Take Corrective Action → Set Standards → Measure Performance → Compare Performance",
+      "Set Standards → Measure Performance → Compare Performance → Take Corrective Action",
+      "Measure Performance → Set Standards → Take Corrective Action → Compare Performance"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 7,
+    "q": "According to Mintzberg, which of the following is categorized as a Decisional Role?",
+    "a": [
+      "Figurehead",
+      "Spokesperson",
+      "Resource Allocator",
+      "Monitor"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 8,
+    "q": "Which type of manager uses technical expertise to advise and support the efforts of line workers?",
+    "a": [
+      "Line Managers",
+      "Administrators",
+      "Staff Managers",
+      "General Managers"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 9,
+    "q": "Together, the combination of leading and motivating employees is often referred to as what?",
+    "a": [
+      "Directing",
+      "Controlling",
+      "Delegating",
+      "Organizing"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 10,
+    "q": "How did Peter Drucker famously distinguish management from leadership?",
+    "a": [
+      "\"Management is doing things right; leadership is doing the right things.\"",
+      "\"Management is the art of getting things done through people.\"",
+      "\"Management is designing and maintaining an environment for individuals.\"",
+      "\"To manage is to forecast and plan, to organize, to command, to coordinate, and to control.\""
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 11,
+    "q": "Why is the \"Resource Allocator\" role classified as a Decisional Role rather than an Informational Role in Mintzberg's framework?",
+    "a": [
+      "Because it focuses solely on building symbolic working relationships across department silos.",
+      "Because it requires choosing where to commit budget, personnel, and time rather than simply gathering or sending data.",
+      "Because resource allocation is handled exclusively by external suppliers.",
+      "Because allocating resources involves public speaking at industry events."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 12,
+    "q": "Which statement best explains why transformation activities create value within an organization?",
+    "a": [
+      "The organization reduces its physical workforce while keeping material purchasing constant.",
+      "Resource inputs are stored for extended periods to appreciate in capital value.",
+      "Management converts long-term strategic plans into short-term operational targets.",
+      "The total value of finished outputs exceeds the combined cost of the initial resource inputs."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 13,
+    "q": "How does the core focus of Strategic Management differ from that of Operations Management?",
+    "a": [
+      "Strategic Management applies only to non-profit entities, while Operations Management applies only to corporations.",
+      "Strategic Management focuses on long-term competitive positioning, while Operations Management focuses on optimizing day-to-day transformation processes.",
+      "Strategic Management deals with employee payroll, while Operations Management formulates organizational missions.",
+      "Strategic Management is performed only by staff managers, while Operations Management is handled by the Board of Directors."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 14,
+    "q": "How do intermediate goals (1–5 years) connect short-term operational targets with long-term strategic visions?",
+    "a": [
+      "They serve as daily task checklists for front-line non-managerial staff.",
+      "They establish external legal compliance parameters for quarterly tax audits.",
+      "They eliminate the need for long-term strategic planning altogether.",
+      "They translate broad strategic goals into achievable tactical milestones for functional departments."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 15,
+    "q": "Why is directing (leading and motivating) considered essential even after clear plans and organized structures are established?",
+    "a": [
+      "Because structural designs and written plans require human effort and alignment to be executed in practice.",
+      "Because plans become legally void if a manager does not conduct weekly staff assemblies.",
+      "Because directing is the step where raw materials are physically converted into inputs.",
+      "Because directing automatically corrects budget variances without managerial intervention."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 16,
+    "q": "Why do proactive organizations invest resources in contingency planning before unexpected crisis events occur?",
+    "a": [
+      "To ensure that primary operational plans never require revision.",
+      "To fulfill a rigid regulatory requirement that applies only to non-profit organizations.",
+      "To enable rapid organizational adaptation and resilience if key environmental assumptions fail.",
+      "To replace long-term mission statements during stable market conditions."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 17,
+    "q": "How does treating employees as \"valuable strategic assets\" alter a manager’s approach compared to treating them as \"costs to be minimized\"?",
+    "a": [
+      "It eliminates employee performance appraisals to reduce administrative work.",
+      "It encourages investment in continuous employee development, empowerment, and long-term engagement.",
+      "It strictly restricts operational decision-making to the Board of Directors.",
+      "It prompts managers to maximize short-term layoffs whenever sales fluctuate."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 18,
+    "q": "When Peter Drucker stated \"Management is doing things right; leadership is doing the right things,\" what fundamental distinction was he making?",
+    "a": [
+      "Management focuses exclusively on non-profit sectors, while leadership operates in commercial firms.",
+      "Management establishes corporate mission statements, while leadership calculates financial ratios.",
+      "Management relies on emotional intelligence, while leadership relies strictly on technical control tools.",
+      "Management focuses on execution efficiency, while leadership focuses on strategic direction and purpose."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 19,
+    "q": "In the context of the Open Systems model, how does customer feedback from the external environment impact organizational operations?",
+    "a": [
+      "It acts solely as a financial audit mechanism without influencing product design.",
+      "It provides continuous signals to adjust transformation processes and raw material inputs.",
+      "It bypasses internal operations and directly alters the organization's legal structure.",
+      "It indicates that the organization operates as a closed, self-sustaining loop independent of market forces."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 20,
+    "q": "How do the Monitor and Disseminator roles work together within Mintzberg’s Informational category?",
+    "a": [
+      "The Monitor leads official ceremonies, while the Disseminator approves annual budgets.",
+      "The Monitor hires line workers, while the Disseminator reports directly to stockholders.",
+      "The Monitor gathers operational and environmental information, while the Disseminator shares it internally with employees.",
+      "The Monitor negotiates supplier contracts, while the Disseminator resolves workplace conflicts."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 21,
+    "q": "During an economic slowdown, Company A immediately cuts employee training budgets and lay off 20% of engineers. Company B retains its talent, enrolling them in upskilling programs to build software features for the upcoming market recovery. How does Company B view its workforce?",
+    "a": [
+      "As operational liabilities that must be minimized during downturns",
+      "As staff managers possessing only legal authority",
+      "As rigid elements of a closed operational system",
+      "As valuable strategic assets that drive long-term competitive advantage"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 22,
+    "q": "A boutique furniture builder purchases $500 worth of raw wood and metal hardware. After 10 hours of expert craftsmanship and custom design, the resulting dining table sells for $2,500. Which action directly generated this $2,000 value creation?",
+    "a": [
+      "Reducing the hourly pay rate of the craftsmen during table assembly",
+      "Transforming raw inputs into a customized finished product that customers value highly",
+      "Storing raw wood in a climate-controlled warehouse for six months prior to construction",
+      "Conducting an audit of the supplier's corporate tax filings"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 23,
+    "q": "A software company notices that user engagement drops significantly after releasing a new feature. In response, the team analyzes customer support tickets and releases an update that restores usability. Under the Open Systems model, how should the support tickets be categorized?",
+    "a": [
+      "A finished product output generated by the organization",
+      "A closed-system boundary barrier protecting internal operations",
+      "Environmental feedback used to refine transformation processes",
+      "An internal machine asset used in the initial manufacturing stage"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 24,
+    "q": "A CEO delivers a live television press conference announcing the company’s commitment to achieving net-zero carbon emissions by 2030. Which Mintzberg Informational Role is being carried out?",
+    "a": [
+      "Disseminator",
+      "Leader",
+      "Figurehead",
+      "Spokesperson"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 25,
+    "q": "A division manager attends a monthly industry coalition breakfast to exchange best practices with peers from non-competing firms and build external networking channels. Which Mintzberg Interpersonal Role does this represent?",
+    "a": [
+      "Negotiator",
+      "Liaison",
+      "Leader",
+      "Disseminator"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 26,
+    "q": "To support a rapid expansion, a logistics company creates three new operational divisions, hires regional managers, and establishes clear reporting relationships between shift workers and team leads. Which POLC function is this manager demonstrating?",
+    "a": [
+      "Directing",
+      "Controlling",
+      "Organizing",
+      "Planning"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 27,
+    "q": "A hotel resort chain relies on overseas food imports. Anticipating potential port strikes, the purchasing department drafts pre-approved vendor contracts with domestic local farms ready to deploy immediately if imports freeze. What type of plan was activated?",
+    "a": [
+      "Strategic Plan",
+      "Contingency Plan",
+      "Operational Mission Statement",
+      "Standing Policy"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 28,
+    "q": "During a busy holiday shift, a restaurant's primary point-of-sale network crashes unexpectedly. The general manager quickly shifts staff to manual cash drawer procedures, calls emergency tech support, and restores order. Which Mintzberg Decisional Role is demonstrated?",
+    "a": [
+      "Liaison",
+      "Monitor",
+      "Disturbance Handler",
+      "Resource Allocator"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 29,
+    "q": "A project manager is forming a cross-functional unit with team members spanning three generations (Gen Z, Millennials, Gen X) across software engineering, sales, and design. To prevent communication friction, what managerial action best addresses this challenge?",
+    "a": [
+      "Enforcing a single rigid work style without soliciting employee input",
+      "Separating employees into age-segregated departments to avoid interpersonal contact",
+      "Establishing collaborative communication norms that integrate diverse perspectives toward unified team objectives",
+      "Eliminating performance controls to reduce working stress"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 30,
+    "q": "A factory supervisor reorganizes the assembly line to cut energy waste and raw material usage by 30%. However, because of severe speed restrictions introduced during this process, the plant misses its delivery deadlines for key clients. How should this supervisor's performance be evaluated?",
+    "a": [
+      "High efficiency, but low effectiveness",
+      "High effectiveness, but low efficiency",
+      "Low efficiency and low effectiveness",
+      "High efficiency and high effectiveness"
+    ],
+    "state": "Not complete"
+  }
+]

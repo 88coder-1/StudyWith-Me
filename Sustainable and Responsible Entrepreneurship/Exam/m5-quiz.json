@@ -1,0 +1,332 @@
+[
+  {
+    "no": 1,
+    "q": "Who pioneered the Triple Bottom Line (TBL) framework and in what year was it introduced?",
+    "a": [
+      "Michael Porter in 1990",
+      "Edward Freeman in 1984",
+      "Milton Friedman in 1970",
+      "John Elkington in 1994"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 2,
+    "q": "What is the primary benefit resulting from Tony’s Chocolonely's model according to Section 6?",
+    "a": [
+      "Lowering direct tax obligations for cocoa importers",
+      "Eliminating all carbon emissions in retail transportation",
+      "Economic sustainability for farming communities and combating systemic labor exploitation",
+      "Drastically reducing global electronic waste"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 3,
+    "q": "According to Section 8, what driver leads to the benefit of \"Talent Retention\"?",
+    "a": [
+      "Capturing a growing demographic of conscious consumers",
+      "Leveraging genuine commitment to build deep, lasting trust with customers",
+      "Cultivating an environment that aligns with personal values to boost employee morale and engagement",
+      "Optimizing resource utilization to lower direct operational overhead"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 4,
+    "q": "What is the primary focus of Fairphone Sustainable Productions as described in the case study?",
+    "a": [
+      "Single-use plastic packaging optimization",
+      "Direct profit-sharing with cocoa farmers",
+      "Providing open-source software for carbon tax auditing",
+      "Product longevity, repairability, and sourcing fair-trade materials"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 5,
+    "q": "According to Section 1 of the text, what are the two primary global threats currently facing modern organizations?",
+    "a": [
+      "Inflation and cyberattacks",
+      "Pandemics and supply chain collapse",
+      "Climate change and earthquakes",
+      "Political instability and deforestation"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 6,
+    "q": "According to the table in Section 8, what is the specific driver behind \"Cost Reductions\"?",
+    "a": [
+      "Cultivating an environment that aligns with personal values",
+      "Optimizing resource utilization and eliminating waste to lower direct operational overhead",
+      "Mitigating systemic risks to adapt to supply chain shocks",
+      "Capturing a growing demographic of conscious consumers"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 7,
+    "q": "According to Section 5, which specific financial metric is mentioned as being balanced against social and environmental performance?",
+    "a": [
+      "Return on Investment (ROI)",
+      "Gross Domestic Product (GDP)",
+      "Net Promoter Score (NPS)",
+      "Price-to-Earnings Ratio (P/E)"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 8,
+    "q": "How many steps are in the implementation roadmap outlined in Section 7 for transitioning to a TBL-aligned strategy?",
+    "a": [
+      "3",
+      "6",
+      "4",
+      "8"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 9,
+    "q": "According to Section 3 of the text, why does diversity serve as a critical ingredient for innovation?",
+    "a": [
+      "Because it reduces direct tax liabilities for multinational corporations",
+      "Because it eliminates the need for social audits",
+      "Because it ensures complete compliance with legal trade agreements",
+      "Because integrating varied perspectives fosters creative problem-solving"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 10,
+    "q": "What is the correct sequential order of the 6-step implementation roadmap presented in Section 7?",
+    "a": [
+      "Assess, Take Action, Set Goals, Monitor, Improve, Communicate",
+      "Set Goals, Assess, Take Action, Communicate, Monitor, Improve",
+      "Communicate, Assess, Set Goals, Take Action, Improve, Monitor",
+      "Assess, Set Goals, Take Action, Monitor, Communicate, Improve"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 11,
+    "q": "What is the primary operational weakness of the traditional \"linear\" business model compared to a \"circular\" model?",
+    "a": [
+      "It overcomplicates internal marketing and public communications.",
+      "It relies on a \"take-make-waste\" approach that threatens the availability of finite resources.",
+      "It prevents companies from establishing measurable ROI metrics.",
+      "It requires excessive investment in community social audits."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 12,
+    "q": "What is the strategic objective of providing equal opportunities to civil society stakeholders under the \"People\" pillar?",
+    "a": [
+      "To address and correct historical and structural power imbalances within communities.",
+      "To eliminate the need for employee compensation negotiations.",
+      "To outsource corporate decision-making to external regulatory agencies.",
+      "To limit community involvement to passive survey responses."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 13,
+    "q": "Why are basic human rights, such as clean air and water, considered a foundation for business sustainability?",
+    "a": [
+      "They guarantee immediate financial profitability in emerging markets.",
+      "They are essential prerequisites for maintaining a healthy and functional workforce.",
+      "They serve primarily as marketing tools to attract international investors.",
+      "They enable businesses to bypass environmental compliance regulations."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 14,
+    "q": "Why does modern risk management under the TBL framework treat environmental and social issues as urgent financial liabilities?",
+    "a": [
+      "They automatically lower corporate credit ratings across global banking sectors.",
+      "They prevent businesses from utilizing the business model canvas.",
+      "Failing to address them can trigger supply chain shocks or complete loss of market trust.",
+      "Regulatory bodies immediately confiscate assets of non-compliant firms."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 15,
+    "q": "Why does balancing the Triple Bottom Line help organizations retain top talent?",
+    "a": [
+      "It guarantees automatic annual pay increases regardless of performance.",
+      "It prevents employees from joining trade unions or external associations.",
+      "It restricts staff movement between international corporate divisions.",
+      "It aligns the working environment with employees' personal values, boosting morale."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 16,
+    "q": "How does a genuine commitment to TBL build lasting brand loyalty among customers?",
+    "a": [
+      "By offering aggressive discount codes to outprice market competitors.",
+      "By fostering deep, lasting trust through authentic dedication to society and planet.",
+      "By enforcing long-term binding purchase contracts with consumers.",
+      "By limiting public access to internal sustainability performance metrics."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 17,
+    "q": "Why is \"Assess\" designated as the vital first step in the 6-step TBL implementation roadmap?",
+    "a": [
+      "To establish a comprehensive understanding of current operational impacts across all three pillars.",
+      "To immediately publish marketing claims to boost corporate reputation.",
+      "To fulfill legal requirements for selling shares on public stock exchanges.",
+      "To calculate exact tax penalties owed to environmental regulators."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 18,
+    "q": "How does adopting TBL practices lead to operational \"Cost Reductions\" according to Section 8?",
+    "a": [
+      "By eliminating social auditing routines across global operations.",
+      "By charging consumers higher prices for basic product features.",
+      "By lowering worker safety standards to cut facility maintenance costs.",
+      "By optimizing resource utilization and eliminating waste to decrease direct overhead."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 19,
+    "q": "How is \"Profit\" redefined within the Triple Bottom Line framework compared to traditional financial management?",
+    "a": [
+      "It focuses on long-term growth generated without harming society or the environment.",
+      "It mandates that all revenue be donated to non-profit organizations.",
+      "It measures economic success solely through local tax contributions.",
+      "It maximizes short-term resource extraction to boost immediate quarterly dividends."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 20,
+    "q": "Why does the text describe sustainability as a strategic imperative rather than merely an ethical choice for modern organizations?",
+    "a": [
+      "It guarantees immediate tax immunity across international regulatory borders.",
+      "It serves primarily to satisfy short-term regulatory mandates without altering core operations.",
+      "It unlocks operational efficiencies and cost savings while building long-term competitive resilience.",
+      "It completely eliminates all exposure to market volatility and financial risk."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 21,
+    "q": "A company discovers that customers view its eco-friendly marketing claims as superficial \"greenwashing.\" Based on Section 8's driver for \"Brand Loyalty,\" how should leadership correct customer perceptions?",
+    "a": [
+      "Lower product prices temporarily to distract from environmental critiques.",
+      "Increase the marketing budget for promotional campaigns while keeping internal practices unchanged.",
+      "Cease all public communication regarding social and environmental initiatives.",
+      "Demonstrate genuine, transparent commitment across all three TBL pillars to build deep, lasting customer trust."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 22,
+    "q": "A global food distributor experiences recurring supply chain disruptions caused by extreme climate events and changing regulatory policies. Applying Section 8, what reward will the firm secure by balancing TBL?",
+    "a": [
+      "Automatic conversion of linear product lines into public non-profit services.",
+      "Complete elimination of raw material purchasing overhead.",
+      "Organizational resilience, allowing the business to adapt to supply chain shocks and regulatory shifts.",
+      "Immediate immunity from regional labor laws and safety inspections."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 23,
+    "q": "A manufacturing firm is experiencing high operational costs due to excessive raw material waste and high energy consumption. According to Section 1 of the text, how should the company's executive team leverage sustainability to address this operational challenge?",
+    "a": [
+      "Use sustainability as a strategic lever to aggressively reduce waste, unlocking process efficiencies that directly cut overhead costs.",
+      "Offset operational waste by purchasing external carbon credits without optimizing internal manufacturing workflows.",
+      "Pass the increased costs of wasted materials directly onto end consumers through higher product prices.",
+      "Treat sustainability purely as a legal compliance burden and pay regulatory fines rather than altering operational processes."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 24,
+    "q": "A hotel chain wants to lower its direct operational overhead expenses while advancing its sustainability strategy. According to Section 8, what practical step will deliver this specific benefit?",
+    "a": [
+      "Rely strictly on traditional advertising campaigns to attract conscious demographic groups.",
+      "Expand risk management software to predict regulatory changes.",
+      "Implement profit-sharing programs for local utility companies.",
+      "Optimize energy and water utilization across facilities to eliminate waste and decrease overhead costs."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 25,
+    "q": "An agricultural enterprise operates in a region suffering from severe groundwater pollution, resulting in high worker absenteeism and declining productivity. Based on the \"People\" pillar, how should leadership resolve this operational vulnerability?",
+    "a": [
+      "Invest in clean water infrastructure for employees and local communities to secure a healthy, resilient workforce foundation.",
+      "Automate field labor while ignoring environmental water degradation in surrounding communities.",
+      "Relocate human resource funds into short-term financial marketing campaigns.",
+      "Increase daily working hours to offset product loss caused by absenteeism."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 26,
+    "q": "A firm has completed setting goals and altering its supply chain design (Steps 2 & 3). To fulfill Step 4 (\"Monitor\") of the 6-step roadmap, what action must management perform?",
+    "a": [
+      "Commit to a final cycle of continuous improvement without tracking performance metrics.",
+      "Draft new marketing slogans for eco-conscious consumer groups.",
+      "Regularly evaluate progress using data-driven metrics to keep the organization on track.",
+      "Perform an initial audit of business practices to identify overall societal impact."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 27,
+    "q": "An entrepreneur wants to design a retail enterprise where employee loyalty and shared success are primary revenue drivers. Which tool explicitly mentioned in Section 5 should the entrepreneur utilize to structure this innovation?",
+    "a": [
+      "The Linear Extraction Index",
+      "The Business Model Canvas",
+      "The Net Zero Tax Exemption Audit",
+      "The Quarterly Dividend Calculator"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 28,
+    "q": "A commercial furniture business currently manufactures single-use wooden desks that are discarded by clients after short lifespans. How should the product development team redesign their operations using Section 4's \"Material Use\" guidance?",
+    "a": [
+      "Transition from the take-make-waste model to modular furniture built for reduction, reuse, and recycling.",
+      "Increase production speed to replace discarded desks more rapidly in consumer markets.",
+      "Maintain current disposal practices but apply for municipal tax incentives.",
+      "Substitute timber with cheaper, non-recyclable synthetic plastic polymers."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 29,
+    "q": "An established food packaging company decides to adopt the TBL roadmap outlined in Section 7. What specific activity must the executive committee execute in Step 1 (\"Assess\")?",
+    "a": [
+      "Establish a continuous improvement feedback loop before gathering operational data.",
+      "Redesign supply chain shipping routes prior to measuring current emission baselines.",
+      "Conduct a comprehensive baseline audit of current business practices across social, environmental, and financial dimensions.",
+      "Publish a public press release announcing future environmental targets."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 30,
+    "q": "A board of directors wants to transition its corporate reporting from a traditional quarterly financial report to the Triple Bottom Line (TBL) accounting framework. How should the finance team restructure their evaluations to align with TBL?",
+    "a": [
+      "Replace financial ROI metrics entirely with annual employee satisfaction surveys.",
+      "Prioritize immediate quarterly dividend distributions over environmental risk mitigation.",
+      "Focus exclusively on Net Zero carbon compliance while ignoring supply chain workforce conditions.",
+      "Evaluate success multi-dimensionally by tracking performance across social impacts, environmental protection, and long-term economic stability."
+    ],
+    "state": "Not complete"
+  }
+]

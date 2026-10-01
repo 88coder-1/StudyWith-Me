@@ -1,0 +1,332 @@
+[
+  {
+    "no": 1,
+    "q": "How many non-consent \"Lawful Bases\" are recognized under Section 24 of the PDPA for processing personal data?",
+    "a": [
+      "10 lawful bases",
+      "6 lawful bases",
+      "12 lawful bases",
+      "3 lawful bases"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 2,
+    "q": "What does the \"Non-Conditional\" principle of consent dictate under the PDPA?",
+    "a": [
+      "Data subjects cannot withdraw consent once given.",
+      "Consent forms must be printed exclusively on white paper.",
+      "Service provision cannot be refused simply because a user refuses consent for non-essential data collection.",
+      "Consent is automatically implied when entering any commercial building."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 3,
+    "q": "What is the primary condition required to invoke the \"Vital Interest\" lawful basis?",
+    "a": [
+      "Delivering physical products ordered via an e-commerce platform",
+      "Conducting market analysis for commercial gain",
+      "Preventing or suppressing a danger to a person's life, body, or health",
+      "Fulfilling an annual government tax submission"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 4,
+    "q": "Which of the following activities is explicitly EXCLUDED from the scope of the PDPA under Section 4?",
+    "a": [
+      "Private e-commerce company tracking customer purchasing histories",
+      "Commercial bank collecting credit scores for loan approval",
+      "Private hospital keeping online electronic medical records",
+      "Processing data purely for personal or household family activities"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 5,
+    "q": "On what date did the Personal Data Protection Act (PDPA) B.E. 2562 (2019) officially become fully effective in Thailand?",
+    "a": [
+      "December 31, 2019",
+      "January 1, 2020",
+      "June 1, 2022",
+      "May 25, 2018"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 6,
+    "q": "What key characteristic distinguishes a Data Processor from a Data Controller under the PDPA?",
+    "a": [
+      "They own the copyright to all personal data stored in their systems.",
+      "They are bound by all statutory duties prescribed specifically for Data Controllers.",
+      "They hold ultimate decision-making power over why data is collected.",
+      "They process data strictly according to the orders or on behalf of the Data Controller."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 7,
+    "q": "Which section of the Personal Data Protection Act governs the conditions for requesting valid consent from a Data Subject?",
+    "a": [
+      "Section 1",
+      "Section 4",
+      "Section 19",
+      "Section 26"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 8,
+    "q": "Which of the following processing examples relies on the \"Contract\" lawful basis?",
+    "a": [
+      "Sending promotional promotional newsletters to non-registered visitors",
+      "Collecting a delivery address to ship a purchased online order",
+      "Reporting employee salary data to the Revenue Department",
+      "Saving credit card details for user convenience during future optional checkouts"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 9,
+    "q": "What is the core distinction between Legal Obligation and Public Task bases?",
+    "a": [
+      "Legal Obligation applies to complying with statutory laws; Public Task applies to government agencies executing official missions.",
+      "Legal Obligation requires explicit signed consent; Public Task never requires records.",
+      "There is no distinction; they are legally identical terms under PDPA.",
+      "Public Task is used exclusively by private retail stores; Legal Obligation applies only to courts."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 10,
+    "q": "Under Section 19, when MUST consent be requested from the Data Subject?",
+    "a": [
+      "Before or at the moment of data collection",
+      "Only when a data breach occurs",
+      "At any point during the fiscal year end review",
+      "Within 30 days after data processing has concluded"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 11,
+    "q": "Why does using credit card data to complete a hotel booking fall under Contract, whereas saving that card for future quick checkouts requires Consent?",
+    "a": [
+      "Hotel bookings are exempt from PDPA, whereas digital wallet features are not.",
+      "Immediate booking is necessary to execute the transaction, while storing it for future convenience is an optional choice.",
+      "Storing data for convenience relies on Legal Obligations mandated by central banking laws.",
+      "Credit card details are classified as sensitive biometric data during future storage."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 12,
+    "q": "What is the legal consequence if an organization collects user data using a consent request that fails to meet Section 19 requirements (e.g., using ambiguous or hidden text)?",
+    "a": [
+      "The Data Subject loses the right to request data erasure.",
+      "The consent automatically converts into a Legitimate Interest basis.",
+      "The consent request is legally non-binding on the Data Subject.",
+      "The processing becomes permanently valid after 30 business days."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 13,
+    "q": "In the context of Legitimate Interest (e.g., installing CCTV for security), what does the principle of \"Minimization\" require?",
+    "a": [
+      "Restricting the scope of data collection and retention to the bare minimum necessary to achieve the objective.",
+      "Deleting all CCTV footage every 60 seconds automatically.",
+      "Limiting camera usage to a maximum of 3 hours per calendar week.",
+      "Reducing the financial budget allocated to cybersecurity software."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 14,
+    "q": "When a Data Subject exercises their legal right to withdraw consent, what statutory duty must the Data Controller perform?",
+    "a": [
+      "They must report the user to law enforcement for breach of service agreement.",
+      "They must charge a fee equal to the cost of initial data collection.",
+      "They must notify the subject of the specific impact or consequences the withdrawal will have on their service.",
+      "They must retain all personal data for 10 mandatory years regardless of the request."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 15,
+    "q": "How does the \"Right to be Informed\" foundational principle empower a Data Subject?",
+    "a": [
+      "It permits users to alter historical public records kept in state archives.",
+      "It forces companies to pay royalty dividends to users for data usage.",
+      "It gives users ownership of source codes used by software vendors.",
+      "It guarantees that individuals are explicitly told the exact purpose and methods of data processing."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 16,
+    "q": "Under the Contract basis, why is a business permitted to process a customer's address without obtaining a separate consent agreement?",
+    "a": [
+      "Because fulfilling the physical delivery is strictly necessary to perform the core contractual agreement.",
+      "Because signing a contract permanently waives all individual privacy rights under Section 19.",
+      "Because physical addresses are not considered personal data under Thai law.",
+      "Because physical delivery is classified as a Public Task exception."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 17,
+    "q": "What capability does the \"Right to Data Portability\" give to individuals moving between competing service providers?",
+    "a": [
+      "It requires internet service providers to provide free mobile data connections.",
+      "It forces service providers to share confidential commercial trade secrets with users.",
+      "It allows individuals to obtain their data in a structured format that can be easily transferred to another service provider.",
+      "It allows users to physically carry paper backup files across international borders without customs duty."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 18,
+    "q": "Which statement accurately explains the legal relationship between a Data Controller and a Data Processor?",
+    "a": [
+      "The Data Subject acts as the Processor when reviewing their own personal files.",
+      "Both entities share identical legal duties under the PDPA without distinction.",
+      "The Controller determines why and how data is handled, while the Processor acts strictly according to the Controller's instructions.",
+      "The Processor sets the overall privacy strategy, and the Controller executes software tasks."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 19,
+    "q": "Under the \"Right to Rectification,\" what specific data quality standard is a Data Controller required to maintain upon request?",
+    "a": [
+      "Ensuring personal information is accurate, up-to-date, complete, and not misleading.",
+      "Publishing corrected customer profiles on public directory listings.",
+      "Translating all personal records into foreign languages upon request.",
+      "Encrypting all personal data behind multi-factor authentication passkeys."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 20,
+    "q": "What is the underlying conceptual objective of the Personal Data Protection Act (PDPA) regarding an individual's digital footprint?",
+    "a": [
+      "To replace all existing civil and criminal legal systems with digital privacy courts",
+      "To allow corporations unrestricted ownership over customer data once collected",
+      "To treat personal information as a protected asset rather than a public commodity, giving individuals agency",
+      "To mandate that all personal data must be stored exclusively on government servers"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 21,
+    "q": "A mobile gaming application refuses to let users open the game unless they consent to letting the app share their contact list with third-party telemarketing companies. Which PDPA principle does this application violate?",
+    "a": [
+      "Right to Data Portability",
+      "Archiving or Research Basis",
+      "Non-Conditional Consent requirement (Section 19)",
+      "Public Task Basis"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 22,
+    "q": "A client disputes the accuracy of a credit score file maintained by a credit agency. While the agency investigates the dispute over the next 14 days, the client requests that they temporarily suspend all processing and sharing of that file. Which right applies?",
+    "a": [
+      "Right to data portability",
+      "Right to restriction",
+      "Right to erasure",
+      "Right to access"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 23,
+    "q": "The Anti-Money Laundering Office (AMLO) processes transaction histories sent by financial institutions to investigate illegal money laundering operations. Which legal basis applies to AMLO's data processing activities?",
+    "a": [
+      "Consent",
+      "Contract",
+      "Public Task",
+      "Archiving or Research"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 24,
+    "q": "A telecom customer notices that her billing statement lists an incorrect postal code and an outdated surname. She contacts customer support to fix the errors. Which PDPA right is she exercising?",
+    "a": [
+      "Right to erasure",
+      "Right to data portability",
+      "Right to restriction",
+      "Right to rectification"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 25,
+    "q": "A former customer closed his online streaming account three years ago. He discovers the company still retains his profile and requests that all his personal viewing records be permanently deleted or anonymized. Which right applies?",
+    "a": [
+      "Right to restriction",
+      "Right to rectification",
+      "Right to data portability",
+      "Right to erasure"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 26,
+    "q": "A food delivery app prompts users: \"Save your credit card details for faster 1-click payment on future orders.\" Which legal basis must the app rely on to process and store this card data for future convenience?",
+    "a": [
+      "Contract",
+      "Vital Interest",
+      "Consent",
+      "Legal Obligations"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 27,
+    "q": "A high-security facility requires employees to scan their fingerprints to unlock building doors. How does the PDPA classify fingerprint scans, and what special standard applies?",
+    "a": [
+      "It is Sensitive Personal Data under Section 26 (Biometric Data) requiring heightened protection.",
+      "It is exempt from PDPA under Section 4 court proceedings.",
+      "It is general personal data because employee entry is covered by standard employment contracts.",
+      "It is not personal data because electronic scans are converted into binary numbers."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 28,
+    "q": "An unconscious traffic accident victim is rushed to an emergency room. Doctors need immediate access to her medical history and blood type to perform life-saving surgery. Which lawful basis allows the hospital to process her medical data without signed consent?",
+    "a": [
+      "Legal Obligations",
+      "Public Task",
+      "Archiving or Research",
+      "Vital Interest"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 29,
+    "q": "A retail shopping center installs CCTV cameras across its entrances and hallways to deter theft and ensure visitor safety. Which lawful basis is most appropriate for operating these security cameras?",
+    "a": [
+      "Consent",
+      "Vital Interest",
+      "Legitimate Interest",
+      "Public Task"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 30,
+    "q": "A consumer continually receives unsolicited cold sales calls from an insurance agency. The consumer calls back and formally demands that the agency stop using his phone number for marketing calls. Which right is being asserted?",
+    "a": [
+      "Right to object",
+      "Right to be informed",
+      "Right to restriction",
+      "Right to data portability"
+    ],
+    "state": "Not complete"
+  }
+]

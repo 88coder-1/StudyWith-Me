@@ -1,0 +1,332 @@
+[
+  {
+    "no": 1,
+    "q": "What is defined as the \"Public Domain\"?",
+    "a": [
+      "The body of creative work to which no intellectual property rights apply",
+      "Software that requires a commercial license for enterprise use",
+      "A database of all registered invention patents maintained by the government",
+      "Information protected specifically under Trade Secret laws"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 2,
+    "q": "In what year was the Electronic Transactions Act enacted in Thailand to recognize the legal effects of data messages?",
+    "a": [
+      "2001 (B.E. 2544)",
+      "2022 (B.E. 2565)",
+      "1994 (B.E. 2537)",
+      "2015 (B.E. 2558)"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 3,
+    "q": "In Public Key Infrastructure (PKI), which key is distributed to others to verify a digital signature?",
+    "a": [
+      "Secret Key",
+      "Public Key",
+      "Session Key",
+      "Private Key"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 4,
+    "q": "Which requirement under Section 8 of the Thai Electronic Transactions Act is unique to Thai law and not explicitly found in the UNCITRAL model law?",
+    "a": [
+      "Usability",
+      "Integrity",
+      "Accessibility",
+      "Interoperability"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 5,
+    "q": "Under Section 7 of the Electronic Transactions Act, a data message cannot be denied legal effect solely because of which reason?",
+    "a": [
+      "Because it is in electronic form",
+      "Because it lacks a Certificate Authority signature",
+      "Because it contains sensitive data",
+      "Because it was created outside of Thailand"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 6,
+    "q": "Under the PDPA, what defines a \"Data Controller\"?",
+    "a": [
+      "The government agency tasked with enforcing data privacy fines",
+      "The entity with the power to make decisions about collecting, using, or disclosing data",
+      "The third party that only processes data on specific direct orders",
+      "The individual user whose data is being collected"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 7,
+    "q": "According to the Patent Act B.E. 2522 of Thailand, which of the following is explicitly ineligible for patent protection?",
+    "a": [
+      "Computer programs",
+      "Manufacturing methods",
+      "Chemical compositions of matter",
+      "Product designs"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 8,
+    "q": "Which of the following correct list identifies the four primary ways to protect Intellectual Property?",
+    "a": [
+      "Patents, Trademarks, Copyrights, Trade Secrets",
+      "Copyrights, Public Domain, Fair Use, Open Source",
+      "Trademarks, Trade Names, Clearances, Affidavits",
+      "Patents, Contracts, Insurance, Retainers"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 9,
+    "q": "In Thailand, what is the non-renewable duration of protection for an Invention Patent?",
+    "a": [
+      "50 years",
+      "20 years",
+      "6 years",
+      "10 years"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 10,
+    "q": "Which type of trademark consists of an invented word with no direct relation to the goods or services (e.g., \"Kodak\")?",
+    "a": [
+      "Coined mark",
+      "Suggestive mark",
+      "Descriptive mark",
+      "Arbitrary mark"
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 11,
+    "q": "When transferring personal data to a destination country outside Thailand under the PDPA, what key condition must generally be satisfied regarding the destination country?",
+    "a": [
+      "The destination country must host servers owned directly by the Thai government.",
+      "The destination country must provide an adequate level of data protection standards recognized by regulatory authorities.",
+      "The data must be translated into the official language of the recipient country before transmission.",
+      "Cross-border transfer of data is strictly illegal under all circumstances without exception."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 12,
+    "q": "How does the legal principle of \"Functional Equivalence\" operate in the context of the Electronic Transactions Act?",
+    "a": [
+      "It replaces all paper contracts automatically with electronic contracts without mutual consent.",
+      "It grants electronic messages and signatures equal legal status to traditional written paper documents if statutory standards are met.",
+      "It states that digital software functions are equivalent to physical machinery hardware under patent law.",
+      "It requires all citizens to use electronic government services instead of physical office visits."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 13,
+    "q": "Under the PDPA, when is explicit consent NOT required to process personal data?",
+    "a": [
+      "Consent is always strictly required for every single data processing activity without exception.",
+      "Whenever personal data is processed by a commercial business for direct marketing purposes.",
+      "When data is gathered secretly without notifying the individual to prevent loss of sales.",
+      "When processing is necessary for fulfilling a contract to which the Data Subject is a party."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 14,
+    "q": "Why are computer programs categorized under Copyright Law rather than Patent Law in Thailand?",
+    "a": [
+      "Software cannot be sold commercially in digital markets.",
+      "Because software developer teams change too frequently to apply for patents.",
+      "Software is treated as a literary work composed of source code expression rather than physical machinery.",
+      "Patent law explicitly prohibits all electronics or hardware inventions."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 15,
+    "q": "What advantage does maintaining a Trade Secret offer over registering an Invention Patent?",
+    "a": [
+      "Trade secret protection has no fixed expiration date and does not require public disclosure of the technology.",
+      "Trade secrets protect against independent reverse engineering by competitors automatically.",
+      "Trade secrets can easily be licensed in official public gazettes worldwide.",
+      "Trade secret rights are granted automatically by government certificate upon application."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 16,
+    "q": "Why does Section 8 of the Thai Electronic Transactions Act require an electronic record to maintain its \"Integrity\" to satisfy written document requirements?",
+    "a": [
+      "To allow the recipient to modify and update terms as market conditions change.",
+      "To guarantee that the information has remained complete and unaltered from the time it was first generated in its final form.",
+      "To ensure that the file format is converted into a PDF document before sending.",
+      "To ensure the document is printed on certified watermarked security paper."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 17,
+    "q": "How does a Geographical Indication (GI) differ fundamentally from a commercial Trademark?",
+    "a": [
+      "A GI links product quality to a specific geographic origin, whereas a trademark links a product to a specific business enterprise.",
+      "There is no legal difference between GIs and Trademarks under IP law.",
+      "Trademarks protect agricultural goods only, while GIs protect industrial machinery.",
+      "A GI is owned exclusively by a single private corporation, while trademarks belong to governments."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 18,
+    "q": "How do Moral Rights differ from Economic Rights in Copyright Law?",
+    "a": [
+      "Moral rights protect attribution and reputation and cannot be transferred, while economic rights can be assigned or licensed.",
+      "Moral rights cover monetary royalties, whereas economic rights control credit and author identification.",
+      "Moral rights last forever without limits, while economic rights last for 5 years max.",
+      "Moral rights apply only to corporate entities, while economic rights apply to individuals."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 19,
+    "q": "In Public Key Infrastructure (PKI), how do private and public key pairs guarantee document integrity and non-repudiation?",
+    "a": [
+      "The sender encrypts the hash with their secret Private Key, allowing anyone with the matching Public Key to verify its origin and detect changes.",
+      "The government stores all private keys and automatically approves valid legal transactions.",
+      "Both sender and receiver use a single shared password to seal the electronic document.",
+      "The sender shares their Private Key publicly so recipients can decrypt and sign the document themselves."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 20,
+    "q": "What does the \"Purpose Limitation\" principle require Data Controllers to do when collecting personal data?",
+    "a": [
+      "Use collected data for any future business project as long as the company profits.",
+      "Collect data only for specified, explicit, and legitimate purposes informed to the subject prior to or at collection.",
+      "Store data indefinitely without ever deleting old databases.",
+      "Restrict all data processing activities exclusively to human physical paperwork."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 21,
+    "q": "A rapidly expanding FinTech startup anticipates receiving frequent ongoing inquiries regarding customer contracts, regulatory compliance, employment issues, and privacy policies every month. Which legal fee structure is most cost-effective and appropriate for their needs?",
+    "a": [
+      "Engaging legal counsel on a monthly Retainer basis to cover continuous, routine legal consultation.",
+      "Filing an Invention Patent application for every contract signed.",
+      "Buying legal insurance without retaining any licensed attorney.",
+      "Hiring external trial litigation attorneys on an individual court-case contingency fee basis for routine questions."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 22,
+    "q": "An importer buys genuine branded sneakers legally in Japan and imports them to sell in Thailand at a discount. The official exclusive Thai distributor sues the importer for trademark infringement. How will the court likely rule based on the Principle of Exhaustion of Rights?",
+    "a": [
+      "Rule in favor of the distributor because importing genuine goods without local distributor consent is piracy.",
+      "Convert the sneakers into a public domain asset.",
+      "Order all sneakers destroyed under criminal copyright statutes.",
+      "Dismiss the lawsuit because the trademark rights in those physical shoes were exhausted after the first authorized sale in Japan."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 23,
+    "q": "A bank customer notices that their purchase history is being used by the bank to send personalized promotional SMS offers for credit cards. The customer calls customer support to stop these offers. Under the PDPA, what right is the customer exercising, and how must the bank respond?",
+    "a": [
+      "Right to Compensation; the bank must pay $100 for every SMS sent.",
+      "Right to Data Portability; the bank must transfer the customer's cash to another bank.",
+      "Right to Access; the bank must post physical transaction ledgers to the customer's home.",
+      "Right to Object; the bank must immediately stop processing data for direct marketing purposes."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 24,
+    "q": "A Thai subsidiary needs to transfer employee HR data to its global parent headquarters in Singapore. Singapore is recognized as having adequate data protection laws. What mechanism can the Thai subsidiary use to streamline this transfer under PDPA?",
+    "a": [
+      "Transfer data using encrypted flash drives carried physically across borders by hand.",
+      "Implement Binding Corporate Rules (BCRs) or rely on adequate protection standard findings for destination countries.",
+      "Pay a cross-border export tariff to the Customs Department.",
+      "Anonymize the employee names and delete all job titles permanently."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 25,
+    "q": "A rice farmer in northern Thailand buys seeds of \"Thung Kula Ronghai Jasmine Rice\" and plants them in his own farm in Chiang Rai. Can he legally label and sell his harvested rice as \"Thung Kula Ronghai Jasmine Rice\"?",
+    "a": [
+      "Yes, because GI rights follow the seed genetics rather than the land location.",
+      "No, because rice crops are excluded from all intellectual property laws.",
+      "Yes, provided he pays a 5% royalty to the Ministry of Agriculture.",
+      "No, because Geographical Indication rights require the product to be grown and produced within the designated geographic region."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 26,
+    "q": "RetailCo hires CloudHost Inc. to store customer database records. CloudHost suffers a server breach exposing 50,000 personal profiles due to unpatched security software. Under the PDPA, what is RetailCo's primary regulatory obligation?",
+    "a": [
+      "RetailCo must issue a full monetary refund to every affected customer within 24 hours.",
+      "RetailCo must transfer all customer records to physical paper files immediately.",
+      "As Data Controller, RetailCo must notify the PDPC office within 72 hours of learning of the breach.",
+      "RetailCo has no obligations because CloudHost is solely responsible for server maintenance."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 27,
+    "q": "Company X receives a contract digitally signed by Supplier Y using a PKI-based certificate. During verification, Company X uses Supplier Y's Public Key, but the system reports a \"Hash Mismatch\" error. What does this indicate happened?",
+    "a": [
+      "The contract has automatically expired after 24 hours.",
+      "Company X must send a physical paper copy to complete the PKI handshake.",
+      "The document content was altered or corrupted after Supplier Y applied their signature.",
+      "Supplier Y used the correct password to approve the document."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 28,
+    "q": "A customer closes their account with an online shopping platform and submits a formal request under PDPA to delete all personal financial invoice records held by the platform. Thai Revenue Law requires tax invoices to be retained for 5 years. How should the platform handle this request?",
+    "a": [
+      "Transfer the tax liability directly to the individual customer.",
+      "Delete all tax records immediately, as PDPA overrides all national tax and revenue statutes.",
+      "Refuse the deletion of required tax invoice data citing statutory compliance duty under Revenue Law, while deleting non-required profile/marketing data.",
+      "Ignore the customer's request completely without giving any explanation."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 29,
+    "q": "A hardware startup invents a modified bicycle gear mechanism that improves shifting efficiency by 5%. The mechanism uses existing components in a clever but simple combination. Which IP protection strategy should the startup pursue in Thailand to secure quick rights?",
+    "a": [
+      "Rely on Geographical Indications to protect the factory location.",
+      "Register the gear mechanism as a literary copyright work.",
+      "Apply for a Petty Patent because it caters to incremental improvements and offers faster registration without rigorous inventive step hurdles.",
+      "Apply for an Invention Patent to guarantee 50 years of absolute global monopoly."
+    ],
+    "state": "Not complete"
+  },
+  {
+    "no": 30,
+    "q": "A mobile app developer creates a sign-up screen with a pre-checked box stating: \"I consent to receive marketing emails and allow my location data to be sold to third-party advertisers.\" Under the PDPA, why is this consent invalid?",
+    "a": [
+      "Because consent forms must be signed in blue ink on paper documents.",
+      "Because mobile apps are completely prohibited from collecting location data.",
+      "Consent must be explicitly given by affirmative action and cannot rely on pre-checked boxes or bundled marketing terms.",
+      "Because marketing permissions must always be approved directly by the Ministry of Digital Economy."
+    ],
+    "state": "Not complete"
+  }
+]
