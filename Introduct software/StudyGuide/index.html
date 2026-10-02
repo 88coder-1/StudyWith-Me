@@ -1,0 +1,1075 @@
+<!doctype html>
+<html lang="th" data-lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intro2SE Midterm Coach</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+/* Layout: one reading column under a sticky tab bar. Follows the instructor's review guide chapter by chapter; diagrams are drawn in UML notation with theme colours.
+   Bilingual text is authored with bracket markers (see build.py); the build expands each one to a .l-th / .l-en pair. */
+:root{
+  --bg:#EEF3F2; --surface:#FFFFFF; --soft:#E2ECEB; --fg:#13252B; --muted:#56696F; --line:#D0DCDB;
+  --accent:#0A6C74; --accent-fg:#FFFFFF; --term:#0A5560;
+  --hl:#FFE066; --hl-fg:#2A2300;
+  --good:#17794A; --good-bg:#DDF3E6; --bad:#B23A2E; --bad-bg:#FBE3DF;
+  --font-display:"Bai Jamjuree","IBM Plex Sans Thai","Noto Sans Thai",system-ui,sans-serif;
+  --font-body:"IBM Plex Sans Thai","Noto Sans Thai","Leelawadee UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0E181C; --surface:#162329; --soft:#1D2E34; --fg:#E4EDEE; --muted:#9AAEB4; --line:#2A3C42;
+  --accent:#58C4C6; --accent-fg:#06262A; --term:#8FDDE0;
+  --hl:#7A6410; --hl-fg:#FFF3BF;
+  --good:#63D29A; --good-bg:#143524; --bad:#F2948A; --bad-bg:#40201C; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0E181C; --surface:#162329; --soft:#1D2E34; --fg:#E4EDEE; --muted:#9AAEB4; --line:#2A3C42;
+  --accent:#58C4C6; --accent-fg:#06262A; --term:#8FDDE0;
+  --hl:#7A6410; --hl-fg:#FFF3BF;
+  --good:#63D29A; --good-bg:#143524; --bad:#F2948A; --bad-bg:#40201C; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html[data-lang="th"] .l-en, html[data-lang="en"] .l-th{display:none}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.7;margin:0}
+.wrap{max-width:860px;margin:0 auto;padding-inline:16px;padding-block:20px 64px}
+h1,h2,h3{font-family:var(--font-display);line-height:1.3;text-wrap:balance;margin:0}
+h1{font-size:1.7rem} h2{font-size:1.3rem;margin-top:8px} h3{font-size:1.05rem}
+p{margin:0}
+a{color:var(--accent)}
+b{color:var(--term);font-weight:600}
+mark{background:var(--hl);color:var(--hl-fg);padding:0 .2em;border-radius:3px;font-weight:600}
+.muted{color:var(--muted)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.stack-lg{display:flex;flex-direction:column;gap:26px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.tabs .bar{max-width:860px;margin:0 auto;padding-inline:16px;display:flex;align-items:center;gap:10px}
+.tabs nav{flex:1;min-width:0;display:flex;gap:4px;overflow-x:auto}
+.tabs nav button{font:inherit;font-family:var(--font-display);font-weight:600;background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);padding:12px 12px 9px;cursor:pointer;white-space:nowrap}
+.tabs nav button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.lang{flex:none;display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.lang button{font:inherit;font-size:.85rem;font-weight:600;border:0;background:var(--surface);color:var(--muted);padding:5px 11px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg)}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip,.btn{font:inherit;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:6px 14px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.btn{border-radius:8px;font-weight:600}
+.btn.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:default}
+
+.map{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.map a{display:flex;flex-direction:column;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;text-decoration:none;color:var(--fg);min-width:0}
+.map .code{font-family:var(--font-display);font-weight:700;color:var(--accent)}
+.map .q{font-weight:600}
+.map .a{font-size:.9rem;color:var(--muted)}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.note{background:var(--soft);border-radius:8px;padding:12px 14px;font-size:.95rem}
+.trap{background:var(--bad-bg);border-radius:8px;padding:12px 14px;font-size:.95rem}
+.trap strong{color:var(--bad);font-family:var(--font-display)}
+ol,ul{margin:0;padding-left:1.3em}
+li+li{margin-top:4px}
+dl.check{margin:0;display:flex;flex-direction:column;gap:10px}
+dl.check dt{font-weight:600}
+dl.check dd{margin:0;padding-left:14px;border-left:3px solid var(--line)}
+
+details.tp{background:var(--surface);border:1px solid var(--line);border-radius:10px}
+details.tp>summary{cursor:pointer;padding:12px 16px;font-family:var(--font-display);font-weight:600;list-style-position:inside}
+details.tp>summary small{font-family:var(--font-body);font-weight:400;color:var(--muted);margin-left:6px}
+details.tp>.in{padding:4px 16px 16px;display:flex;flex-direction:column;gap:12px}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.flow span.s{background:var(--soft);border-radius:6px;padding:4px 10px;font-weight:500}
+.flow i{font-style:normal;color:var(--muted)}
+
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-family:var(--font-display);font-size:.85rem;color:var(--muted);font-weight:600;white-space:nowrap}
+td:first-child{font-weight:600;color:var(--term);min-width:9em}
+
+/* UML figures */
+figure.fig{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+figure.fig figcaption{font-size:.95rem}
+.figgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.figbox{overflow-x:auto}
+svg.d{display:block;width:100%;height:auto;max-width:640px}
+.d line,.d path,.d rect,.d ellipse,.d circle,.d polygon{stroke:var(--fg);stroke-width:1.5;fill:var(--surface)}
+.d .nf{fill:none}
+.d .fill{fill:var(--fg)}
+.d .dash{stroke-dasharray:6 4}
+.d text{fill:var(--fg);stroke:none;font-family:var(--font-body);font-size:13px}
+.d .b{font-weight:600}
+.d .sm{font-size:11px;fill:var(--muted)}
+.d .acc{stroke:var(--accent);stroke-width:2.5}
+.d .accf{fill:var(--accent);stroke:var(--accent)}
+.d .acct{fill:var(--accent);font-weight:600}
+.d .bad{stroke:var(--bad)}
+.d .badt{fill:var(--bad);font-weight:600}
+.d .goodt{fill:var(--good);font-weight:600}
+.d .soft{stroke:var(--line)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px 18px;text-align:center;cursor:pointer;min-height:190px;display:flex;flex-direction:column;justify-content:center;gap:10px;font:inherit;color:var(--fg);width:100%}
+.card .en{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:var(--term)}
+.card .th{font-size:1.1rem}
+.card .hint{color:var(--muted);font-size:.95rem}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.row .grow{flex:1;min-width:0}
+
+.qtext{font-size:1.1rem;font-weight:500}
+.choices{display:flex;flex-direction:column;gap:8px}
+.choice{font:inherit;text-align:left;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:11px 14px;cursor:pointer}
+.choice.ok{background:var(--good-bg);border-color:var(--good)}
+.choice.no{background:var(--bad-bg);border-color:var(--bad)}
+.choice:disabled{cursor:default;opacity:1;color:var(--fg)}
+.exp{border-radius:10px;padding:12px 14px}
+.exp.ok{background:var(--good-bg)} .exp.no{background:var(--bad-bg)}
+.exp strong{font-family:var(--font-display)}
+.exp.ok strong{color:var(--good)} .exp.no strong{color:var(--bad)}
+.score{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.95rem}
+.tag{display:inline-block;font-size:.8rem;border:1px solid var(--line);border-radius:999px;padding:1px 9px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<!-- shared SVG markers and the actor symbol (build.py inlines the actor wherever it is used) -->
+<svg class="d" width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <marker id="m-open" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="nf" d="M1 1 L9 5 L1 9"/></marker>
+  <marker id="m-fill" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="fill" d="M1 1 L9 5 L1 9 Z"/></marker>
+  <marker id="m-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path class="accf" d="M1 1 L9 5 L1 9 Z"/></marker>
+  <marker id="m-tri" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="11" markerHeight="11" orient="auto"><path d="M1 1 L11 6 L1 11 Z"/></marker>
+  <marker id="m-dia" viewBox="0 0 16 10" refX="1" refY="5" markerWidth="13" markerHeight="9" orient="auto"><path class="fill" d="M1 5 L8 1 L15 5 L8 9 Z"/></marker>
+  <g id="actor"><circle cx="0" cy="-22" r="8"/><line x1="0" y1="-14" x2="0" y2="8"/><line x1="-12" y1="-6" x2="12" y2="-6"/><line x1="0" y1="8" x2="-10" y2="24"/><line x1="0" y1="8" x2="10" y2="24"/></g>
+</defs></svg>
+
+<div class="tabs"><div class="bar">
+  <nav role="tablist" aria-label="Sections">
+    <button role="tab" data-tab="start" aria-selected="true"><span class="l-th">เริ่มที่นี่</span><span class="l-en">Start</span></button>
+    <button role="tab" data-tab="learn" aria-selected="false"><span class="l-th">ทบทวนตามบท</span><span class="l-en">Review by chapter</span></button>
+    <button role="tab" data-tab="uml" aria-selected="false"><span class="l-th">อ่านรูป UML</span><span class="l-en">Read UML</span></button>
+    <button role="tab" data-tab="vocab" aria-selected="false"><span class="l-th">ท่องศัพท์</span><span class="l-en">Flashcards</span></button>
+    <button role="tab" data-tab="quiz" aria-selected="false"><span class="l-th">ฝึกข้อสอบ</span><span class="l-en">Practice</span></button>
+  </nav>
+  <div class="lang" role="group" aria-label="Language">
+    <button id="lang-th" data-lang="th" aria-pressed="true">ไทย</button>
+    <button id="lang-en" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+</div></div>
+
+<div class="wrap">
+
+<!-- ================= START ================= -->
+<section id="tab-start" class="stack-lg">
+  <div class="stack">
+    <h1><span class="l-th">ทบทวนกลางภาค Intro to Software Engineering</span><span class="l-en">Intro to Software Engineering Midterm Review</span></h1>
+    <p class="muted"><span class="l-th">ไล่ตาม Midterm Review Guide ของอาจารย์ทุกหัวข้อ · บท 1–5 (สัปดาห์ 1–5)</span><span class="l-en">Follows the instructor's Midterm Review Guide topic by topic · Chapters 1–5 (Weeks 1–5)</span></p>
+  </div>
+
+  <div class="stack">
+    <h2><span class="l-th">ข้อสอบเป็นแบบไหน</span><span class="l-en">What the exam looks like</span></h2>
+    <div class="tw"><table>
+      <tr><th><span class="l-th">เรื่อง</span><span class="l-en">Item</span></th><th><span class="l-th">รายละเอียด</span><span class="l-en">Detail</span></th></tr>
+      <tr><td><span class="l-th">รูปแบบ</span><span class="l-en">Format</span></td><td><span class="l-th">ปรนัย 60 ข้อ ข้อละ 1 คะแนน คิดเป็น 20% ของวิชา ปิดหนังสือ</span><span class="l-en">60 multiple-choice questions, 1 mark each, 20% of the course grade, closed book</span></td></tr>
+      <tr><td><span class="l-th">ขอบเขต</span><span class="l-en">Coverage</span></td><td><span class="l-th">บท 1–5 (สัปดาห์ 1–5) สัปดาห์ 6 เรื่อง Git ไม่ออก</span><span class="l-en">Chapters 1–5 (Weeks 1–5). Week 6 (Git) is not on the exam</span></td></tr>
+      <tr><td><span class="l-th">ข้ออ่านรูป</span><span class="l-en">Diagram items</span></td><td><span class="l-th">7 ข้อ เป็นรูป UML</span><span class="l-en">7 questions that ask you to read a UML diagram</span></td></tr>
+      <tr><td><span class="l-th">การเดา</span><span class="l-en">Guessing</span></td><td><span class="l-th">ไม่หักคะแนน ให้ตอบทุกข้อ</span><span class="l-en">No penalty, so answer every question</span></td></tr>
+      <tr><td><span class="l-th">ช่วงสอบ</span><span class="l-en">Exam window</span></td><td><span class="l-th">28 ก.ย.–4 ต.ค. เช็กวัน เวลา และห้องของตัวเอง นำดินสอหรือปากกากับบัตรนักศึกษา</span><span class="l-en">28 Sep–4 Oct. Confirm your own date, time and room. Bring a pencil or pen and your student ID</span></td></tr>
+    </table></div>
+    <div class="map">
+      <a href="#c1"><span class="code"><span class="l-th">บท 1 · 9 ข้อ</span><span class="l-en">Ch 1 · 9 Qs</span></span><span class="q"><span class="l-th">SE ในยุค AI</span><span class="l-en">SE in the AI era</span></span><span class="a"><span class="l-th">นิยาม SE, ประเภทซอฟต์แวร์, quality attributes, AI-honesty</span><span class="l-en">SE definition, software types, quality attributes, AI honesty</span></span></a>
+      <a href="#c2"><span class="code"><span class="l-th">บท 2 · 11 ข้อ</span><span class="l-en">Ch 2 · 11 Qs</span></span><span class="q">Process / SDLC / Agile</span><span class="a"><span class="l-th">4 activities, Waterfall กับ Incremental, Scrum</span><span class="l-en">4 activities, Waterfall vs Incremental, Scrum</span></span></a>
+      <a href="#c3"><span class="code"><span class="l-th">บท 3 · 11 ข้อ</span><span class="l-en">Ch 3 · 11 Qs</span></span><span class="q">Requirements &amp; SRS</span><span class="a"><span class="l-th">FR กับ NFR, user story, acceptance criteria</span><span class="l-en">FR vs NFR, user story, acceptance criteria</span></span></a>
+      <a href="#c4"><span class="code"><span class="l-th">บท 4 · 12 ข้อ</span><span class="l-en">Ch 4 · 12 Qs</span></span><span class="q">UML Modeling</span><span class="a"><span class="l-th">ประเภทไดอะแกรม, use-case, class, activity</span><span class="l-en">Diagram types, use-case, class, activity</span></span></a>
+      <a href="#c5"><span class="code"><span class="l-th">บท 5 · 11 ข้อ</span><span class="l-en">Ch 5 · 11 Qs</span></span><span class="q">Design &amp; Architecture</span><span class="a"><span class="l-th">cohesion กับ coupling, MVC, component, deployment, ADR</span><span class="l-en">Cohesion vs coupling, MVC, component, deployment, ADR</span></span></a>
+      <a href="#c6"><span class="code"><span class="l-th">บท 5+ · 6 ข้อ</span><span class="l-en">Ch 5+ · 6 Qs</span></span><span class="q">UX/UI &amp; Heuristic Eval</span><span class="a">Nielsen 10, severity, POUR</span></a>
+    </div>
+  </div>
+
+  <div class="stack" data-m="pairs">
+    <h2><span class="l-th">คู่ที่คล้ายกัน ต้องแยกให้ออก</span><span class="l-en">Look-alike pairs you must tell apart</span></h2>
+    <p><span class="l-th">อาจารย์เขียนไว้ว่าข้อสอบชุดนี้ตัดคำใบ้ทิ้ง และตัวลวงทุกตัวมาจากความเข้าใจผิดที่พบบ่อย ตารางนี้จึงเป็นสิ่งแรกที่ควรจำ</span><span class="l-en">The instructor says this paper strips out the usual tells, and every distractor is a common misconception. So this table is the first thing to learn.</span></p>
+    <div class="tw"><table class="terms">
+      <tr><th><span class="l-th">คู่</span><span class="l-en">Pair</span></th><th><span class="l-th">ตัวแรก</span><span class="l-en">First</span></th><th><span class="l-th">ตัวที่สอง</span><span class="l-en">Second</span></th></tr>
+      <tr><td>Program / Software product</td><td><span class="l-th">โค้ดที่รันได้ ผู้ใช้คือคนเขียนเอง</span><span class="l-en">Code that runs; the author is the only user</span></td><td><span class="l-th">ถูกทำให้คนอื่นใช้ เชื่อถือ และแก้ต่อได้</span><span class="l-en">Engineered so others can use, trust and change it</span></td></tr>
+      <tr><td>Generic / Custom (bespoke)</td><td><span class="l-th">ขายตลาดทั่วไป เช่น Excel, LINE</span><span class="l-en">Sold on the open market, e.g. Excel, LINE</span></td><td><span class="l-th">สั่งทำให้ลูกค้ารายเดียว เช่น ระบบคิวโรงพยาบาล</span><span class="l-en">Built for one customer, e.g. a hospital's queue system</span></td></tr>
+      <tr><td>Reliability / Security</td><td><span class="l-th">ทำงานถูกต่อเนื่อง ข้อมูลไม่หาย</span><span class="l-en">Keeps working correctly; no data loss</span></td><td><span class="l-th">คนไม่มีสิทธิ์เข้าไม่ถึงข้อมูล</span><span class="l-en">Only authorized people can reach the data</span></td></tr>
+      <tr><td>FR / NFR</td><td><span class="l-th">ระบบทำอะไร</span><span class="l-en">What the system does</span></td><td><span class="l-th">ทำได้ดีแค่ไหน (เร็ว ปลอดภัย พร้อมใช้)</span><span class="l-en">How well it does it (fast, secure, available)</span></td></tr>
+      <tr><td>Verification / Validation</td><td><span class="l-th">สร้างถูกตาม spec ไหม (building it right)</span><span class="l-en">Does it match the spec? (building it right)</span></td><td><span class="l-th">สร้างสิ่งที่ผู้ใช้ต้องการจริงไหม (building the right thing)</span><span class="l-en">Is it what users really need? (building the right thing)</span></td></tr>
+      <tr><td>Waterfall / Incremental</td><td><span class="l-th">ทำทีละเฟส เหมาะกับ requirement นิ่ง</span><span class="l-en">One phase at a time; fits stable requirements</span></td><td><span class="l-th">ส่งทีละก้อนที่ใช้ได้ เหมาะกับของที่ยังเปลี่ยน</span><span class="l-en">Ships usable slices one at a time; fits changing needs</span></td></tr>
+      <tr><td>Product Owner / Scrum Master</td><td><span class="l-th">จัดลำดับ Product Backlog</span><span class="l-en">Orders the Product Backlog</span></td><td><span class="l-th">ดูแลกระบวนการ ขจัดอุปสรรค</span><span class="l-en">Guards the process, removes blockers</span></td></tr>
+      <tr><td>Sprint Review / Retrospective</td><td><span class="l-th">ดูตัวผลิตภัณฑ์กับ stakeholder</span><span class="l-en">Looks at the product with stakeholders</span></td><td><span class="l-th">ทบทวนวิธีทำงานของทีม</span><span class="l-en">Reflects on how the team works</span></td></tr>
+      <tr><td>Elicitation / Validation (requirements)</td><td><span class="l-th">เก็บความต้องการ เช่น สัมภาษณ์ สังเกต</span><span class="l-en">Discovering needs, e.g. interview, observe</span></td><td><span class="l-th">ตรวจว่า requirement ที่เขียนถูกต้อง</span><span class="l-en">Checking the written requirements are the right ones</span></td></tr>
+      <tr><td>User story / Acceptance criteria</td><td>As a role, I want goal, so that benefit</td><td><span class="l-th">Given / When / Then ที่วัดได้</span><span class="l-en">Measurable Given / When / Then</span></td></tr>
+      <tr><td>«include» / «extend»</td><td><span class="l-th">ทำเสมอ</span><span class="l-en">Always performed</span></td><td><span class="l-th">ทำเมื่อเข้าเงื่อนไข</span><span class="l-en">Performed only under a condition</span></td></tr>
+      <tr><td>Structural / Behavioural</td><td>Class, Component, Deployment, Object</td><td>Use-case, Activity, Sequence, State</td></tr>
+      <tr><td>Cohesion / Coupling</td><td><span class="l-th">ความเกาะกลุ่มในโมดูล อยากได้สูง</span><span class="l-en">Focus inside a module; want it high</span></td><td><span class="l-th">การพึ่งพาระหว่างโมดูล อยากได้ต่ำ</span><span class="l-en">Dependence between modules; want it low</span></td></tr>
+      <tr><td>MVC / MVP</td><td><span class="l-th">มีเส้น Model → View (View สังเกต Model)</span><span class="l-en">Has the Model → View edge (View observes Model)</span></td><td><span class="l-th">สายโซ่ View ⇄ Controller ⇄ Model ล้วน</span><span class="l-en">A pure View ⇄ Controller ⇄ Model chain</span></td></tr>
+      <tr><td>Component / Deployment diagram</td><td><span class="l-th">ชิ้นส่วนและ interface ที่ต่อกัน</span><span class="l-en">The pieces and the interfaces joining them</span></td><td><span class="l-th">เครื่องที่ชิ้นส่วนไปรันอยู่</span><span class="l-en">The machines the pieces run on</span></td></tr>
+      <tr><td>Heuristic evaluation / User testing</td><td><span class="l-th">ผู้เชี่ยวชาญตรวจเทียบหลักการ</span><span class="l-en">Experts inspect against principles</span></td><td><span class="l-th">ให้ผู้ใช้จริงลองทำงาน</span><span class="l-en">Real users try real tasks</span></td></tr>
+    </table></div>
+  </div>
+
+  <div class="stack">
+    <h2><span class="l-th">ลำดับการทบทวนที่แนะนำ</span><span class="l-en">Suggested review order</span></h2>
+    <div class="panel"><ol>
+      <li><span class="l-th">อ่านตารางคู่ที่คล้ายกันด้านบนให้จบ</span><span class="l-en">Read the look-alike pairs table above.</span></li>
+      <li><span class="l-th">เปิดแท็บ <b>ทบทวนตามบท</b> ไล่ทีละบท อ่าน "กับดัก" และลองตอบเช็กลิสต์ของอาจารย์ในใจก่อนดูคำตอบ</span><span class="l-en">Open <b>Review by chapter</b>. For each chapter read the traps, and answer the instructor's checklist in your head before opening the answers.</span></li>
+      <li><span class="l-th">เปิดแท็บ <b>อ่านรูป UML</b> ดูรูปทั้ง 7 แบบ แล้วลองวาดเองบนกระดาษ</span><span class="l-en">Open <b>Read UML</b>, study all 7 diagram types, then draw them yourself on paper.</span></li>
+      <li><span class="l-th">เปิดแท็บ <b>ฝึกข้อสอบ</b> ทำชุด "ของอาจารย์" 23 ข้อก่อน แล้วทำข้อเสริม จบด้วยชุด "ข้อที่เคยผิด"</span><span class="l-en">Open <b>Practice</b>. Do the instructor's 23 questions first, then the extra ones, and finish with the "Missed" set.</span></li>
+    </ol></div>
+  </div>
+
+  <div class="stack">
+    <h2><span class="l-th">เทคนิควันสอบ (จาก Review Guide)</span><span class="l-en">Exam-day tactics (from the Review Guide)</span></h2>
+    <div class="panel"><ul>
+      <li><span class="l-th"><b>อ่านโจทย์ให้จบ</b> โดยเฉพาะข้อที่มีคำว่า NOT, ไม่ใช่, incorrect, ผิด มีข้อกลับด้านหลายข้อ</span><span class="l-en"><b>Read the whole question</b>, especially ones with NOT or incorrect. Several items are inverted.</span></li>
+      <li><span class="l-th"><b>ระวังคำผิว ๆ</b> เช่น กริยา see หรือ เห็น ที่หลอกให้ตอบ FR ทั้งที่เป็น NFR ให้ดูเจตนาของประโยค</span><span class="l-en"><b>Beware surface words</b>, e.g. the verb "see" luring you to FR when it is an NFR. Read the sentence's intent.</span></li>
+      <li><span class="l-th"><b>ตัวเลือกยาวสุดหรือ all of the above ไม่ใช่คำตอบเสมอไป</b> ข้อสอบชุดนี้ตัดคำใบ้พวกนี้ออกแล้ว</span><span class="l-en"><b>The longest option or "all of the above" is not always right.</b> This paper has removed those tells.</span></li>
+      <li><span class="l-th"><b>ข้ออ่านรูป ดูสัญลักษณ์ก่อน</b> ◆ คือ decision, ○ ประกบ ⊃ คือ interface, กล่อง 3 มิติคือ node แล้วค่อยอ่านความหมาย</span><span class="l-en"><b>For diagram items, read the symbol first:</b> ◆ is a decision, ○ meeting ⊃ is an interface, a 3-D box is a node. Then read the meaning.</span></li>
+      <li><span class="l-th"><b>ทำข้อง่ายก่อน</b> กาข้อที่ลังเลไว้แล้วกลับมาทำ</span><span class="l-en"><b>Do the easy ones first.</b> Mark the ones you doubt and come back.</span></li>
+    </ul></div>
+  </div>
+
+  <p class="note"><span class="l-th">ที่มา: Midterm Review Guide ของอาจารย์เป็นโครงหลัก รายละเอียดเพิ่มมาจากสไลด์สัปดาห์ 1–5, คู่มือ M3 และ UX/UI primer ข้อฝึก 23 ข้อเป็นของอาจารย์พร้อมเฉลยของอาจารย์ ส่วนข้อเสริมแต่งขึ้นจากเนื้อหาเดียวกัน ไม่ใช่ข้อสอบจริง</span><span class="l-en">Sources: the instructor's Midterm Review Guide is the backbone. Extra detail comes from the Week 1–5 slides, the M3 guide and the UX/UI primer. 23 practice questions are the instructor's own, with the instructor's answers. The extra questions were written from the same material and are not real exam questions.</span></p>
+</section>
+
+<!-- ================= LEARN ================= -->
+<section id="tab-learn" class="stack-lg" hidden>
+  <div class="chips" id="modchips">
+    <button class="chip" data-mod="c1" aria-pressed="true"><span class="l-th">บท 1 SE ยุค AI</span><span class="l-en">Ch 1 SE &amp; AI</span></button>
+    <button class="chip" data-mod="c2" aria-pressed="false"><span class="l-th">บท 2 Process</span><span class="l-en">Ch 2 Process</span></button>
+    <button class="chip" data-mod="c3" aria-pressed="false"><span class="l-th">บท 3 Requirements</span><span class="l-en">Ch 3 Requirements</span></button>
+    <button class="chip" data-mod="c4" aria-pressed="false"><span class="l-th">บท 4 UML</span><span class="l-en">Ch 4 UML</span></button>
+    <button class="chip" data-mod="c5" aria-pressed="false"><span class="l-th">บท 5 Design</span><span class="l-en">Ch 5 Design</span></button>
+    <button class="chip" data-mod="c6" aria-pressed="false"><span class="l-th">บท 5+ UX/UI</span><span class="l-en">Ch 5+ UX/UI</span></button>
+  </div>
+
+  <!-- ---------- CH 1 ---------- -->
+  <div class="mod stack" id="mod-c1" data-m="c1">
+    <h2><span class="l-th">บท 1 Software Engineering ในยุค AI</span><span class="l-en">Chapter 1 Software Engineering in the AI era</span> <small class="tag"><span class="l-th">9 ข้อ</span><span class="l-en">9 Qs</span></small></h2>
+    <p><span class="l-th">SE คือการสร้างซอฟต์แวร์อย่างมีระเบียบวินัยให้คนอื่นใช้ได้นาน ไม่ใช่แค่เขียนโค้ดให้รันได้ AI ช่วยร่างได้ แต่คนยังต้องตัดสินใจ ตรวจ และรับผิดชอบ</span><span class="l-en">SE is the disciplined building of software that other people can use for years, not just code that runs. AI can draft, but a human still decides, verifies and is accountable.</span></p>
+
+    <details class="tp" open><summary><span class="l-th">SE คืออะไร</span><span class="l-en">What SE is</span></summary><div class="in">
+      <table class="terms">
+        <tr><th>English</th><th><span class="l-th">ความหมาย</span><span class="l-en">Meaning</span></th><th><span class="l-th">จำง่าย ๆ</span><span class="l-en">Remember</span></th></tr>
+        <tr><td>Software engineering</td><td><span class="l-th">แนวทาง engineering ที่มีระเบียบวินัยในการสร้างซอฟต์แวร์ รวมวางแผน วิเคราะห์ความต้องการ ออกแบบ ทดสอบ ส่งมอบ และดูแลต่อ</span><span class="l-en">A disciplined engineering approach to building software: planning, requirements analysis, design, testing, delivery and maintenance</span></td><td><span class="l-th">ไม่ใช่แค่เขียนโค้ด</span><span class="l-en">Not just coding</span></td></tr>
+        <tr><td>Systematic, disciplined, quantifiable</td><td><span class="l-th">3 คำในนิยามของ IEEE: เป็นระบบ (ทำซ้ำได้) มีวินัย (ทำตามแนวปฏิบัติสม่ำเสมอ) วัดผลได้</span><span class="l-en">The 3 words in the IEEE definition: a repeatable process, proven practices applied consistently, and measured quality and progress</span></td><td><span class="l-th">ใช้กับ development, operation, maintenance</span><span class="l-en">Applied to development, operation and maintenance</span></td></tr>
+        <tr><td>Program</td><td><span class="l-th">โค้ดที่รันได้ เราเขียนเอง ใช้เอง</span><span class="l-en">Code that runs; you wrote it and you are the only user</span></td><td><span class="l-th">สคริปต์เปลี่ยนชื่อไฟล์</span><span class="l-en">A script that renames your files</span></td></tr>
+        <tr><td>Software product</td><td><span class="l-th">ถูกทำให้คนอื่นใช้ เชื่อถือ และแก้ต่อได้อีกหลายปี</span><span class="l-en">Engineered so others can use it, trust it and change it for years</span></td><td><span class="l-th">คนแปลกหน้าพึ่งพามัน</span><span class="l-en">Strangers depend on it</span></td></tr>
+        <tr><td>Doghouse vs skyscraper</td><td><span class="l-th">Programming เหมือนสร้างบ้านหมา คนเดียวทำได้ ไม่ต้องวางแผน ส่วน engineering เหมือนสร้างตึกสูง ต้องมีทีม แบบแปลน และแผนบำรุงรักษา</span><span class="l-en">Programming is like building a doghouse: one person, little planning. Engineering is like building a skyscraper: a team, blueprints and planned maintenance</span></td><td><span class="l-th">ต่างกันที่ขนาด ทีม และผลเมื่อพัง</span><span class="l-en">The difference is scale, teamwork and the cost of failure</span></td></tr>
+        <tr><td>Maintenance</td><td><span class="l-th">การดูแลและแก้ไขหลังปล่อยใช้งาน ใช้ต้นทุนกว่า 60% ของทั้งอายุระบบ</span><span class="l-en">Fixing and changing the system after launch; over 60% of its lifetime cost</span></td><td><span class="l-th">ซอฟต์แวร์ไม่เคยเสร็จ</span><span class="l-en">Software is never done</span></td></tr>
+      </table>
+    </div></details>
+
+    <details class="tp"><summary><span class="l-th">ประเภทซอฟต์แวร์</span><span class="l-en">Types of software</span></summary><div class="in">
+      <table class="terms">
+        <tr><th>English</th><th><span class="l-th">ความหมาย</span><span class="l-en">Meaning</span></th><th><span class="l-th">ตัวอย่างหรือข้อจำกัด</span><span class="l-en">Example or constraints</span></th></tr>
+        <tr><td>Generic product</td><td><span class="l-th">ทำขายตลาดทั่วไป ผู้ขายคิด requirement เอง</span><span class="l-en">Built for the open market; the vendor imagines the requirements</span></td><td>Excel, LINE</td></tr>
+        <tr><td>Custom (bespoke) software</td><td><span class="l-th">สั่งทำให้ลูกค้ารายเดียว ลูกค้าเป็นคนบอกความต้องการ</span><span class="l-en">Built for one customer, who states the need</span></td><td><span class="l-th">ระบบคิวของโรงพยาบาลที่ใช้ในวอร์ดตัวเอง</span><span class="l-en">A hospital queue system used only in its own wards</span></td></tr>
+        <tr><td>Web</td><td><span class="l-th">รันในเบราว์เซอร์ อัปเดตให้ทุกคนพร้อมกัน</span><span class="l-en">Runs in a browser; updates for everyone at once</span></td><td><span class="l-th">การเชื่อมต่อ หลายเบราว์เซอร์ โหลดช่วงพีก</span><span class="l-en">Connectivity, many browsers, peak load</span></td></tr>
+        <tr><td>Mobile</td><td><span class="l-th">อยู่บนอุปกรณ์ส่วนตัว</span><span class="l-en">Lives on a personal device</span></td><td><span class="l-th">แบตเตอรี่ จอเล็ก ใช้ออฟไลน์ ต้องผ่าน app store</span><span class="l-en">Battery, small screen, offline use, app-store review</span></td></tr>
+        <tr><td>Embedded</td><td><span class="l-th">ฝังในรถ หม้อหุงข้าว เครื่องมือแพทย์</span><span class="l-en">Inside a car, a rice cooker, a medical device</span></td><td><span class="l-th">หน่วยความจำน้อย ต้องตอบทันที ความปลอดภัย แก้ยาก</span><span class="l-en">Tiny memory, real-time response, safety, hard to patch</span></td></tr>
+        <tr><td>Data &amp; AI</td><td><span class="l-th">พฤติกรรมมาจากข้อมูลด้วย ไม่ใช่โค้ดอย่างเดียว</span><span class="l-en">Behaviour comes partly from data, not only code</span></td><td><span class="l-th">คุณภาพข้อมูล ผลลัพธ์ไม่เหมือนเดิมทุกครั้ง ทดสอบยาก</span><span class="l-en">Data quality; outputs vary, so hard to test</span></td></tr>
+      </table>
+    </div></details>
+
+    <details class="tp"><summary><span class="l-th">Quality attributes และสาเหตุที่โปรเจกต์ล้มเหลว</span><span class="l-en">Quality attributes and why projects fail</span> <small><span class="l-th">ออกสอบบ่อย</span><span class="l-en">often tested</span></small></summary><div class="in">
+      <p><span class="l-th">"รันได้" ไม่ได้แปลว่า "มีคุณภาพ" โจทย์มักให้สถานการณ์แล้วถามว่าผิด quality attribute ใด</span><span class="l-en">"It runs" does not mean "it's good". Questions usually give a scenario and ask which quality attribute fails.</span></p>
+      <table class="terms">
+        <tr><th>English</th><th><span class="l-th">ความหมาย</span><span class="l-en">Meaning</span></th><th><span class="l-th">สถานการณ์ที่ผิดข้อนี้</span><span class="l-en">A scenario that violates it</span></th></tr>
+        <tr><td>Reliability</td><td><span class="l-th">ทำงานถูกต้องต่อเนื่อง ข้อมูลไม่หาย</span><span class="l-en">Keeps working correctly; no data loss</span></td><td><span class="l-th">แอปแครชแล้วงานที่บันทึกไว้หาย</span><span class="l-en">The app crashes and saved tasks are lost</span></td></tr>
+        <tr><td>Security</td><td><span class="l-th">เฉพาะผู้มีสิทธิ์เข้าถึงข้อมูลได้</span><span class="l-en">Only authorized people can access the data</span></td><td><span class="l-th">คนอื่นเห็นข้อมูลของเรา ข้อมูลรั่ว</span><span class="l-en">Others can see your data; a data leak</span></td></tr>
+        <tr><td>Maintainability</td><td><span class="l-th">นักพัฒนาคนถัดไปแก้ต่อได้</span><span class="l-en">The next developer can change it</span></td><td><span class="l-th">โค้ดอ่านยาก แก้นิดเดียวใช้เวลาหลายสัปดาห์</span><span class="l-en">Unreadable code; a small change takes weeks</span></td></tr>
+        <tr><td>Usability</td><td><span class="l-th">ผู้ใช้จริงใช้งานได้</span><span class="l-en">Real users can use it</span></td><td><span class="l-th">ผู้ใช้หาปุ่มไม่เจอ ใช้ไม่เป็น</span><span class="l-en">Users cannot find the button or work it out</span></td></tr>
+        <tr><td>Performance</td><td><span class="l-th">เร็วและใช้ทรัพยากรในระดับที่ยอมรับได้</span><span class="l-en">Acceptable speed and cost</span></td><td><span class="l-th">หน้าจอโหลดนานเกินไป</span><span class="l-en">The screen takes too long to load</span></td></tr>
+      </table>
+      <p><span class="l-th"><b>สาเหตุ (root cause) ที่โปรเจกต์ล้มเหลว:</b> requirement ไม่ชัดหรือเปลี่ยนตลอด · วางแผนหรือประเมินเวลาผิด · การสื่อสารในทีมพัง ส่วนส่งช้า งบบาน คุณภาพแย่ เป็นอาการ (symptom)</span><span class="l-en"><b>Root causes of project failure:</b> unclear or shifting requirements · bad planning or estimation · broken team communication. Late delivery, budget overrun and poor quality are symptoms.</span></p>
+    </div></details>
+
+    <details class="tp"><summary><span class="l-th">ยุค AI และกติกา AI-honesty</span><span class="l-en">The AI era and the AI-honesty rule</span> <small><span class="l-th">ออกสอบบ่อย</span><span class="l-en">often tested</span></small></summary><div class="in">
+      <table class="terms">
+        <tr><th>English</th><th><span class="l-th">ความหมาย</span><span class="l-en">Meaning</span></th><th><span class="l-th">จำง่าย ๆ</span><span class="l-en">Remember</span></th></tr>
+        <tr><td>AI-honesty rule</td><td><span class="l-th">ใช้ AI ได้ แต่ต้อง log–verify–explain</span><span class="l-en">You may use AI, but you must log–verify–explain</span></td><td><span class="l-th">ไม่ได้แปลว่าห้ามใช้ AI</span><span class="l-en">It does not mean "no AI"</span></td></tr>
+        <tr><td>Log</td><td><span class="l-th">บันทึกว่าใช้ AI ตรงไหน ถามอะไร ได้อะไร แก้อะไร</span><span class="l-en">Record where you used AI, what you asked, what it produced, what you changed</span></td><td>AI Usage Log</td></tr>
+        <tr><td>Verify</td><td><span class="l-th">ตรวจและทดสอบว่าผลลัพธ์ถูก</span><span class="l-en">Check and test that the output is correct</span></td><td><span class="l-th">คอมไพล์ผ่านไม่ได้แปลว่าถูก</span><span class="l-en">Compiling is not the same as correct</span></td></tr>
+        <tr><td>Explain</td><td><span class="l-th">อธิบายได้ว่าโค้ดทำงานอย่างไร</span><span class="l-en">Be able to explain how the code works</span></td><td><span class="l-th">อธิบายไม่ได้ ส่วนนั้นได้ศูนย์</span><span class="l-en">If you cannot explain it, that part scores zero</span></td></tr>
+        <tr><td>What stays human</td><td><span class="l-th">การตัดสินใจ ตรวจสอบความถูกต้อง รับผิดชอบผลลัพธ์ และจริยธรรม</span><span class="l-en">Judgment, verifying correctness, accountability and ethics</span></td><td><span class="l-th">AI ร่าง คนตัดสินและรับผิดชอบ</span><span class="l-en">AI drafts; the human decides and answers for it</span></td></tr>
+        <tr><td>Developer roles in the AI era</td><td><span class="l-th">Coder (AI ช่วยส่วนนี้), Reviewer, System Orchestrator, Risk Owner</span><span class="l-en">Coder (AI assists here), Reviewer, System Orchestrator, Risk Owner</span></td><td><span class="l-th">จากคนเขียนโค้ดเป็นคนรับผิดชอบผลลัพธ์</span><span class="l-en">From writing code to owning outcomes</span></td></tr>
+        <tr><td>Software process at a glance (Wk1)</td><td>Understand needs → Design → Build → Validate → Evolve</td><td><span class="l-th">ต่างจาก 4 activities ของบท 2 ที่รวม Design กับ Build เป็น Development</span><span class="l-en">Chapter 2's four activities merge Design and Build into Development</span></td></tr>
+      </table>
+      <p><span class="l-th"><b>3 สิ่งที่คนทำได้และ AI แทนไม่ได้:</b> Empathy &amp; UX (เข้าใจความรู้สึกผู้ใช้) · Requirements analysis (หาความต้องการจริง) · Architectural decisions (เลือก trade-off และรับผลที่ตามมา)</span><span class="l-en"><b>Three things only a human can own:</b> Empathy &amp; UX (feeling what users feel) · Requirements analysis (finding the true need) · Architectural decisions (choosing trade-offs and owning the consequences)</span></p>
+    </div></details>
+
+    <div class="trap"><strong><span class="l-th">กับดัก</span><span class="l-en">Traps</span></strong>
+      <ul>
+        <li><span class="l-th">"รันได้" ≠ "มีคุณภาพ": ข้อมูลรั่ว = security · ข้อมูลหาย = reliability</span><span class="l-en">"It runs" ≠ "it's good": data leak = security · data loss = reliability</span></li>
+        <li><span class="l-th">คิดว่า AI-honesty = ห้ามใช้ AI ที่จริงคือใช้ได้ แต่ต้อง log–verify–explain</span><span class="l-en">Thinking AI-honesty means "no AI". It means use it, but log–verify–explain.</span></li>
+      </ul>
+    </div>
+
+    <details class="tp"><summary><span class="l-th">เช็กลิสต์ของอาจารย์ พร้อมคำตอบ</span><span class="l-en">The instructor's checklist, with answers</span></summary><div class="in"><dl class="check">
+      <dt><span class="l-th">SE ต่างจาก "การเขียนโค้ดเฉย ๆ" อย่างไร</span><span class="l-en">How does SE differ from "just coding"?</span></dt>
+      <dd><span class="l-th">การเขียนโค้ดคือทำให้โปรแกรมรันได้ SE ครอบคลุมทั้งกระบวนการ: วางแผน วิเคราะห์ความต้องการ ออกแบบ ทดสอบ ส่งมอบ และดูแลต่อ ทำเป็นทีม เพื่อให้คนอื่นใช้และแก้ต่อได้นานหลายปี</span><span class="l-en">Coding makes a program run. SE covers the whole process: planning, requirements, design, testing, delivery and maintenance, done as a team so others can use and change the software for years.</span></dd>
+      <dt><span class="l-th">ยกตัวอย่าง generic กับ custom software</span><span class="l-en">Give an example of generic vs custom software</span></dt>
+      <dd><span class="l-th">Generic: Excel, LINE ขายให้ใครก็ได้ Custom: ระบบคิวที่โรงพยาบาลจ้างทำเพื่อใช้ในวอร์ดของตัวเอง</span><span class="l-en">Generic: Excel, LINE, sold to anyone. Custom: a queue system a hospital commissions for its own wards.</span></dd>
+      <dt><span class="l-th">จับคู่สถานการณ์กับ quality attribute ที่ถูกละเมิด</span><span class="l-en">Match a scenario to the quality attribute it violates</span></dt>
+      <dd><span class="l-th">ข้อมูลหายหลังแครช = reliability · คนอื่นเห็นข้อมูลเรา = security · แก้โค้ดยาก = maintainability · ใช้ไม่เป็น = usability · ช้า = performance</span><span class="l-en">Data lost after a crash = reliability · others see your data = security · hard to change = maintainability · cannot work out how to use it = usability · slow = performance</span></dd>
+      <dt><span class="l-th">ท่อง log–verify–explain และอธิบายแต่ละคำ</span><span class="l-en">Recite log–verify–explain and explain each word</span></dt>
+      <dd><span class="l-th">Log บันทึกว่าใช้ AI ตรงไหน · Verify ตรวจและทดสอบว่าถูก · Explain อธิบายได้ว่าโค้ดทำงานอย่างไร</span><span class="l-en">Log: record where you used AI · Verify: check and test that it is correct · Explain: be able to say how the code works</span></dd>
+    </dl></div></details>
+  </div>
+
+  <!-- ---------- CH 2 ---------- -->
+  <div class="mod stack" id="mod-c2" data-m="c2" hidden>
+    <h2><span class="l-th">บท 2 Software Process / SDLC / Agile</span><span class="l-en">Chapter 2 Software Process / SDLC / Agile</span> <small class="tag"><span class="l-th">11 ข้อ</span><span class="l-en">11 Qs</span></small></h2>
+    <p><span class="l-th">ทุกกระบวนการทำงาน 4 อย่างเหมือนกัน ต่างกันที่จังหวะ Waterfall ทำทีละเฟสจนครบ ส่วน Agile ทำเป็นรอบสั้น ๆ แล้วปรับตาม feedback</span><span class="l-en">Every process does the same four kinds of work; they differ in rhythm. Waterfall finishes one phase at a time. Agile works in short cycles and adapts to feedback.</span></p>
+    <div class="flow"><span class="s">Specification</span><i>→</i><span class="s">Development</span><i>→</i><span class="s">Validation</span><i>→</i><span class="s">Evolution</span></div>
+
+    <details class="tp" open><summary><span class="l-th">4 กิจกรรมพื้นฐาน (Sommerville)</span><span class="l-en">The four fundamental activities (Sommerville)</span></summary><div class="in">
+      <table class="terms">
+        <tr><th>English</th><th><span class="l-th">ความหมาย</span><span class="l-en">Meaning</span></th><th><span class="l-th">จำง่าย ๆ</span><span class="l-en">Remember</span></th></tr>
+        <tr><td>Specification</td><td><span class="l-th">กำหนดว่าระบบต้องให้บริการอะไร และมีข้อจำกัดอะไร</span><span class="l-en">Define what services the system must provide and its constraints</span></td><td>defining: the what</td></tr>
+        <tr><td>Development</td><td><span class="l-th">ออกแบบและสร้างระบบ (design + implementation)</span><span class="l-en">Design and build the system (design + implementation)</span></td><td>building</td></tr>
+        <tr><td>Validation</td><td><span class="l-th">ตรวจว่าระบบตรง spec และตรงความต้องการของลูกค้า</span><span class="l-en">Check the system meets its spec and the customer's expectations</span></td><td>checking (V&amp;V)</td></tr>
+        <tr><td>Evolution</td><td><span class="l-th">แก้และปรับระบบหลังใช้งานจริง</span><span class="l-en">Change the system after it goes into use</span></td><td><span class="l-th">changing ซอฟต์แวร์ไม่เคยเสร็จ</span><span class="l-en">changing: software is never done</span></td></tr>
+        <tr><td>Verification</td><td><span class="l-th">Are we building it right? ตรงตาม spec ไหม มีบั๊กไหม</span><span class="l-en">Are we building it right? Does it meet the spec; are there bugs?</span></td><td><span class="l-th">สร้างถูกวิธี</span><span class="l-en">Built correctly</span></td></tr>
+        <tr><td>Validation (V&amp;V)</td><td><span class="l-th">Are we building the right thing? แก้ปัญหาผู้ใช้ได้จริงไหม</span><span class="l-en">Are we building the right thing? Does it solve the user's problem?</span></td><td><span class="l-th">สร้างสิ่งที่ถูก</span><span class="l-en">The right product</span></td></tr>
+        <tr><td>Technical debt</td><td><span class="l-th">ทางลัดที่ทำตอนพัฒนาเพื่อประหยัดเวลา แต่ทำให้ค่าบำรุงรักษาในอนาคตแพงขึ้น</span><span class="l-en">Shortcuts taken to save time now that make future maintenance cost more</span></td><td></td></tr>
+        <tr><td>SDLC</td><td><span class="l-th">วงจรชีวิตการพัฒนาซอฟต์แวร์ ตั้งแต่เริ่มคิดจนถึงเลิกใช้ (conception through retirement)</span><span class="l-en">Software development life cycle: from conception through retirement</span></td><td><span class="l-th">Deploy ไม่ใช่เส้นชัย</span><span class="l-en">Deployment is not the finish line</span></td></tr>
+      </table>
+      <p><span class="l-th"><b>ประเภทการบำรุงรักษา:</b> Corrective แก้ข้อผิดพลาด · Adaptive ปรับให้เข้ากับสภาพแวดล้อมใหม่ เช่น OS ใหม่ · Perfective ปรับปรุงให้ดีขึ้น</span><span class="l-en"><b>Types of maintenance:</b> Corrective fixes faults · Adaptive adjusts to a new environment such as a new OS · Perfective improves performance or maintainability</span></p>
+    </div></details>
+
+    <details class="tp"><summary>Plan-driven, Waterfall, Incremental <small><span class="l-th">ออกสอบบ่อย</span><span class="l-en">often tested</span></small></summary><div class="in">
+      <table class="terms">
+        <tr><th>English</th><th><span class="l-th">ความหมาย</span><span class="l-en">Meaning</span></th><th><span class="l-th">เหมาะเมื่อ</span><span class="l-en">Fits when</span></th></tr>
+        <tr><td>Plan-driven</td><td><span class="l-th">วางแผนล่วงหน้าเป็นเฟส พึ่งเอกสารชัดเจน</span><span class="l-en">Phases planned up front; relies on explicit documents</span></td><td><span class="l-th">ระบบใหญ่ safety-critical ทีมกระจาย</span><span class="l-en">Large or safety-critical systems, distributed teams</span></td></tr>
+        <tr><td>Agile</td><td><span class="l-th">ทำเป็นรอบสั้น ๆ ส่งของที่ใช้ได้บ่อย ๆ ปรับตาม feedback ทำงานใกล้ชิดผู้ใช้</span><span class="l-en">Short cycles, working software shipped often, adapting to feedback, close to users</span></td><td><span class="l-th">ทีมเล็ก ของยังเปลี่ยน ลูกค้าพร้อมมีส่วนร่วม</span><span class="l-en">Small team, evolving product, an involved customer</span></td></tr>
+        <tr><td>Waterfall</td><td><span class="l-th">ทำทีละเฟสให้จบก่อนไปเฟสถัดไป (Big Design Up Front)</span><span class="l-en">Finish each phase before the next (Big Design Up Front)</span></td><td><span class="l-th">requirement ชัด นิ่ง เข้าใจครบตั้งแต่ต้น ขอบเขตตายตัว ต้องมีเอกสารหรือการรับรอง</span><span class="l-en">Requirements are clear, stable and understood up front; fixed scope; documents or certification needed</span></td></tr>
+        <tr><td>Incremental</td><td><span class="l-th">แบ่งผลิตภัณฑ์เป็นส่วน ส่งทีละก้อนที่ใช้ได้ เอาของมีคุณค่าที่สุดก่อน</span><span class="l-en">Split the product and ship one usable slice at a time, most valuable first</span></td><td><span class="l-th">ซอฟต์แวร์ธุรกิจ สตาร์ทอัพ requirement เปลี่ยนเร็ว</span><span class="l-en">Business software, startups, fast-changing requirements</span></td></tr>
+        <tr><td>MVP</td><td><span class="l-th">ผลิตภัณฑ์ขั้นต่ำที่ใช้ได้ ส่งฟีเจอร์สำคัญก่อน</span><span class="l-en">Minimum viable product: ship the key feature first</span></td><td><span class="l-th">StudyMate ส่งการเตือนก่อน รายงานทีหลัง</span><span class="l-en">StudyMate ships reminders first, reports later</span></td></tr>
+        <tr><td>Reuse-oriented</td><td><span class="l-th">ประกอบระบบจากชิ้นส่วนที่มีอยู่แล้ว เช่น web services, COTS, open-source</span><span class="l-en">Assemble the system from existing parts: web services, COTS, open source</span></td><td><span class="l-th">เร็วและถูก แต่เสียการควบคุม</span><span class="l-en">Fast and cheap, but you lose control</span></td></tr>
+        <tr><td>V-Model / Spiral / Prototype</td><td><span class="l-th">V-Model จับคู่ทุกเฟสสร้างกับเฟสทดสอบ · Spiral เน้นจัดการความเสี่ยงทุกรอบ · Prototype สร้างต้นแบบเพื่อเรียนรู้</span><span class="l-en">V-Model pairs each build phase with a test phase · Spiral puts risk first in every loop · Prototype builds a model to learn</span></td><td><span class="l-th">เครื่องมือแพทย์ใช้ V · AI ที่ยังไม่แน่ใจใช้ Prototype</span><span class="l-en">Medical device: V · unproven AI: prototype</span></td></tr>
+      </table>
+      <p class="note"><span class="l-th">Waterfall: ข้อดีคือ milestone ชัด จัดการง่าย เอกสารดี ข้อเสียคือเปลี่ยนแปลงแพง และกว่าจะได้ของที่ใช้ได้ก็ช้า · Incremental: ข้อดีคือได้ feedback เร็ว เสี่ยงน้อย ข้อเสียคือโครงสร้างอาจเสื่อมถ้าไม่ดูแล</span><span class="l-en">Waterfall: clear milestones, easy to manage, good documents; but change is expensive and working software arrives late · Incremental: early feedback and lower risk; but the structure can degrade if nobody looks after it</span></p>
+    </div></details>
+
+    <details class="tp"><summary>Agile Manifesto</summary><div class="in">
+      <table class="terms">
+        <tr><th><span class="l-th">ให้ค่ามากกว่า</span><span class="l-en">Valued more</span></th><th><span class="l-th">เหนือกว่า</span><span class="l-en">Over</span></th><th></th></tr>
+        <tr><td>Individuals and interactions</td><td>processes and tools</td><td><span class="l-th">คนและการพูดคุย</span><span class="l-en">People and conversation</span></td></tr>
+        <tr><td>Working software</td><td>comprehensive documentation</td><td><span class="l-th">ของที่ใช้ได้จริง</span><span class="l-en">Something that runs</span></td></tr>
+        <tr><td>Customer collaboration</td><td>contract negotiation</td><td><span class="l-th">ร่วมมือกับลูกค้า</span><span class="l-en">Working with the customer</span></td></tr>
+        <tr><td>Responding to change</td><td>following a plan</td><td><span class="l-th">ตอบสนองการเปลี่ยนแปลง</span><span class="l-en">Adapting to change</span></td></tr>
+      </table>
+      <p><span class="l-th">ของทางขวาก็ยังมีค่า แค่ให้น้ำหนักทางซ้ายมากกว่า Agile จึงไม่ได้แปลว่าไม่มีเอกสารหรือไม่มีแผน แต่มี "เท่าที่จำเป็น"</span><span class="l-en">The items on the right still have value; the left ones are valued more. So Agile does not mean no documents or no plan. It means "just enough".</span></p>
+    </div></details>
+
+    <details class="tp"><summary>Scrum: roles, artifacts, events <small><span class="l-th">ออกสอบบ่อย</span><span class="l-en">often tested</span></small></summary><div class="in">
+      <table class="terms">
+        <tr><th>English</th><th><span class="l-th">ทำอะไร</span><span class="l-en">What it does</span></th><th><span class="l-th">ประเภท</span><span class="l-en">Kind</span></th></tr>
+        <tr><td>Product Owner</td><td><span class="l-th">เป็นตัวแทนคุณค่าที่จะสร้าง จัดลำดับความสำคัญของ Product Backlog</span><span class="l-en">Represents the value to build; orders and prioritizes the Product Backlog</span></td><td>Role</td></tr>
+        <tr><td>Scrum Master</td><td><span class="l-th">ดูแลกระบวนการ ขจัดอุปสรรคให้ทีม ไม่ได้สั่งลำดับงาน</span><span class="l-en">Guards the process and removes blockers; does not set priorities</span></td><td>Role</td></tr>
+        <tr><td>Developers</td><td><span class="l-th">ทีมที่สร้าง increment จริง จัดการงานกันเอง</span><span class="l-en">The self-organizing team that builds the increment</span></td><td>Role</td></tr>
+        <tr><td>Product Backlog</td><td><span class="l-th">รายการงานทั้งหมดที่เรียงตามความสำคัญ</span><span class="l-en">The ordered list of all the work</span></td><td>Artifact</td></tr>
+        <tr><td>Sprint Backlog</td><td><span class="l-th">งานที่เลือกมาทำใน sprint นี้</span><span class="l-en">The work selected for this sprint</span></td><td>Artifact</td></tr>
+        <tr><td>Increment</td><td><span class="l-th">ผลงานที่ใช้ได้จริงเมื่อจบ sprint</span><span class="l-en">The usable result at the end of a sprint</span></td><td>Artifact</td></tr>
+        <tr><td>Sprint</td><td><span class="l-th">รอบทำงานที่กำหนดเวลาตายตัว ราว 2–4 สัปดาห์</span><span class="l-en">A fixed-length cycle of about 2–4 weeks</span></td><td>Event</td></tr>
+        <tr><td>Sprint Planning</td><td><span class="l-th">ตั้งเป้าและเลือกงานของ sprint</span><span class="l-en">Set the goal and select the work for the sprint</span></td><td>Event</td></tr>
+        <tr><td>Daily Scrum</td><td><span class="l-th">ประชุมสั้นประจำวันเพื่อซิงก์งาน</span><span class="l-en">A short daily sync</span></td><td>Event</td></tr>
+        <tr><td>Sprint Review</td><td><span class="l-th">สาธิต increment ให้ stakeholder ดูและรับ feedback เรื่องผลิตภัณฑ์</span><span class="l-en">Show the increment to stakeholders and get feedback on the product</span></td><td>Event</td></tr>
+        <tr><td>Sprint Retrospective</td><td><span class="l-th">ทบทวนว่าทีมทำงานกันอย่างไร แล้วเลือกสิ่งที่จะปรับใน sprint หน้า</span><span class="l-en">Reflect on how the team worked and pick improvements for the next sprint</span></td><td>Event</td></tr>
+      </table>
+    </div></details>
+
+    <div class="trap"><strong><span class="l-th">กับดัก</span><span class="l-en">Traps</span></strong>
+      <ul>
+        <li><span class="l-th">สลับ Product Owner กับ Scrum Master: คนจัดลำดับ backlog คือ Product Owner</span><span class="l-en">Swapping Product Owner and Scrum Master: the one who orders the backlog is the Product Owner.</span></li>
+        <li><span class="l-th">คิดว่า Retrospective รีวิวของที่ทำเสร็จ ที่จริงรีวิวกระบวนการ ส่วน Sprint Review ดูผลิตภัณฑ์</span><span class="l-en">Thinking the Retrospective reviews the finished product. It reviews the process; the Sprint Review looks at the product.</span></li>
+        <li><span class="l-th">เชื่อว่า Agile = ไม่ต้องมีเอกสารหรือแผน</span><span class="l-en">Believing Agile = no documents or plans.</span></li>
+        <li><span class="l-th">เลือก Waterfall กับงานที่ requirement เปลี่ยนบ่อย</span><span class="l-en">Choosing Waterfall for work whose requirements change often.</span></li>
+      </ul>
+    </div>
+
+    <details class="tp"><summary><span class="l-th">เช็กลิสต์ของอาจารย์ พร้อมคำตอบ</span><span class="l-en">The instructor's checklist, with answers</span></summary><div class="in"><dl class="check">
+      <dt><span class="l-th">เรียง 4 activities ให้ถูกลำดับ</span><span class="l-en">Order the 4 activities correctly</span></dt>
+      <dd>Specification → Development → Validation → Evolution</dd>
+      <dt><span class="l-th">Waterfall เหมาะและไม่เหมาะกับสถานการณ์แบบไหน</span><span class="l-en">When does Waterfall fit, and when not?</span></dt>
+      <dd><span class="l-th">เหมาะ: requirement ชัดและนิ่ง ขอบเขตตายตัว มีกฎระเบียบหรือต้องรับรอง เช่น สัญญาภาครัฐ เครื่องมือแพทย์ · ไม่เหมาะ: สตาร์ทอัพ MVP ที่ฟีเจอร์เปลี่ยนทุกสัปดาห์ งานวิจัยที่โจทย์ยังไม่ชัด hackathon</span><span class="l-en">Fits: clear and stable requirements, fixed scope, regulation or certification, e.g. a government contract or a medical device · Does not fit: a startup MVP whose features change weekly, a research prototype, a hackathon</span></dd>
+      <dt><span class="l-th">จับคู่ Scrum role, artifact, event ให้ครบ</span><span class="l-en">Match every Scrum role, artifact and event</span></dt>
+      <dd>Roles: Product Owner, Scrum Master, Developers · Artifacts: Product Backlog, Sprint Backlog, Increment · Events: Sprint, Sprint Planning, Daily Scrum, Sprint Review, Sprint Retrospective</dd>
+      <dt><span class="l-th">จุดประสงค์ของ Retrospective</span><span class="l-en">The purpose of the Retrospective</span></dt>
+      <dd><span class="l-th">ทบทวนว่าทีมทำงานกันอย่างไร แล้วเลือกสิ่งที่จะปรับปรุงในรอบหน้า ไม่ใช่การรีวิวผลิตภัณฑ์</span><span class="l-en">Reflect on how the team worked and choose improvements for the next sprint. It is not a review of the product.</span></dd>
+    </dl></div></details>
+  </div>
+
+  <!-- ---------- CH 3 ---------- -->
+  <div class="mod stack" id="mod-c3" data-m="c3" hidden>
+    <h2><span class="l-th">บท 3 Requirements &amp; SRS</span><span class="l-en">Chapter 3 Requirements &amp; SRS</span> <small class="tag"><span class="l-th">11 ข้อ</span><span class="l-en">11 Qs</span></small></h2>
+    <p><span class="l-th">Requirement คือข้อตกลงที่ทดสอบได้ ไม่ใช่ความปรารถนา ต้องแยกให้ออกว่าข้อไหนคือสิ่งที่ระบบทำ (FR) ข้อไหนคือคุณภาพ (NFR) และข้อไหนวัดไม่ได้</span><span class="l-en">A requirement is a testable contract, not a wish. Tell apart what the system does (FR), how well it does it (NFR), and statements that cannot be measured.</span></p>
+    <div class="flow"><span class="s">Elicitation</span><i>→</i><span class="s">Analysis</span><i>→</i><span class="s">Specification</span><i>→</i><span class="s">Validation</span></div>
+
+    <details class="tp" open><summary><span class="l-th">FR กับ NFR</span><span class="l-en">FR vs NFR</span> <small><span class="l-th">ออกสอบบ่อย</span><span class="l-en">often tested</span></small></summary><div class="in">
+      <table class="terms">
+        <tr><th>English</th><th><span class="l-th">ความหมาย</span><span class="l-en">Meaning</span></th><th><span class="l-th">ตัวอย่าง</span><span class="l-en">Example</span></th></tr>
+        <tr><td>Requirement</td><td><span class="l-th">เงื่อนไขหรือความสามารถที่ผู้ใช้ต้องการ เพื่อแก้ปัญหาหรือบรรลุเป้าหมาย</span><span class="l-en">A condition or capability a user needs to solve a problem or reach an objective</span></td><td><span class="l-th">เป็นข้อตกลงที่ทดสอบได้</span><span class="l-en">A testable contract</span></td></tr>
+        <tr><td>Functional requirement (FR)</td><td><span class="l-th">ระบบทำอะไร: ฟังก์ชันหรือพฤติกรรม</span><span class="l-en">What the system does: a function or behaviour</span></td><td><span class="l-th">ผู้ใช้ทำเครื่องหมายว่างานเสร็จได้</span><span class="l-en">The user can mark a task as done</span></td></tr>
+        <tr><td>Non-functional requirement (NFR)</td><td><span class="l-th">ระบบทำได้ดีแค่ไหน: ข้อจำกัดเชิงคุณภาพ</span><span class="l-en">How well it does it: a quality constraint</span></td><td><span class="l-th">ตอบภายใน 1 วินาที · พร้อมใช้ 99.9% · ข้อมูลถูกเข้ารหัส</span><span class="l-en">Responds within 1 second · 99.9% available · data encrypted</span></td></tr>
+        <tr><td>Security NFR</td><td><span class="l-th">ข้อจำกัดการเข้าถึงข้อมูล</span><span class="l-en">A limit on who can access data</span></td><td><span class="l-th">นักศึกษาเห็นได้เฉพาะงานของตัวเอง (NFR-5)</span><span class="l-en">A student can see only their own tasks (NFR-5)</span></td></tr>
+        <tr><td>User requirements</td><td><span class="l-th">ภาษาธรรมดาสำหรับลูกค้าและผู้ใช้ พูดถึงเป้าหมาย</span><span class="l-en">Plain language for customers and end-users; about goals</span></td><td><span class="l-th">ผู้จัดการและลูกค้าอ่าน</span><span class="l-en">Read by managers and clients</span></td></tr>
+        <tr><td>System requirements</td><td><span class="l-th">รายละเอียดที่มีหมายเลขกำกับ สำหรับนักออกแบบและนักพัฒนา</span><span class="l-en">Detailed, numbered statements for architects and developers</span></td><td><span class="l-th">วิศวกรอ่าน</span><span class="l-en">Read by engineers</span></td></tr>
+        <tr><td>NFR types</td><td><span class="l-th">Product (ของตัวซอฟต์แวร์), Organizational (กฎของลูกค้าหรือทีม), External (กฎหมาย จริยธรรม เช่น PDPA)</span><span class="l-en">Product (the software itself), Organizational (rules of the customer or team), External (law and ethics, e.g. PDPA)</span></td><td></td></tr>
+      </table>
+      <p class="note"><span class="l-th">วิธีแยก: ถามว่าประโยคนี้บอก "การกระทำที่ระบบทำได้" หรือบอก "เร็ว ปลอดภัย พร้อมใช้ ใช้ง่าย แค่ไหน" อย่าดูแค่กริยา คำว่า "เห็นได้เฉพาะของตัวเอง" มีกริยา เห็น แต่เจตนาคือจำกัดการเข้าถึง จึงเป็น NFR</span><span class="l-en">How to tell: ask whether the sentence states an action the system performs, or how fast, secure, available or easy it must be. Do not go by the verb alone. "Can see only their own" has the verb see, but its intent is to restrict access, so it is an NFR.</span></p>
+    </div></details>
+
+    <details class="tp"><summary><span class="l-th">Requirement ที่ดีต้องตรวจสอบได้</span><span class="l-en">A good requirement is verifiable</span></summary><div class="in">
+      <table class="terms">
+        <tr><th>English</th><th><span class="l-th">ความหมาย</span><span class="l-en">Meaning</span></th><th><span class="l-th">ตัวอย่าง</span><span class="l-en">Example</span></th></tr>
+        <tr><td>Verifiable requirement</td><td><span class="l-th">มีเกณฑ์ที่ test ผ่านหรือไม่ผ่านได้ เช่น ตัวเลข สถานะ หรือใช่/ไม่ใช่</span><span class="l-en">Has a criterion a test can pass or fail: a number, a state, or yes/no</span></td><td><span class="l-th">การเตือนต้องมาถึงภายใน 1 นาทีจากเวลากำหนด</span><span class="l-en">A reminder must appear within one minute of its due time</span></td></tr>
+        <tr><td>Non-verifiable requirement</td><td><span class="l-th">ไม่มีเกณฑ์วัด จึงเป็น requirement ที่ไม่ดี</span><span class="l-en">Has no measurable threshold, so it is a weak requirement</span></td><td><span class="l-th">ระบบควรโหลดเร็วมากเพื่อให้ผู้ใช้รู้สึกพอใจ</span><span class="l-en">The system should load very quickly so users feel satisfied</span></td></tr>
+        <tr><td>User story</td><td><span class="l-th">As a «role», I want «goal», so that «benefit» ต้องครบทั้ง 3 ส่วน</span><span class="l-en">As a «role», I want «goal», so that «benefit». All three parts are required.</span></td><td>As a student, I want a reminder 1 day before a deadline, so that I submit on time.</td></tr>
+        <tr><td>Acceptance criteria</td><td><span class="l-th">เกณฑ์ผ่านที่วัดได้ เขียนแบบ Given / When / Then</span><span class="l-en">Measurable pass conditions, written as Given / When / Then</span></td><td><span class="l-th">Given งานยังเปิดอยู่ When เหลือ 1 วันก่อนกำหนด Then ระบบส่งการเตือน</span><span class="l-en">Given the task is open, When it is 1 day before due, Then the system sends a reminder</span></td></tr>
+        <tr><td>Edge case</td><td><span class="l-th">กรณีขอบที่ต้องระบุให้ครบ</span><span class="l-en">A boundary case that must be stated</span></td><td><span class="l-th">FR-3: งานที่ทำเสร็จแล้วจะไม่เตือน</span><span class="l-en">FR-3: a completed task does not trigger a reminder</span></td></tr>
+      </table>
+      <p><span class="l-th">คำต้องห้ามใน requirement: quickly, easy, smart, user-friendly, เร็วมาก, พอใจ ให้เปลี่ยนเป็นตัวเลขหรือเงื่อนไข</span><span class="l-en">Words to avoid in a requirement: quickly, easy, smart, user-friendly, very fast, satisfied. Replace them with a number or a condition.</span></p>
+    </div></details>
+
+    <details class="tp"><summary><span class="l-th">กิจกรรม requirement, SRS, out-of-scope</span><span class="l-en">Requirements activities, the SRS, out-of-scope</span></summary><div class="in">
+      <table class="terms">
+        <tr><th>English</th><th><span class="l-th">ความหมาย</span><span class="l-en">Meaning</span></th><th><span class="l-th">จำง่าย ๆ</span><span class="l-en">Remember</span></th></tr>
+        <tr><td>Elicitation</td><td><span class="l-th">ค้นหาความต้องการจาก stakeholder ด้วยการสัมภาษณ์ สังเกต อ่านเอกสาร</span><span class="l-en">Discover needs from stakeholders by interviewing, observing and reading documents</span></td><td>discovering</td></tr>
+        <tr><td>Analysis</td><td><span class="l-th">ตรวจความเป็นไปได้ ความขัดแย้ง ความสอดคล้อง จัดกลุ่มและจัดลำดับ</span><span class="l-en">Check feasibility, conflicts and consistency; group and prioritize</span></td><td>checking</td></tr>
+        <tr><td>Specification</td><td><span class="l-th">เขียน requirement เป็นเอกสาร</span><span class="l-en">Write the requirements down</span></td><td>writing</td></tr>
+        <tr><td>Validation (requirements)</td><td><span class="l-th">ตรวจว่า requirement ที่เขียนถูกต้อง ครบ ไม่ขัดกัน ทำได้จริง และทดสอบได้</span><span class="l-en">Check the written requirements are valid, complete, consistent, realistic and verifiable</span></td><td>agreeing</td></tr>
+        <tr><td>Requirements management</td><td><span class="l-th">ควบคุมการเปลี่ยนแปลง ขอบเขต และการสืบย้อน</span><span class="l-en">Control change, scope and tracing</span></td><td><span class="l-th">ทำคู่ขนานไปตลอด</span><span class="l-en">Runs alongside the whole time</span></td></tr>
+        <tr><td>SRS</td><td><span class="l-th">เอกสารข้อตกลงกลางที่ระบุว่าระบบต้องทำอะไร ให้ทุกฝ่ายอ้างอิงตรงกัน</span><span class="l-en">The single agreed reference of what the system must do</span></td><td><span class="l-th">ไม่ใช่คู่มือผู้ใช้ ไม่ใช่แผนโค้ด</span><span class="l-en">Not a user manual, not a code plan</span></td></tr>
+        <tr><td>Out-of-scope</td><td><span class="l-th">สิ่งที่ระบุไว้ว่าระบบจะไม่ทำ</span><span class="l-en">What the system will NOT do</span></td><td><span class="l-th">กัน scope creep</span><span class="l-en">Prevents scope creep</span></td></tr>
+        <tr><td>Scope creep</td><td><span class="l-th">ขอบเขตงานบานออกไปเรื่อย ๆ</span><span class="l-en">The scope keeps growing without control</span></td><td></td></tr>
+        <tr><td>Traceability</td><td><span class="l-th">ทุก requirement สืบไปถึงการออกแบบ โค้ด และ test ได้</span><span class="l-en">Each requirement links to its design, code and tests</span></td><td></td></tr>
+      </table>
+      <p><span class="l-th"><b>AI-First:</b> ให้ AI ร่าง user story ได้ แต่ต้องตรวจกับหลักฐานจริง (บันทึกสัมภาษณ์ ผู้ใช้จริง) แล้วคัดและแก้ ไม่ใช่สั่ง AI ให้เขียน requirement จากอากาศ</span><span class="l-en"><b>AI-First:</b> AI may draft user stories, but verify them against real evidence (interview notes, real users), then cut and fix. Never ask AI to write requirements from nothing.</span></p>
+    </div></details>
+
+    <div class="trap"><strong><span class="l-th">กับดัก</span><span class="l-en">Traps</span></strong>
+      <ul>
+        <li><span class="l-th">เห็นกริยา เห็น หรือ ดู แล้วรีบตอบ FR: "เห็นได้เฉพาะของตัวเอง" คือข้อจำกัดความปลอดภัย = NFR</span><span class="l-en">Seeing the verb "see" and answering FR: "see only your own" is a security constraint = NFR.</span></li>
+        <li><span class="l-th">เลือก requirement ที่ฟังดูดีแต่วัดไม่ได้ เช่น เร็วมาก พอใจ ว่าเป็นข้อดี</span><span class="l-en">Picking a nice-sounding but unmeasurable requirement ("very fast", "satisfied") as the good one.</span></li>
+        <li><span class="l-th">สับสน SRS กับคู่มือผู้ใช้หรือเอกสารออกแบบโค้ด</span><span class="l-en">Confusing the SRS with a user manual or a code-design document.</span></li>
+        <li><span class="l-th">คิดว่า AI-First = ให้ AI เขียน requirement เสร็จแล้วใช้เลย</span><span class="l-en">Thinking AI-First = accept the AI's requirements as they are.</span></li>
+      </ul>
+    </div>
+
+    <details class="tp"><summary><span class="l-th">เช็กลิสต์ของอาจารย์ พร้อมคำตอบ</span><span class="l-en">The instructor's checklist, with answers</span></summary><div class="in"><dl class="check">
+      <dt><span class="l-th">แยก FR กับ NFR จากประโยคสถานการณ์</span><span class="l-en">Classify FR or NFR from a scenario sentence</span></dt>
+      <dd><span class="l-th">FR: ผู้ใช้เพิ่มงานได้ · ผู้ใช้ทำเครื่องหมายว่าเสร็จได้ · ระบบส่งการเตือน NFR: ภายใน 1 วินาที · available 99.9% · เข้ารหัสข้อมูล · เห็นได้เฉพาะงานของตัวเอง</span><span class="l-en">FR: the user can add a task · the user can mark it done · the system sends a reminder. NFR: within 1 second · 99.9% available · data encrypted · can see only their own tasks</span></dd>
+      <dt><span class="l-th">เขียน user story ตามฟอร์แมต role/goal/benefit</span><span class="l-en">Write a user story in role/goal/benefit form</span></dt>
+      <dd>As a student, I want a reminder 1 day before an open deadline, so that I submit on time.</dd>
+      <dt><span class="l-th">requirement ไหน verifiable และไม่ verifiable</span><span class="l-en">Which requirement is verifiable, and which is not?</span></dt>
+      <dd><span class="l-th">Verifiable: มีตัวเลขหรือเงื่อนไขชัด เช่น ภายใน 1 นาที Not verifiable: เร็วมาก ใช้ง่าย ผู้ใช้พอใจ</span><span class="l-en">Verifiable: has a clear number or condition, e.g. within 1 minute. Not verifiable: very fast, easy to use, users are satisfied.</span></dd>
+      <dt><span class="l-th">จุดประสงค์ของ SRS และ out-of-scope</span><span class="l-en">The purpose of the SRS and of out-of-scope</span></dt>
+      <dd><span class="l-th">SRS เป็นข้อตกลงกลางว่าระบบต้องทำอะไร Out-of-scope บอกสิ่งที่จะไม่ทำ เพื่อกัน scope creep</span><span class="l-en">The SRS is the agreed reference of what the system must do. Out-of-scope states what will not be built, to prevent scope creep.</span></dd>
+    </dl></div></details>
+  </div>
+
+  <!-- ---------- CH 4 ---------- -->
+  <div class="mod stack" id="mod-c4" data-m="c4" hidden>
+    <h2><span class="l-th">บท 4 UML Modeling</span><span class="l-en">Chapter 4 UML Modeling</span> <small class="tag"><span class="l-th">12 ข้อ</span><span class="l-en">12 Qs</span></small></h2>
+    <p><span class="l-th">UML เป็นชุดรูปมาตรฐานสำหรับสื่อสารการออกแบบ บทนี้ออกมากที่สุด และมีข้ออ่านรูป ดูรูปประกอบในแท็บ <a href="#uml">อ่านรูป UML</a></span><span class="l-en">UML is a standard set of diagrams for communicating design. This chapter has the most questions, including diagram-reading items. See the figures in the <a href="#uml">Read UML</a> tab.</span></p>
+
+    <details class="tp" open><summary><span class="l-th">UML และ 2 หมวด</span><span class="l-en">UML and its two families</span> <small><span class="l-th">ออกสอบบ่อย</span><span class="l-en">often tested</span></small></summary><div class="in">
+      <table class="terms">
+        <tr><th>Diagram</th><th><span class="l-th">ตอบคำถาม</span><span class="l-en">Answers</span></th><th><span class="l-th">หมวด</span><span class="l-en">Family</span></th></tr>
+        <tr><td>UML</td><td><span class="l-th">ภาษาวาดแบบจำลอง (visual modeling language) เพื่อสื่อสารการออกแบบ</span><span class="l-en">A visual modeling language for communicating design</span></td><td><span class="l-th">ไม่ใช่ภาษาโปรแกรม ไม่ใช่กระบวนการ</span><span class="l-en">Not a programming language, not a process</span></td></tr>
+        <tr><td>Use-case diagram</td><td><span class="l-th">actor ทำอะไรกับระบบได้บ้าง</span><span class="l-en">What can actors do with the system?</span></td><td>Behavioural</td></tr>
+        <tr><td>Activity diagram</td><td><span class="l-th">ขั้นตอนเรียงลำดับอย่างไร แยกทางตรงไหน</span><span class="l-en">In what order, with what branching?</span></td><td>Behavioural</td></tr>
+        <tr><td>Sequence diagram</td><td><span class="l-th">วัตถุใดส่งข้อความหาวัตถุใด ตามลำดับเวลา</span><span class="l-en">Which object sends which message, in time order?</span></td><td>Behavioural</td></tr>
+        <tr><td>State diagram</td><td><span class="l-th">สิ่งหนึ่งเปลี่ยนสถานะอย่างไร เช่น open → doing → done</span><span class="l-en">How one thing changes state, e.g. open → doing → done</span></td><td>Behavioural</td></tr>
+        <tr><td>Class diagram</td><td><span class="l-th">มีข้อมูลอะไร รูปร่างอย่างไร สัมพันธ์กันอย่างไร</span><span class="l-en">What data exists, its shape, and how it relates</span></td><td>Structural</td></tr>
+        <tr><td>Component diagram</td><td><span class="l-th">ชิ้นส่วนที่รันอยู่ต่อกันอย่างไร</span><span class="l-en">How the running pieces fit together</span></td><td>Structural</td></tr>
+        <tr><td>Deployment diagram</td><td><span class="l-th">แต่ละชิ้นรันอยู่บนเครื่องไหน</span><span class="l-en">Which machine each piece runs on</span></td><td>Structural</td></tr>
+      </table>
+      <p class="note"><span class="l-th">Structural = มีอะไรอยู่ อยู่ที่ไหน · Behavioural = ใครทำอะไร ลำดับใด</span><span class="l-en">Structural = what exists and where it lives · Behavioural = who does what, in what order</span></p>
+    </div></details>
+
+    <details class="tp"><summary>Use-case diagram <small><span class="l-th">ออกสอบบ่อย</span><span class="l-en">often tested</span></small></summary><div class="in">
+      <table class="terms">
+        <tr><th>English</th><th><span class="l-th">ความหมาย</span><span class="l-en">Meaning</span></th><th><span class="l-th">กฎ</span><span class="l-en">Rule</span></th></tr>
+        <tr><td>Actor</td><td><span class="l-th">ใครหรืออะไรที่อยู่นอกระบบและโต้ตอบกับระบบ เป็นบทบาท ไม่จำเป็นต้องเป็นคน</span><span class="l-en">Who or what is outside the system and interacts with it. A role, not always a person</span></td><td><span class="l-th">วาดเป็นคนแท่ง</span><span class="l-en">Drawn as a stick figure</span></td></tr>
+        <tr><td>Primary actor</td><td><span class="l-th">ผู้เริ่ม use case เพื่อให้ได้เป้าหมาย</span><span class="l-en">Starts the use case to reach a goal</span></td><td>Student, Customer</td></tr>
+        <tr><td>Secondary (system) actor</td><td><span class="l-th">ระบบภายนอกที่ use case ต้องพึ่ง แต่ไม่ได้เป็นผู้เริ่ม</span><span class="l-en">An external system the use case depends on, but which never starts it</span></td><td>«system» Payment Gateway</td></tr>
+        <tr><td>Use case</td><td><span class="l-th">สิ่งหนึ่งที่ระบบทำให้ actor วาดเป็นวงรี</span><span class="l-en">One thing the system does for an actor; drawn as an oval</span></td><td><span class="l-th">ตั้งชื่อ กริยา + นาม เช่น Add Task</span><span class="l-en">Named verb + noun, e.g. Add Task</span></td></tr>
+        <tr><td>Association</td><td><span class="l-th">เส้นทึบเชื่อม actor กับ use case</span><span class="l-en">A solid line joining an actor to a use case</span></td><td><span class="l-th">ใช้ระหว่าง actor กับ use case เท่านั้น</span><span class="l-en">Only between an actor and a use case</span></td></tr>
+        <tr><td>«include»</td><td><span class="l-th">base use case ทำ use case ที่ถูก include เสมอ ทุกครั้ง</span><span class="l-en">The base use case always performs the included one, every time</span></td><td><span class="l-th">ลูกศรประชี้จาก base ไป included · Checkout «include» Validate Cart</span><span class="l-en">Dashed arrow from base to included · Checkout «include» Validate Cart</span></td></tr>
+        <tr><td>«extend»</td><td><span class="l-th">use case เสริมที่ทำเมื่อเข้าเงื่อนไข base สมบูรณ์ได้เอง</span><span class="l-en">An optional use case that runs only under a condition; the base is complete without it</span></td><td><span class="l-th">ลูกศรประชี้จาก extension ไป base · Reserve Book «extend» Borrow Book</span><span class="l-en">Dashed arrow from extension to base · Reserve Book «extend» Borrow Book</span></td></tr>
+        <tr><td>System boundary</td><td><span class="l-th">กรอบสี่เหลี่ยมที่บอกขอบเขตของระบบ</span><span class="l-en">The rectangle marking the edge of the system</span></td><td><span class="l-th">actor อยู่นอกกรอบ</span><span class="l-en">Actors sit outside it</span></td></tr>
+      </table>
+      <p><span class="l-th">ทุก FR กลายเป็น use case อย่างน้อยหนึ่งอัน ส่วน NFR ไม่ปรากฏเป็น use case เพราะไม่ใช่สิ่งที่ผู้ใช้ทำ</span><span class="l-en">Every FR becomes at least one use case. NFRs never appear as use cases, because they are not things a user does.</span></p>
+    </div></details>
+
+    <details class="tp"><summary><span class="l-th">Class diagram และ Activity diagram</span><span class="l-en">Class diagram and Activity diagram</span></summary><div class="in">
+      <table class="terms">
+        <tr><th>English</th><th><span class="l-th">ความหมาย</span><span class="l-en">Meaning</span></th><th><span class="l-th">จำง่าย ๆ</span><span class="l-en">Remember</span></th></tr>
+        <tr><td>Class / entity</td><td><span class="l-th">กล่องที่มีชื่อ attributes และ methods</span><span class="l-en">A box with a name, attributes and methods</span></td><td><span class="l-th">คำนามใน FR เป็น class หรือ attribute</span><span class="l-en">Nouns in the FR become classes or attributes</span></td></tr>
+        <tr><td>Multiplicity</td><td><span class="l-th">จำนวนของความสัมพันธ์ เช่น 1, *, 1..*, 0..*</span><span class="l-en">How many of one side relate to the other: 1, *, 1..*, 0..*</span></td><td><span class="l-th">อ่านว่า one X has how many Y</span><span class="l-en">Read it as "one X has how many Y"</span></td></tr>
+        <tr><td>1 —— *</td><td><span class="l-th">หนึ่งต่อกลุ่ม: Student 1 คนมีหลาย Task และ Task หนึ่งเป็นของ Student คนเดียว</span><span class="l-en">One-to-many: one Student has many Tasks; each Task belongs to one Student</span></td><td><span class="l-th">ระวังอ่านกลับด้าน</span><span class="l-en">Do not read it backwards</span></td></tr>
+        <tr><td>Visibility</td><td>+ public · − private · # protected</td><td></td></tr>
+        <tr><td>Initial node</td><td><span class="l-th">● จุดเริ่มของ activity diagram</span><span class="l-en">● where an activity diagram starts</span></td><td></td></tr>
+        <tr><td>Final node</td><td><span class="l-th">◉ จุดจบของเส้นทาง</span><span class="l-en">◉ where a path ends</span></td><td></td></tr>
+        <tr><td>Decision / merge</td><td><span class="l-th">◆ ข้าวหลามตัด decision มีลูกศรเข้า 1 ออก 2 ขึ้นไป merge มีเข้า 2 ขึ้นไป ออก 1</span><span class="l-en">◆ a diamond. A decision has one arrow in and two or more out; a merge has two or more in and one out</span></td><td><span class="l-th">มี [guard] กำกับแต่ละทาง</span><span class="l-en">Each branch has a [guard]</span></td></tr>
+        <tr><td>Guard</td><td><span class="l-th">เงื่อนไขในวงเล็บเหลี่ยมบนลูกศร เช่น [open]</span><span class="l-en">The condition in square brackets on an arrow, e.g. [open]</span></td><td></td></tr>
+      </table>
+      <p><span class="l-th"><b>กับดักใน class diagram:</b> ใส่ multiplicity ผิดฝั่งทำให้ความหมายกลับ · ค่าที่คำนวณได้ เช่น จำนวนวันจนถึงกำหนดส่ง ไม่ใช่ field</span><span class="l-en"><b>Class-diagram traps:</b> multiplicity on the wrong side flips the meaning · a calculated value such as "days until due" is not a field</span></p>
+    </div></details>
+
+    <div class="trap"><strong><span class="l-th">กับดัก</span><span class="l-en">Traps</span></strong>
+      <ul>
+        <li><span class="l-th">สลับ «include» กับ «extend»: include = เสมอ, extend = มีเงื่อนไข ข้อสอบชอบกลับด้าน</span><span class="l-en">Swapping «include» and «extend»: include = always, extend = conditional. The exam likes to invert this.</span></li>
+        <li><span class="l-th">จับ Activity, Use-case, Class เข้าหมวดผิด</span><span class="l-en">Putting Activity, Use-case or Class in the wrong family.</span></li>
+        <li><span class="l-th">อ่าน multiplicity 1 —— * กลับด้าน</span><span class="l-en">Reading 1 —— * multiplicity backwards.</span></li>
+        <li><span class="l-th">คิดว่า UML เป็นภาษาโปรแกรมหรือต้องรันได้</span><span class="l-en">Thinking UML is a programming language or must run.</span></li>
+        <li><span class="l-th">รูป use-case ที่ผิดมักมี actor ถูกลากด้วย «include» นั่นคือจุดผิด</span><span class="l-en">In a wrong use-case figure, an actor is often joined by «include». That is the error.</span></li>
+      </ul>
+    </div>
+
+    <details class="tp"><summary><span class="l-th">เช็กลิสต์ของอาจารย์ พร้อมคำตอบ</span><span class="l-en">The instructor's checklist, with answers</span></summary><div class="in"><dl class="check">
+      <dt><span class="l-th">ไดอะแกรมแต่ละชนิดอยู่หมวดใด</span><span class="l-en">Which family is each diagram in?</span></dt>
+      <dd>Structural: Class, Component, Deployment, Object · Behavioural: Use-case, Activity, Sequence, State</dd>
+      <dt><span class="l-th">อธิบาย «include» กับ «extend» พร้อมตัวอย่าง</span><span class="l-en">Explain «include» vs «extend» with an example</span></dt>
+      <dd><span class="l-th">«include»: Checkout ต้อง Validate Cart ทุกครั้ง · «extend»: Apply Discount Code เสริม Place Order เฉพาะเมื่อลูกค้ากรอกโค้ด</span><span class="l-en">«include»: Checkout always performs Validate Cart · «extend»: Apply Discount Code extends Place Order only when the customer enters a code</span></dd>
+      <dt><span class="l-th">อ่าน multiplicity และสัญลักษณ์ activity</span><span class="l-en">Read multiplicity and the activity symbols</span></dt>
+      <dd><span class="l-th">Student 1 —— * Task: นักศึกษา 1 คนมีหลายงาน งานหนึ่งเป็นของนักศึกษาคนเดียว · ● เริ่ม ◉ จบ ◆ decision หรือ merge</span><span class="l-en">Student 1 —— * Task: one student has many tasks; each task belongs to one student · ● start, ◉ end, ◆ decision or merge</span></dd>
+      <dt><span class="l-th">ชี้จุดผิดในรูป use-case ที่วาดผิด</span><span class="l-en">Spot the error in a wrong use-case figure</span></dt>
+      <dd><span class="l-th">actor ต่อกับ use case ด้วย «include» ผิด ต้องเป็นเส้น association ส่วน «include» และ «extend» ใช้ระหว่าง use case กับ use case เท่านั้น</span><span class="l-en">An actor joined to a use case by «include» is wrong; it must be an association. «include» and «extend» go only between two use cases.</span></dd>
+    </dl></div></details>
+  </div>
+
+  <!-- ---------- CH 5 ---------- -->
+  <div class="mod stack" id="mod-c5" data-m="c5" hidden>
+    <h2><span class="l-th">บท 5 Design &amp; Architecture</span><span class="l-en">Chapter 5 Design &amp; Architecture</span> <small class="tag"><span class="l-th">11 ข้อ</span><span class="l-en">11 Qs</span></small></h2>
+    <p><span class="l-th">Design คือการตัดสินใจเรื่องโครงสร้างก่อนเขียนโค้ด กฎข้อเดียวที่ใช้ทุกระดับคือ high cohesion, low coupling และอย่าออกแบบเกินจำเป็น</span><span class="l-en">Design is settling the structure before writing code. One rule applies at every level: high cohesion, low coupling, and do not over-design.</span></p>
+    <div class="flow"><span class="s"><span class="l-th">Architecture ทั้งระบบ</span><span class="l-en">Architecture: the whole system</span></span><i>→</i><span class="s"><span class="l-th">Detailed design ในหนึ่งชิ้นส่วน</span><span class="l-en">Detailed design: inside one part</span></span><i>→</i><span class="s"><span class="l-th">UX/UI หน้าจอ</span><span class="l-en">UX/UI: the screen</span></span></div>
+
+    <details class="tp" open><summary><span class="l-th">Cohesion กับ Coupling</span><span class="l-en">Cohesion vs Coupling</span> <small><span class="l-th">ออกสอบบ่อย</span><span class="l-en">often tested</span></small></summary><div class="in">
+      <table class="terms">
+        <tr><th>English</th><th><span class="l-th">ความหมาย</span><span class="l-en">Meaning</span></th><th><span class="l-th">เป้าหมาย</span><span class="l-en">Goal</span></th></tr>
+        <tr><td>Cohesion</td><td><span class="l-th">ความรับผิดชอบภายในโมดูลเดียวเกาะกลุ่มกันแค่ไหน โมดูลทำเรื่องเดียวที่เกี่ยวข้องกันหรือเปล่า</span><span class="l-en">How strongly a module's own responsibilities belong together; does it do one related job?</span></td><td><span class="l-th">สูง = ดี</span><span class="l-en">High = good</span></td></tr>
+        <tr><td>Coupling</td><td><span class="l-th">โมดูลหนึ่งพึ่งพาไส้ในของโมดูลอื่นมากแค่ไหน</span><span class="l-en">How much one module depends on the insides of another</span></td><td><span class="l-th">ต่ำ = ดี แก้ที่เดียวไม่ลามพัง</span><span class="l-en">Low = good: a change in one place does not break others</span></td></tr>
+        <tr><td>God class</td><td><span class="l-th">คลาสเดียวทำทุกอย่าง เช่น StudyMateManager ที่ส่งการเตือน คุยฐานข้อมูล วาดหน้าจอ ตรวจรหัสผ่าน</span><span class="l-en">One class that does everything, e.g. a StudyMateManager that sends reminders, talks to the database, draws the screen and checks passwords</span></td><td><span class="l-th">cohesion ต่ำ + coupling สูง</span><span class="l-en">Low cohesion + high coupling</span></td></tr>
+        <tr><td>Modularity</td><td><span class="l-th">แบ่งระบบเป็นโมดูลเล็ก ๆ ที่มีงานชัดเจนอย่างละหนึ่งงาน</span><span class="l-en">Split the system into small modules, each with one clear job</span></td><td></td></tr>
+        <tr><td>Abstraction</td><td><span class="l-th">โมดูลแสดง interface ที่เรียบง่าย และซ่อนรายละเอียดข้างใน</span><span class="l-en">A module shows a simple interface and hides its inner workings</span></td><td></td></tr>
+        <tr><td>Interface</td><td><span class="l-th">ชุดคำสั่งเล็ก ๆ ที่โมดูลเปิดให้โมดูลอื่นเรียกใช้</span><span class="l-en">The small set of calls a module exposes to others</span></td><td><span class="l-th">คุยผ่าน interface = low coupling</span><span class="l-en">Talking through an interface = low coupling</span></td></tr>
+        <tr><td>Over-design</td><td><span class="l-th">ออกแบบเกินจำเป็น เช่น ใส่ microservices ให้โปรเจกต์ที่มี 4 FR</span><span class="l-en">Designing more than is needed, e.g. microservices for a 4-FR project</span></td><td><span class="l-th">ออกแบบเท่าที่ requirement บังคับ</span><span class="l-en">Design only what a requirement forces</span></td></tr>
+      </table>
+      <p class="note"><span class="l-th">จำ: เกาะกันเองในโมดูลให้แน่น (cohesion ↑) ผูกกับโมดูลอื่นให้หลวม (coupling ↓) ทดสอบเร็ว ๆ: ถ้าบอกหน้าที่ของโมดูลแล้วต้องใช้คำว่า "และ" แปลว่ามันทำมากไป</span><span class="l-en">Remember: hold together tightly inside a module (cohesion ↑), stay loose between modules (coupling ↓). Quick test: if you need the word "and" to say what a module does, it does too much.</span></p>
+    </div></details>
+
+    <details class="tp"><summary><span class="l-th">สถาปัตยกรรม 4 สไตล์ และ MVC</span><span class="l-en">Four architecture styles, and MVC</span> <small><span class="l-th">ออกสอบบ่อย</span><span class="l-en">often tested</span></small></summary><div class="in">
+      <table class="terms">
+        <tr><th>Style</th><th><span class="l-th">ตอบคำถาม</span><span class="l-en">Answers</span></th><th><span class="l-th">จำง่าย ๆ</span><span class="l-en">Remember</span></th></tr>
+        <tr><td>Layered (N-tier)</td><td><span class="l-th">จัดโค้ดเป็นชั้นบนลงล่างอย่างไร: Presentation → Business logic → Data</span><span class="l-en">How the code is stacked top to bottom: Presentation → Business logic → Data</span></td><td><span class="l-th">แต่ละชั้นคุยกับชั้นติดกันเท่านั้น UI ไม่แตะฐานข้อมูลโดยตรง</span><span class="l-en">Each layer talks only to its neighbour; the UI never touches the database directly</span></td></tr>
+        <tr><td>Client-Server</td><td><span class="l-th">ใครคุยกับใครผ่านเครือข่าย</span><span class="l-en">Who talks to whom over a network</span></td><td><span class="l-th">client ขอ server ตอบ เช่น แอปมือถือกับ backend</span><span class="l-en">The client asks, the server answers, e.g. a mobile app and its backend</span></td></tr>
+        <tr><td>MVC</td><td><span class="l-th">แยกโค้ด UI ออกจากตรรกะอย่างไร</span><span class="l-en">How UI code is kept apart from the logic</span></td><td><span class="l-th">Model ข้อมูลและกฎ · View หน้าจอ · Controller รับการกดแล้วตัดสินใจ</span><span class="l-en">Model: data and rules · View: the screen · Controller: handles a tap and decides</span></td></tr>
+        <tr><td>Monolith</td><td><span class="l-th">deploy เป็นหน่วยเดียว ทุกฟีเจอร์อยู่ในแอปเดียว</span><span class="l-en">One deployable unit; all features in one app</span></td><td><span class="l-th">เหมาะกับทีมเล็ก โปรเจกต์เทอมเดียว</span><span class="l-en">Fits a small team and a one-semester project</span></td></tr>
+        <tr><td>Microservices</td><td><span class="l-th">แยกเป็นบริการเล็ก ๆ ที่ deploy และ scale แยกกันได้</span><span class="l-en">Many small services, each deployed and scaled independently</span></td><td><span class="l-th">ซับซ้อนขึ้น เหมาะกับทีมใหญ่หลายทีม</span><span class="l-en">More complex; fits many large teams</span></td></tr>
+        <tr><td>MVC loop</td><td><span class="l-th">ผู้ใช้กด → View ส่งต่อให้ Controller → Controller สั่ง Model → Model แจ้ง View → View วาดใหม่</span><span class="l-en">User taps → View forwards to Controller → Controller calls the Model → Model notifies the View → View redraws</span></td><td><span class="l-th">เส้น Model → View คือหัวใจ</span><span class="l-en">The Model → View edge is the key</span></td></tr>
+        <tr><td>MVP</td><td><span class="l-th">สายโซ่ View ⇄ Controller ⇄ Model ล้วน ไม่มี View สังเกต Model</span><span class="l-en">A pure View ⇄ Controller ⇄ Model chain; the View does not observe the Model</span></td><td><span class="l-th">ไม่ใช่ MVC</span><span class="l-en">Not MVC</span></td></tr>
+      </table>
+      <p><span class="l-th">ระบบจริงใช้หลายสไตล์พร้อมกันได้ StudyMate เป็น Layered + Client-Server + MVC + Monolith รูปที่แนะนำสำหรับทีมนักศึกษาคือ Monolith + Layered + Client-Server</span><span class="l-en">A real system uses several styles at once. StudyMate is Layered + Client-Server + MVC + Monolith. The recommended shape for a student team is Monolith + Layered + Client-Server.</span></p>
+    </div></details>
+
+    <details class="tp"><summary>Component, Deployment, Sequence</summary><div class="in">
+      <table class="terms">
+        <tr><th>English</th><th><span class="l-th">ความหมาย</span><span class="l-en">Meaning</span></th><th><span class="l-th">อ่านรูป</span><span class="l-en">How to read it</span></th></tr>
+        <tr><td>Component diagram</td><td><span class="l-th">ชิ้นส่วนของระบบและ interface ที่ต่อกัน</span><span class="l-en">The pieces of the system and the interfaces joining them</span></td><td><span class="l-th">กล่อง = component</span><span class="l-en">A box = a component</span></td></tr>
+        <tr><td>Ball-and-socket</td><td><span class="l-th">component หนึ่งให้ interface ที่อีกตัวต้องการ (provided–required)</span><span class="l-en">One component provides an interface the other requires (provided–required)</span></td><td><span class="l-th">○ ball = provided · ⊃ socket = required เป็นการพึ่งพาเชิงตรรกะ ไม่ใช่วางเครื่องเดียวกัน</span><span class="l-en">○ ball = provided · ⊃ socket = required. A logical dependency, not being on the same machine</span></td></tr>
+        <tr><td>Deployment diagram</td><td><span class="l-th">ชิ้นส่วนไปรันอยู่บนเครื่องไหน</span><span class="l-en">Which machine each piece runs on</span></td><td><span class="l-th">กล่อง 3 มิติ = node หรือ device เช่น «device» Phone, «node» Server</span><span class="l-en">A 3-D box = a node or device, e.g. «device» Phone, «node» Server</span></td></tr>
+        <tr><td>Communication path</td><td><span class="l-th">เส้นทางสื่อสารระหว่าง node</span><span class="l-en">The link between two nodes</span></td><td><span class="l-th">เส้นทึบ ไม่มีหัวลูกศร</span><span class="l-en">A solid line with no arrowhead</span></td></tr>
+        <tr><td>Sequence diagram</td><td><span class="l-th">หนึ่งสถานการณ์ วัตถุส่งข้อความหากันตามเวลา จากบนลงล่าง</span><span class="l-en">One scenario: objects exchange messages over time, top to bottom</span></td><td><span class="l-th">เส้นทึบหัวทึบ = call · เส้นประหัวโปร่ง = return</span><span class="l-en">Solid line, filled head = call · dashed line, open head = return</span></td></tr>
+        <tr><td>Lifeline / activation bar</td><td><span class="l-th">เส้นประแนวตั้งใต้วัตถุ / แถบที่บอกว่าวัตถุกำลังทำงาน</span><span class="l-en">The dashed vertical line under an object / the bar showing the object is active</span></td><td></td></tr>
+        <tr><td>alt fragment</td><td><span class="l-th">กรอบที่แสดงทางเลือกแบบ if/else มี [guard] กำกับ</span><span class="l-en">A frame showing if/else alternatives, each with a [guard]</span></td><td><span class="l-th">loop = ทำซ้ำ</span><span class="l-en">loop = repeat</span></td></tr>
+      </table>
+    </div></details>
+
+    <details class="tp"><summary><span class="l-th">ADR และการตัดสินใจออกแบบ</span><span class="l-en">ADR and design decisions</span></summary><div class="in">
+      <table class="terms">
+        <tr><th>English</th><th><span class="l-th">ความหมาย</span><span class="l-en">Meaning</span></th><th><span class="l-th">จำง่าย ๆ</span><span class="l-en">Remember</span></th></tr>
+        <tr><td>ADR (Architecture Decision Record)</td><td><span class="l-th">บันทึกการตัดสินใจออกแบบ ทางเลือกที่ชั่งน้ำหนัก และเหตุผลที่เลือก</span><span class="l-en">A record of a design decision, the alternatives weighed, and why it was chosen</span></td><td><span class="l-th">เก็บ "ทำไม" ไม่ได้เก็บโค้ด</span><span class="l-en">It stores the "why", not code</span></td></tr>
+        <tr><td>Context / Decision / Consequence</td><td><span class="l-th">ADR 3 บรรทัด: FR หรือ NFR ใดบังคับให้ต้องเลือก · เลือกอะไร · ได้อะไร เสียอะไร</span><span class="l-en">The 3-line ADR: which FR or NFR forces a choice · what was chosen · what you gain and give up</span></td><td></td></tr>
+        <tr><td>NFR-driven design decision</td><td><span class="l-th">การตัดสินใจออกแบบที่มี NFR เป็นตัวบังคับ</span><span class="l-en">A design decision forced by an NFR</span></td><td><span class="l-th">StudyMate เลือกงาน scheduled รายวันแทนเช็คตอนเปิดแอป เพื่อเตือนได้แม้ปิดแอป</span><span class="l-en">StudyMate chose a daily scheduled job over checking on open, so reminders fire even when the app is closed</span></td></tr>
+        <tr><td>Design rationale</td><td><span class="l-th">ชื่อที่ SWEBOK ใช้เรียกเหตุผลของการออกแบบ</span><span class="l-en">SWEBOK's name for the reasoning behind a design</span></td><td></td></tr>
+        <tr><td>Gold-plating</td><td><span class="l-th">เพิ่มของที่ไม่มี requirement ขอ</span><span class="l-en">Adding something no requirement asked for</span></td><td><span class="l-th">ตัดทิ้ง</span><span class="l-en">Cut it</span></td></tr>
+      </table>
+      <p class="note"><span class="l-th">ตัวอย่าง StudyMate ใน Review Guide กับสไลด์สัปดาห์ 5 เขียนสลับกันว่าเลือกทางไหน ถ้าข้อสอบถาม ให้ยึดตาม Review Guide ประเด็นที่ทั้งสองแหล่งตรงกันคือ NFR เป็นตัวบังคับการตัดสินใจ</span><span class="l-en">The StudyMate example is written the opposite way round in the Review Guide and in the Week 5 slides. If the exam asks, follow the Review Guide. Both sources agree on the point: the NFR forces the decision.</span></p>
+    </div></details>
+
+    <div class="trap"><strong><span class="l-th">กับดัก</span><span class="l-en">Traps</span></strong>
+      <ul>
+        <li><span class="l-th">จำ cohesion กับ coupling กลับด้าน</span><span class="l-en">Flipping cohesion and coupling.</span></li>
+        <li><span class="l-th">เดา MVC กับ MVP ผิด: มีเส้น Model → View (observed) = MVC</span><span class="l-en">Guessing MVC vs MVP wrong: a Model → View (observed) edge = MVC.</span></li>
+        <li><span class="l-th">คิดว่า ball-and-socket คือเอา 2 component ไปวางเครื่องเดียวกัน ที่จริงคือ provided–required interface</span><span class="l-en">Thinking ball-and-socket means two components on one machine. It is a provided–required interface.</span></li>
+        <li><span class="l-th">วาด communication path ใน deployment โดยใส่หัวลูกศร ที่ถูกคือเส้นทึบไม่มีหัวลูกศร</span><span class="l-en">Drawing a deployment communication path with an arrowhead. It is a plain solid line.</span></li>
+        <li><span class="l-th">คิดว่า ADR เก็บโค้ด ที่จริงเก็บเหตุผลของการตัดสินใจ</span><span class="l-en">Thinking an ADR stores code. It stores the reasoning behind a decision.</span></li>
+      </ul>
+    </div>
+
+    <details class="tp"><summary><span class="l-th">เช็กลิสต์ของอาจารย์ พร้อมคำตอบ</span><span class="l-en">The instructor's checklist, with answers</span></summary><div class="in"><dl class="check">
+      <dt><span class="l-th">นิยามและยกตัวอย่าง cohesion กับ coupling</span><span class="l-en">Define cohesion and coupling, with examples</span></dt>
+      <dd><span class="l-th">Cohesion สูง: ReminderService ทำเรื่องการเตือนอย่างเดียว · Coupling ต่ำ: หน้าจอเรียก TaskRepository.getTasks() โดยไม่สนว่าข้อมูลเก็บที่ไหน เปลี่ยนฐานข้อมูลแล้วหน้าจอไม่ต้องแก้</span><span class="l-en">High cohesion: ReminderService handles only reminders · Low coupling: the screen calls TaskRepository.getTasks() without caring where the data lives; swap the database and the screen does not change</span></dd>
+      <dt><span class="l-th">ชี้เส้นที่ทำให้เป็น MVC</span><span class="l-en">Point to the edge that makes it MVC</span></dt>
+      <dd><span class="l-th">เส้น Model → View: Model เปลี่ยนแล้วแจ้ง View ให้วาดใหม่ (View สังเกต Model)</span><span class="l-en">The Model → View edge: the Model changes and notifies the View, which redraws (the View observes the Model)</span></dd>
+      <dt><span class="l-th">อ่าน component และ deployment</span><span class="l-en">Read component and deployment diagrams</span></dt>
+      <dd><span class="l-th">Component: ○ ประกบ ⊃ = provided–required interface · Deployment: กล่อง 3 มิติ = เครื่อง เส้นทึบไม่มีหัวลูกศร = communication path</span><span class="l-en">Component: ○ meeting ⊃ = a provided–required interface · Deployment: a 3-D box = a machine; a solid line with no arrowhead = a communication path</span></dd>
+      <dt><span class="l-th">จุดประสงค์ของ ADR</span><span class="l-en">The purpose of an ADR</span></dt>
+      <dd><span class="l-th">บันทึกการตัดสินใจออกแบบ ทางเลือกอื่นที่พิจารณา และเหตุผล เพื่อให้ทีมย้อนดูได้ว่าทำไมจึงเลือกแบบนี้</span><span class="l-en">Record a design decision, the alternatives considered and the reason, so the team can later see why it was chosen</span></dd>
+    </dl></div></details>
+  </div>
+
+  <!-- ---------- CH 6 ---------- -->
+  <div class="mod stack" id="mod-c6" data-m="c6" hidden>
+    <h2><span class="l-th">บท 5+ UX/UI &amp; Heuristic Evaluation</span><span class="l-en">Chapter 5+ UX/UI &amp; Heuristic Evaluation</span> <small class="tag"><span class="l-th">6 ข้อ</span><span class="l-en">6 Qs</span></small></h2>
+    <p><span class="l-th">ส่วนนี้ถามว่าปัญหาบนหน้าจอผิดหลักข้อไหน และแยกการตรวจโดยผู้เชี่ยวชาญออกจากการทดสอบกับผู้ใช้จริง</span><span class="l-en">This part asks which principle a screen problem violates, and separates expert inspection from testing with real users.</span></p>
+
+    <details class="tp" open><summary>Heuristic evaluation, severity, user testing <small><span class="l-th">ออกสอบบ่อย</span><span class="l-en">often tested</span></small></summary><div class="in">
+      <table class="terms">
+        <tr><th>English</th><th><span class="l-th">ความหมาย</span><span class="l-en">Meaning</span></th><th><span class="l-th">จำง่าย ๆ</span><span class="l-en">Remember</span></th></tr>
+        <tr><td>Heuristic evaluation</td><td><span class="l-th">ผู้เชี่ยวชาญตรวจ UI เทียบกับหลักการ (heuristics) แล้วจดทุกปัญหา</span><span class="l-en">Experts inspect the UI against a set of principles (heuristics) and note every issue</span></td><td><span class="l-th">ไม่มีผู้ใช้จริง</span><span class="l-en">No real users involved</span></td></tr>
+        <tr><td>User (usability) testing</td><td><span class="l-th">ให้ผู้ใช้จริงทำงานตามโจทย์ พูดสิ่งที่คิดออกมา แล้วทีมสังเกต</span><span class="l-en">Real users do set tasks while thinking aloud, and the team watches</span></td><td><span class="l-th">5 คนก็เจอปัญหาส่วนใหญ่</span><span class="l-en">5 users surface most problems</span></td></tr>
+        <tr><td>Severity rating (0–4)</td><td><span class="l-th">คะแนนความรุนแรงของปัญหา 0 = ไม่เป็นปัญหา ถึง 4 = หายนะ</span><span class="l-en">How serious a problem is: 0 = no problem, up to 4 = catastrophe</span></td><td><span class="l-th">ใช้จัดลำดับว่าจะแก้อะไรก่อน</span><span class="l-en">Used to decide what to fix first</span></td></tr>
+        <tr><td>UX</td><td><span class="l-th">ประสบการณ์ทั้งหมด: ใช้ได้ไหม ไปถึงเป้าหมายได้ไหม</span><span class="l-en">The whole experience: can users reach their goal?</span></td><td>does it work</td></tr>
+        <tr><td>UI</td><td><span class="l-th">พื้นผิวที่เห็น: หน้าจอ ปุ่ม สี ตัวอักษร</span><span class="l-en">The visible surface: screens, buttons, colour, type</span></td><td>does it look and feel right</td></tr>
+      </table>
+    </div></details>
+
+    <details class="tp"><summary>Nielsen's 10 heuristics (1994)</summary><div class="in">
+      <table class="terms">
+        <tr><th>Heuristic</th><th><span class="l-th">ความหมาย</span><span class="l-en">Meaning</span></th><th><span class="l-th">ตัวอย่างที่ผิดหรือถูก</span><span class="l-en">Right or wrong example</span></th></tr>
+        <tr><td>1 Visibility of system status</td><td><span class="l-th">บอกสถานะให้ผู้ใช้เห็นว่าเกิดอะไรขึ้น</span><span class="l-en">Show users what is happening</span></td><td><span class="l-th">ถูก: progress bar, Saving… Saved ✓ · ผิด: กด Save แล้วเงียบ</span><span class="l-en">Right: a progress bar, Saving… Saved ✓ · Wrong: tap Save and nothing shows</span></td></tr>
+        <tr><td>2 Match between system and the real world</td><td><span class="l-th">ใช้ภาษาและสัญลักษณ์ที่ผู้ใช้คุ้นเคย</span><span class="l-en">Use words and symbols users already know</span></td><td><span class="l-th">ถูก: ปฏิทินที่หน้าตาเหมือนปฏิทิน</span><span class="l-en">Right: a calendar that looks like a calendar</span></td></tr>
+        <tr><td>3 User control and freedom</td><td><span class="l-th">มีทางถอย: undo, cancel, ทางออกฉุกเฉิน</span><span class="l-en">A way back: undo, cancel, an emergency exit</span></td><td><span class="l-th">ผิด: ลบทันทีโดยไม่มียืนยันและ undo ไม่ได้</span><span class="l-en">Wrong: instant delete with no confirmation and no undo</span></td></tr>
+        <tr><td>4 Consistency and standards</td><td><span class="l-th">ทำตามแบบแผนเดียวกันทั้งแอปและตามมาตรฐานแพลตฟอร์ม</span><span class="l-en">Follow the same conventions across the app and the platform</span></td><td><span class="l-th">ถูก: ปุ่มอยู่ที่เดิมทุกหน้า</span><span class="l-en">Right: controls in the same place on every page</span></td></tr>
+        <tr><td>5 Error prevention</td><td><span class="l-th">กันความผิดพลาดก่อนเกิด</span><span class="l-en">Stop mistakes before they happen</span></td><td><span class="l-th">ถูก: ทำวันที่ที่จองไม่ได้เป็นสีเทา ถามยืนยันก่อนลบ</span><span class="l-en">Right: grey out unavailable dates; confirm before deleting</span></td></tr>
+        <tr><td>6 Recognition rather than recall</td><td><span class="l-th">แสดงตัวเลือกให้เห็น ไม่บังคับให้จำ</span><span class="l-en">Show the options; do not force users to remember</span></td><td><span class="l-th">ถูก: เมนูแสดงตัวเลือก ไม่ใช่ให้พิมพ์รหัส</span><span class="l-en">Right: a menu of options instead of typing a code</span></td></tr>
+        <tr><td>7 Flexibility and efficiency of use</td><td><span class="l-th">มีทางลัดสำหรับผู้ใช้ที่ชำนาญ</span><span class="l-en">Shortcuts for expert users</span></td><td><span class="l-th">ถูก: คีย์ลัด</span><span class="l-en">Right: keyboard shortcuts</span></td></tr>
+        <tr><td>8 Aesthetic and minimalist design</td><td><span class="l-th">ตัดสิ่งที่ไม่ช่วยออก</span><span class="l-en">Cut what does not help</span></td><td><span class="l-th">ถูก: หน้าจอมีเฉพาะที่จำเป็น</span><span class="l-en">Right: only what is needed on screen</span></td></tr>
+        <tr><td>9 Help users recognize, diagnose, and recover from errors</td><td><span class="l-th">ข้อความ error เป็นภาษาคน และบอกวิธีแก้</span><span class="l-en">Error messages in plain language, with a fix</span></td><td><span class="l-th">ผิด: Error 0x0007F</span><span class="l-en">Wrong: Error 0x0007F</span></td></tr>
+        <tr><td>10 Help and documentation</td><td><span class="l-th">มีความช่วยเหลือเมื่อต้องการ</span><span class="l-en">Help when users need it</span></td><td><span class="l-th">ถูก: คำแนะนำในหน้าจอ</span><span class="l-en">Right: inline tips</span></td></tr>
+      </table>
+      <p class="note"><span class="l-th">ลบทันทีไม่มี undo: Review Guide ให้ตอบ User control and freedom ส่วนกล่องถามยืนยันก่อนลบเป็นตัวอย่างของ Error prevention ในสไลด์ ถ้าโจทย์เน้นว่า undo ไม่ได้ ให้ตอบข้อ 3</span><span class="l-en">Instant delete with no undo: the Review Guide's answer is User control and freedom. The slides use a confirm-before-delete dialog as an example of Error prevention. If the question stresses that there is no undo, answer number 3.</span></p>
+    </div></details>
+
+    <details class="tp"><summary>Accessibility: POUR / WCAG</summary><div class="in">
+      <table class="terms">
+        <tr><th>English</th><th><span class="l-th">ความหมาย</span><span class="l-en">Meaning</span></th><th><span class="l-th">ตัวอย่าง</span><span class="l-en">Example</span></th></tr>
+        <tr><td>Perceivable</td><td><span class="l-th">รับรู้ได้</span><span class="l-en">Users can perceive the content</span></td><td><span class="l-th">contrast ข้อความอย่างน้อย 4.5:1 · มี alt text · ไม่สื่อด้วยสีอย่างเดียว</span><span class="l-en">Text contrast at least 4.5:1 · alt text · never colour alone</span></td></tr>
+        <tr><td>Operable</td><td><span class="l-th">ใช้งานได้</span><span class="l-en">Users can operate it</span></td><td><span class="l-th">ใช้คีย์บอร์ดได้ทั้งหมด · เห็น focus · ปุ่มใหญ่ราว 44px</span><span class="l-en">Works by keyboard · visible focus · targets about 44px</span></td></tr>
+        <tr><td>Understandable</td><td><span class="l-th">เข้าใจได้</span><span class="l-en">Users can understand it</span></td><td><span class="l-th">ภาษาชัด · ฟอร์มมีป้ายกำกับ · error บอกวิธีแก้</span><span class="l-en">Clear language · labelled forms · errors that say how to fix</span></td></tr>
+        <tr><td>Robust</td><td><span class="l-th">ทนทาน ทำงานกับเทคโนโลยีช่วยเหลือได้</span><span class="l-en">Works with assistive technology</span></td><td><span class="l-th">ใช้ semantic HTML ให้ screen reader อ่านได้</span><span class="l-en">Semantic HTML so screen readers work</span></td></tr>
+        <tr><td>WCAG AA</td><td><span class="l-th">ระดับมาตรฐานที่ควรทำให้ถึง (A ต่ำสุด, AA มาตรฐาน, AAA สูงสุด)</span><span class="l-en">The level to aim for (A minimum, AA the standard, AAA highest)</span></td><td>contrast ≥ 4.5:1</td></tr>
+      </table>
+      <p><span class="l-th"><b>Anti-pattern:</b> ใช้สีแดงอย่างเดียวบอกช่องที่ต้องกรอก · ใช้ฟอนต์หลายแบบ · ทำข้อความทุกจุดขนาดเท่ากัน</span><span class="l-en"><b>Anti-patterns:</b> marking required fields with red alone · using many font families · making every text the same size</span></p>
+    </div></details>
+
+    <details class="tp"><summary><span class="l-th">เนื้อหาเสริมจาก UX/UI primer</span><span class="l-en">Extra material from the UX/UI primer</span> <small><span class="l-th">โอกาสออกน้อยกว่า</span><span class="l-en">less likely on the exam</span></small></summary><div class="in">
+      <table class="terms">
+        <tr><th>English</th><th><span class="l-th">ความหมาย</span><span class="l-en">Meaning</span></th><th><span class="l-th">จำง่าย ๆ</span><span class="l-en">Remember</span></th></tr>
+        <tr><td>C.R.A.P</td><td>Contrast, Repetition, Alignment, Proximity</td><td><span class="l-th">เช็กลิสต์จัดเลย์เอาต์</span><span class="l-en">A layout checklist</span></td></tr>
+        <tr><td>Visual hierarchy</td><td><span class="l-th">ใช้ขนาด น้ำหนัก สี ตำแหน่ง บอกตาว่ามองอะไรก่อน</span><span class="l-en">Use size, weight, colour and position to tell the eye where to look first</span></td><td></td></tr>
+        <tr><td>60/30/10</td><td><span class="l-th">สีพื้น 60% สีรอง 30% สีเน้น 10% สำหรับปุ่ม</span><span class="l-en">60% neutral, 30% secondary, 10% accent for actions</span></td><td></td></tr>
+        <tr><td>Wireframe</td><td><span class="l-th">ภาพร่างหน้าจอแบบกล่องและป้าย ยังไม่มีสี</span><span class="l-en">A low-fidelity sketch of boxes and labels, no colours yet</span></td><td>low-fidelity</td></tr>
+        <tr><td>Design system / design tokens</td><td><span class="l-th">ชุดค่ากลางของสี ฟอนต์ ระยะห่าง และ component ที่ใช้ซ้ำทุกหน้า</span><span class="l-en">Shared values for colour, type and spacing, plus reusable components, used on every screen</span></td><td></td></tr>
+        <tr><td>Fitts's Law</td><td><span class="l-th">เป้ายิ่งเล็กหรือไกล ยิ่งกดช้า</span><span class="l-en">The smaller or farther a target, the slower it is to hit</span></td><td><span class="l-th">ทำปุ่มสำคัญให้ใหญ่และเอื้อมถึง</span><span class="l-en">Make key controls big and reachable</span></td></tr>
+        <tr><td>Hick's Law</td><td><span class="l-th">ตัวเลือกยิ่งมาก ยิ่งตัดสินใจช้า</span><span class="l-en">More choices mean slower decisions</span></td><td><span class="l-th">ลดจำนวนตัวเลือก</span><span class="l-en">Offer fewer options</span></td></tr>
+        <tr><td>Signifier</td><td><span class="l-th">สัญญาณที่บอกว่ากดตรงไหนได้</span><span class="l-en">A signal showing where you can act</span></td><td><span class="l-th">ของที่กดได้ต้องดูกดได้</span><span class="l-en">Tappable things must look tappable</span></td></tr>
+      </table>
+    </div></details>
+
+    <div class="trap"><strong><span class="l-th">กับดัก</span><span class="l-en">Traps</span></strong>
+      <ul>
+        <li><span class="l-th">สับสน heuristic evaluation (ผู้เชี่ยวชาญกับหลักการ) กับ user testing (ผู้ใช้จริง)</span><span class="l-en">Confusing heuristic evaluation (experts and principles) with user testing (real users).</span></li>
+        <li><span class="l-th">ลบทันทีไม่มี undo หรือยืนยัน ผิด User control &amp; freedom ไม่ใช่ consistency หรือ recognition</span><span class="l-en">Instant delete with no undo or confirmation violates User control &amp; freedom, not consistency or recognition.</span></li>
+        <li><span class="l-th">คิดว่า accessibility = มีหลายขนาดตัวอักษร หรือใช้สีบอก required field พวกนี้เป็น anti-pattern</span><span class="l-en">Thinking accessibility = several text sizes, or colour-only required fields. Those are anti-patterns.</span></li>
+      </ul>
+    </div>
+
+    <details class="tp"><summary><span class="l-th">เช็กลิสต์ของอาจารย์ พร้อมคำตอบ</span><span class="l-en">The instructor's checklist, with answers</span></summary><div class="in"><dl class="check">
+      <dt><span class="l-th">แยก heuristic evaluation กับ user testing</span><span class="l-en">Tell heuristic evaluation from user testing</span></dt>
+      <dd><span class="l-th">Heuristic evaluation: ผู้เชี่ยวชาญตรวจ UI เทียบหลักการ · User testing: ผู้ใช้จริงลองทำงานแล้วทีมสังเกต</span><span class="l-en">Heuristic evaluation: experts inspect the UI against principles · User testing: real users try tasks while the team watches</span></dd>
+      <dt><span class="l-th">จับคู่ปัญหา UI กับ heuristic ที่ถูกละเมิด</span><span class="l-en">Match a UI problem to the heuristic it violates</span></dt>
+      <dd><span class="l-th">ไม่มี undo = User control and freedom · ใช้รหัสแทนคำที่คุ้น = Match the real world · กดแล้วเงียบ = Visibility of system status</span><span class="l-en">No undo = User control and freedom · codes instead of familiar words = Match the real world · no response after a tap = Visibility of system status</span></dd>
+      <dt><span class="l-th">จุดประสงค์ของ severity rating</span><span class="l-en">The purpose of severity ratings</span></dt>
+      <dd><span class="l-th">จัดลำดับว่าจะแก้ปัญหาไหนก่อน โดยดูว่าปัญหาไหนกระทบผู้ใช้มากที่สุด</span><span class="l-en">Prioritize what to fix first, by which problem hurts users most</span></dd>
+      <dt><span class="l-th">บอก accessibility requirement ตาม WCAG/POUR</span><span class="l-en">State an accessibility requirement per WCAG/POUR</span></dt>
+      <dd><span class="l-th">contrast ของข้อความอย่างน้อย 4.5:1 และไม่สื่อความหมายด้วยสีอย่างเดียว (WCAG AA)</span><span class="l-en">Text contrast of at least 4.5:1, and never rely on colour alone (WCAG AA)</span></dd>
+    </dl></div></details>
+  </div>
+</section>
+
+<!-- ================= UML ================= -->
+<section id="tab-uml" class="stack-lg" hidden>
+  <div class="stack">
+    <h2><span class="l-th">อ่านรูป UML ทั้ง 7 แบบ</span><span class="l-en">Reading all 7 UML diagram types</span></h2>
+    <p><span class="l-th">ข้อสอบมีข้ออ่านรูป 7 ข้อ ชีตของอาจารย์มี 7 แถวพอดี ดูสัญลักษณ์ก่อน แล้วค่อยอ่านความหมาย อาจารย์แนะนำให้ลองวาด StudyMate ด้วยมือ ถ้าวาดเองได้จะอ่านรูปในข้อสอบออก</span><span class="l-en">The exam has 7 diagram-reading items, and the instructor's cheat-sheet has exactly 7 rows. Read the symbol first, then the meaning. The instructor suggests drawing StudyMate by hand: if you can draw the diagrams, you can read them on the exam.</span></p>
+  </div>
+
+  <div class="stack">
+    <h3>1 Use-case <span class="tag">Behavioural</span></h3>
+    <figure class="fig" data-fig="uc-wrong"><div class="figbox"><svg class="d" viewBox="0 0 640 210" role="img" aria-label="Wrong and correct use-case diagrams">
+      <text x="16" y="22" class="badt"><tspan class="l-th">✗ ผิด</tspan><tspan class="l-en">✗ Wrong</tspan></text>
+      <g transform="translate(60 95)"><circle cx="0" cy="-22" r="8"/><line x1="0" y1="-14" x2="0" y2="8"/><line x1="-12" y1="-6" x2="12" y2="-6"/><line x1="0" y1="8" x2="-10" y2="24"/><line x1="0" y1="8" x2="10" y2="24"/></g><text x="60" y="138" text-anchor="middle">Student</text>
+      <ellipse cx="230" cy="95" rx="72" ry="26"/><text x="230" y="99" text-anchor="middle">Get Reminder</text>
+      <line class="dash bad" x1="76" y1="90" x2="156" y2="94" marker-end="url(#m-open)"/><text x="116" y="80" text-anchor="middle" class="badt">«include»</text>
+      <line class="soft" x1="320" y1="10" x2="320" y2="200"/>
+      <text x="336" y="22" class="goodt"><tspan class="l-th">✓ ถูก</tspan><tspan class="l-en">✓ Correct</tspan></text>
+      <g transform="translate(380 85)"><circle cx="0" cy="-22" r="8"/><line x1="0" y1="-14" x2="0" y2="8"/><line x1="-12" y1="-6" x2="12" y2="-6"/><line x1="0" y1="8" x2="-10" y2="24"/><line x1="0" y1="8" x2="10" y2="24"/></g><text x="380" y="128" text-anchor="middle">Student</text>
+      <ellipse cx="540" cy="58" rx="72" ry="24"/><text x="540" y="62" text-anchor="middle">Get Reminder</text>
+      <line x1="396" y1="80" x2="468" y2="62"/>
+      <ellipse cx="540" cy="166" rx="80" ry="24"/><text x="540" y="170" text-anchor="middle">Snooze Reminder</text>
+      <line class="dash" x1="540" y1="142" x2="540" y2="84" marker-end="url(#m-open)"/><text x="548" y="117">«extend»</text>
+    </svg></div>
+    <figcaption><span class="l-th">Actor ต่อกับ use case ด้วยเส้น association (เส้นทึบ) เท่านั้น ส่วน «include» และ «extend» เป็นเส้นประระหว่าง use case กับ use case รูปซ้ายผิดเพราะลาก actor ด้วย «include»</span><span class="l-en">An actor joins a use case only by an association (a solid line). «include» and «extend» are dashed lines between two use cases. The left figure is wrong because the actor is joined with «include».</span></figcaption></figure>
+    <div class="figgrid">
+      <figure class="fig" data-fig="uc-include"><div class="figbox"><svg class="d" viewBox="0 0 320 220" role="img" aria-label="include">
+        <rect class="nf" x="108" y="10" width="202" height="200" rx="6"/><text x="118" y="27" class="sm">SHOP SYSTEM</text>
+        <g transform="translate(48 78)"><circle cx="0" cy="-22" r="8"/><line x1="0" y1="-14" x2="0" y2="8"/><line x1="-12" y1="-6" x2="12" y2="-6"/><line x1="0" y1="8" x2="-10" y2="24"/><line x1="0" y1="8" x2="10" y2="24"/></g><text x="48" y="121" text-anchor="middle">Customer</text>
+        <ellipse cx="210" cy="72" rx="62" ry="24"/><text x="210" y="76" text-anchor="middle">Checkout</text>
+        <line x1="62" y1="72" x2="148" y2="72"/>
+        <ellipse cx="210" cy="172" rx="72" ry="24"/><text x="210" y="176" text-anchor="middle">Validate Cart</text>
+        <line class="dash" x1="210" y1="96" x2="210" y2="146" marker-end="url(#m-open)"/><text x="218" y="126">«include»</text>
+      </svg></div><figcaption><span class="l-th"><b>«include»</b> = ทำเสมอ ลูกศรชี้จาก base (Checkout) ไปหาตัวที่ถูก include</span><span class="l-en"><b>«include»</b> = always performed. The arrow points from the base (Checkout) to the included use case.</span></figcaption></figure>
+      <figure class="fig" data-fig="uc-extend"><div class="figbox"><svg class="d" viewBox="0 0 320 220" role="img" aria-label="extend">
+        <rect class="nf" x="108" y="10" width="202" height="200" rx="6"/><text x="118" y="27" class="sm">LIBRARY SYSTEM</text>
+        <g transform="translate(48 78)"><circle cx="0" cy="-22" r="8"/><line x1="0" y1="-14" x2="0" y2="8"/><line x1="-12" y1="-6" x2="12" y2="-6"/><line x1="0" y1="8" x2="-10" y2="24"/><line x1="0" y1="8" x2="10" y2="24"/></g><text x="48" y="121" text-anchor="middle">Member</text>
+        <ellipse cx="210" cy="72" rx="66" ry="24"/><text x="210" y="76" text-anchor="middle">Borrow Book</text>
+        <line x1="62" y1="72" x2="144" y2="72"/>
+        <ellipse cx="210" cy="172" rx="70" ry="24"/><text x="210" y="176" text-anchor="middle">Reserve Book</text>
+        <line class="dash" x1="210" y1="148" x2="210" y2="98" marker-end="url(#m-open)"/><text x="218" y="120">«extend»</text><text x="218" y="136" class="sm">[book unavailable]</text>
+      </svg></div><figcaption><span class="l-th"><b>«extend»</b> = ทำเมื่อเข้าเงื่อนไข ลูกศรชี้จากตัวเสริม (Reserve Book) กลับไปหา base</span><span class="l-en"><b>«extend»</b> = performed only under a condition. The arrow points from the extension (Reserve Book) back to the base.</span></figcaption></figure>
+    </div>
+  </div>
+
+  <div class="stack">
+    <h3>2 Class / Entity <span class="tag">Structural</span></h3>
+    <div class="figgrid">
+      <figure class="fig" data-fig="class-mult"><div class="figbox"><svg class="d" viewBox="0 0 420 150" role="img" aria-label="multiplicity">
+        <rect x="20" y="20" width="140" height="96"/><line x1="20" y1="48" x2="160" y2="48"/>
+        <text x="90" y="39" text-anchor="middle" class="b">Course</text><text x="30" y="68">id</text><text x="30" y="86">code</text><text x="30" y="104">name</text>
+        <rect x="260" y="20" width="140" height="114"/><line x1="260" y1="48" x2="400" y2="48"/>
+        <text x="330" y="39" text-anchor="middle" class="b">Task</text><text x="270" y="68">id</text><text x="270" y="86">title</text><text x="270" y="104">dueDate</text><text x="270" y="122">status</text>
+        <line x1="160" y1="66" x2="260" y2="66"/><text x="168" y="58" class="b">1</text><text x="244" y="60" class="b">*</text>
+      </svg></div><figcaption><span class="l-th"><b>Multiplicity:</b> อ่านว่า one X has how many Y ฝั่ง 1 คือ Course ฝั่ง * คือ Task จึงเป็นหนึ่งวิชามีหลายงาน และงานหนึ่งอยู่ในวิชาเดียว</span><span class="l-en"><b>Multiplicity:</b> read it as "one X has how many Y". The 1 side is Course and the * side is Task, so one course has many tasks and each task belongs to one course.</span></figcaption></figure>
+      <figure class="fig" data-fig="class-box"><div class="figbox"><svg class="d" viewBox="0 0 420 190" role="img" aria-label="class box">
+        <rect x="20" y="10" width="190" height="170"/><line x1="20" y1="40" x2="210" y2="40"/><line x1="20" y1="122" x2="210" y2="122"/>
+        <text x="115" y="30" text-anchor="middle" class="b">Task</text>
+        <text x="30" y="60">− id: int</text><text x="30" y="78">− title: String</text><text x="30" y="96">− dueDate: Date</text><text x="30" y="114">− status: Status</text>
+        <text x="30" y="142">+ markDone()</text><text x="30" y="160">+ isOverdue(): bool</text>
+        <text x="224" y="30" class="acct"><tspan class="l-th">① ชื่อคลาส</tspan><tspan class="l-en">① class name</tspan></text><text x="224" y="84" class="acct">② attributes</text><text x="224" y="100" class="sm"><tspan class="l-th">สิ่งที่มันรู้</tspan><tspan class="l-en">what it knows</tspan></text><text x="224" y="148" class="acct">③ operations</text><text x="224" y="164" class="sm"><tspan class="l-th">สิ่งที่มันทำได้</tspan><tspan class="l-en">what it can do</tspan></text>
+      </svg></div><figcaption><b>Visibility:</b> + public · − private · # protected</figcaption></figure>
+    </div>
+    <figure class="fig" data-fig="class-rel"><div class="figbox"><svg class="d" viewBox="0 0 520 214" role="img" aria-label="Four class relationships">
+      <rect x="20" y="16" width="110" height="28"/><text x="75" y="35" text-anchor="middle">Course</text><rect x="390" y="16" width="110" height="28"/><text x="445" y="35" text-anchor="middle">Task</text>
+      <line x1="130" y1="30" x2="390" y2="30"/><text x="138" y="24" class="b">1</text><text x="376" y="26" class="b">*</text><text x="260" y="22" text-anchor="middle" class="sm">association: <tspan class="l-th">มี / รู้จัก</tspan><tspan class="l-en">has / knows</tspan></text>
+      <rect x="20" y="68" width="110" height="28"/><text x="75" y="87" text-anchor="middle">Scheduler</text><rect x="390" y="68" width="110" height="28"/><text x="445" y="87" text-anchor="middle">Repository</text>
+      <line class="dash" x1="130" y1="82" x2="388" y2="82" marker-end="url(#m-open)"/><text x="260" y="74" text-anchor="middle" class="sm">dependency: <tspan class="l-th">ใช้</tspan><tspan class="l-en">uses</tspan> («use»)</text>
+      <rect x="20" y="120" width="110" height="28"/><text x="75" y="139" text-anchor="middle">PushReminder</text><rect x="390" y="120" width="110" height="28"/><text x="445" y="139" text-anchor="middle">Reminder</text>
+      <line x1="130" y1="134" x2="388" y2="134" marker-end="url(#m-tri)"/><text x="250" y="126" text-anchor="middle" class="sm">generalization: <tspan class="l-th">เป็นชนิดของ</tspan><tspan class="l-en">is a kind of</tspan></text>
+      <rect x="20" y="172" width="110" height="28"/><text x="75" y="191" text-anchor="middle">Report</text><rect x="390" y="172" width="110" height="28"/><text x="445" y="191" text-anchor="middle">Section</text>
+      <line x1="132" y1="186" x2="390" y2="186" marker-start="url(#m-dia)"/><text x="270" y="178" text-anchor="middle" class="sm">composition: <tspan class="l-th">เป็นส่วนของ</tspan><tspan class="l-en">part of</tspan></text>
+    </svg></div>
+    <figcaption><span class="l-th">เส้น 4 แบบ: <b>association</b> เส้นทึบ · <b>dependency</b> เส้นประมีลูกศร · <b>generalization</b> สามเหลี่ยมโปร่งชี้ไปที่คลาสแม่ · <b>composition</b> ข้าวหลามตัดทึบอยู่ฝั่งตัวรวม (ถ้าโปร่งคือ aggregation)</span><span class="l-en">Four lines: <b>association</b> a solid line · <b>dependency</b> a dashed arrow · <b>generalization</b> a hollow triangle pointing at the parent · <b>composition</b> a filled diamond on the whole (a hollow diamond is aggregation)</span></figcaption></figure>
+  </div>
+
+  <div class="stack">
+    <h3>3 Activity <span class="tag">Behavioural</span></h3>
+    <figure class="fig" data-fig="activity"><div class="figbox"><svg class="d" viewBox="0 0 600 190" role="img" aria-label="Activity diagram for Get Reminder">
+      <circle class="fill" cx="30" cy="95" r="9"/>
+      <line x1="39" y1="95" x2="98" y2="95" marker-end="url(#m-fill)"/>
+      <polygon points="140,65 180,95 140,125 100,95"/><text x="140" y="99" text-anchor="middle" class="sm">status?</text>
+      <path class="nf" d="M140 65 L140 40 L298 40" marker-end="url(#m-fill)"/><text x="150" y="32">[open, 1 day before due]</text>
+      <rect x="300" y="22" width="140" height="36" rx="14"/><text x="370" y="45" text-anchor="middle">Send reminder</text>
+      <line x1="440" y1="40" x2="518" y2="40" marker-end="url(#m-fill)"/>
+      <circle class="nf" cx="532" cy="40" r="11"/><circle class="fill" cx="532" cy="40" r="6"/>
+      <path class="nf" d="M140 125 L140 155 L518 155" marker-end="url(#m-fill)"/><text x="150" y="148">[done]</text><text x="400" y="148" class="sm">stays silent</text>
+      <circle class="nf" cx="532" cy="155" r="11"/><circle class="fill" cx="532" cy="155" r="6"/>
+    </svg></div>
+    <figcaption><span class="l-th"><b>●</b> initial node · <b>◆</b> decision (หรือ merge) มี <b>[guard]</b> กำกับแต่ละทาง · กล่องมุมมน = action · <b>◉</b> final node · ลูกศร = ลำดับงาน สองทางในรูปคือ acceptance criteria สองข้อของ FR-3</span><span class="l-en"><b>●</b> initial node · <b>◆</b> decision (or merge), with a <b>[guard]</b> on each branch · rounded box = action · <b>◉</b> final node · arrows = flow order. The two branches are FR-3's two acceptance criteria.</span></figcaption></figure>
+  </div>
+
+  <div class="stack">
+    <h3>4 Sequence <span class="tag">Behavioural</span></h3>
+    <figure class="fig" data-fig="sequence"><div class="figbox"><svg class="d" viewBox="0 0 610 250" role="img" aria-label="Sequence diagram">
+      <rect x="10" y="8" width="110" height="26"/><text x="65" y="26" text-anchor="middle">:Student</text>
+      <rect x="160" y="8" width="120" height="26"/><text x="220" y="26" text-anchor="middle">:TodayScreen</text>
+      <rect x="310" y="8" width="150" height="26"/><text x="385" y="26" text-anchor="middle">:ReminderScheduler</text>
+      <rect x="490" y="8" width="110" height="26"/><text x="545" y="26" text-anchor="middle">:TaskRepo</text>
+      <line class="dash soft" x1="65" y1="34" x2="65" y2="240"/><line class="dash soft" x1="220" y1="34" x2="220" y2="240"/><line class="dash soft" x1="385" y1="34" x2="385" y2="240"/><line class="dash soft" x1="545" y1="34" x2="545" y2="240"/>
+      <rect x="215" y="62" width="10" height="158"/><rect x="380" y="88" width="10" height="102"/><rect x="540" y="114" width="10" height="42"/>
+      <line x1="65" y1="62" x2="214" y2="62" marker-end="url(#m-fill)"/><text x="140" y="56" text-anchor="middle">openApp()</text>
+      <line x1="225" y1="88" x2="379" y2="88" marker-end="url(#m-fill)"/><text x="302" y="82" text-anchor="middle">checkDue(now)</text>
+      <line x1="390" y1="114" x2="539" y2="114" marker-end="url(#m-fill)"/><text x="465" y="108" text-anchor="middle">findDueBefore(now)</text>
+      <line class="dash" x1="540" y1="156" x2="391" y2="156" marker-end="url(#m-open)"/><text x="465" y="150" text-anchor="middle">List&lt;Task&gt;</text>
+      <line class="dash" x1="380" y1="190" x2="226" y2="190" marker-end="url(#m-open)"/><text x="302" y="184" text-anchor="middle">dueTasks</text>
+      <line class="dash" x1="215" y1="220" x2="66" y2="220" marker-end="url(#m-open)"/><text x="140" y="214" text-anchor="middle">today's reminders</text>
+    </svg></div>
+    <figcaption><span class="l-th">เวลาไหลจากบนลงล่าง · เส้นประแนวตั้ง = <b>lifeline</b> · แถบแนวตั้ง = <b>activation bar</b> · เส้นทึบหัวทึบ = <b>call</b> · เส้นประหัวโปร่ง = <b>return</b> · กรอบ <b>alt</b> = ทางเลือกแบบ if/else</span><span class="l-en">Time flows top to bottom · dashed vertical line = <b>lifeline</b> · vertical bar = <b>activation bar</b> · solid line with filled head = <b>call</b> · dashed line with open head = <b>return</b> · an <b>alt</b> frame = if/else alternatives</span></figcaption></figure>
+  </div>
+
+  <div class="stack">
+    <h3>5 MVC</h3>
+    <div class="figgrid">
+      <figure class="fig" data-fig="mvc"><div class="figbox"><svg class="d" viewBox="0 0 480 230" role="img" aria-label="MVC">
+        <rect x="170" y="14" width="140" height="46"/><text x="240" y="34" text-anchor="middle" class="b">Model</text><text x="240" y="50" text-anchor="middle" class="sm">data + rules</text>
+        <rect x="24" y="164" width="140" height="46"/><text x="94" y="184" text-anchor="middle" class="b">View</text><text x="94" y="200" text-anchor="middle" class="sm">draws the screen</text>
+        <rect x="316" y="164" width="140" height="46"/><text x="386" y="184" text-anchor="middle" class="b">Controller</text><text x="386" y="200" text-anchor="middle" class="sm">handles a tap</text>
+        <line x1="164" y1="187" x2="314" y2="187" marker-end="url(#m-fill)"/><text x="240" y="180" text-anchor="middle">user events</text>
+        <line x1="386" y1="164" x2="298" y2="62" marker-end="url(#m-fill)"/><text x="352" y="108">updates</text>
+        <line class="acc" x1="190" y1="60" x2="104" y2="160" marker-end="url(#m-acc)"/><text x="138" y="100" text-anchor="end" class="acct">Model → View</text><text x="134" y="116" text-anchor="end" class="acct">notifies</text>
+      </svg></div><figcaption><span class="l-th"><b>MVC:</b> เส้น Model → View คือหัวใจ View สังเกต Model แล้ววาดใหม่เมื่อข้อมูลเปลี่ยน</span><span class="l-en"><b>MVC:</b> the Model → View edge is the key. The View observes the Model and redraws when the data changes.</span></figcaption></figure>
+      <figure class="fig" data-fig="mvp"><div class="figbox"><svg class="d" viewBox="0 0 480 80" role="img" aria-label="MVP">
+        <rect x="10" y="20" width="120" height="40"/><text x="70" y="45" text-anchor="middle" class="b">View</text>
+        <rect x="180" y="20" width="120" height="40"/><text x="240" y="45" text-anchor="middle" class="b">Controller</text>
+        <rect x="350" y="20" width="120" height="40"/><text x="410" y="45" text-anchor="middle" class="b">Model</text>
+        <line x1="132" y1="40" x2="178" y2="40" marker-start="url(#m-fill)" marker-end="url(#m-fill)"/>
+        <line x1="302" y1="40" x2="348" y2="40" marker-start="url(#m-fill)" marker-end="url(#m-fill)"/>
+      </svg></div><figcaption><span class="l-th"><b>MVP:</b> สายโซ่ View ⇄ Controller ⇄ Model ล้วน ไม่มีเส้นจาก Model ไป View</span><span class="l-en"><b>MVP:</b> a pure View ⇄ Controller ⇄ Model chain, with no edge from Model to View.</span></figcaption></figure>
+    </div>
+  </div>
+
+  <div class="stack">
+    <h3>6 Component <span class="tag">Structural</span></h3>
+    <figure class="fig" data-fig="component"><div class="figbox"><svg class="d" viewBox="0 0 600 120" role="img" aria-label="Component diagram">
+      <rect x="20" y="30" width="140" height="50"/><text x="90" y="60" text-anchor="middle">Presentation</text>
+      <rect x="250" y="30" width="110" height="50"/><text x="305" y="60" text-anchor="middle">Logic</text>
+      <rect x="450" y="30" width="130" height="50"/><text x="515" y="60" text-anchor="middle">Data</text>
+      <line x1="160" y1="55" x2="193" y2="55"/><path class="nf" d="M206 42 A13 13 0 0 0 206 68"/><circle cx="206" cy="55" r="7"/><line x1="213" y1="55" x2="250" y2="55"/>
+      <line x1="360" y1="55" x2="393" y2="55"/><path class="nf" d="M406 42 A13 13 0 0 0 406 68"/><circle cx="406" cy="55" r="7"/><line x1="413" y1="55" x2="450" y2="55"/>
+      <text x="196" y="100" text-anchor="end" class="sm">required ⊃</text><text x="214" y="100" class="sm">○ provided</text>
+    </svg></div>
+    <figcaption><span class="l-th"><b>Ball-and-socket:</b> ○ ball คือ interface ที่ component ให้ (provided) ⊃ socket คือ interface ที่ต้องการ (required) เมื่อประกบกันแปลว่าพึ่งพากันเชิงตรรกะ ไม่ได้แปลว่าอยู่เครื่องเดียวกัน</span><span class="l-en"><b>Ball-and-socket:</b> the ○ ball is an interface a component provides; the ⊃ socket is an interface it requires. When they meet, it is a logical dependency. It does not mean the two are on the same machine.</span></figcaption></figure>
+  </div>
+
+  <div class="stack">
+    <h3>7 Deployment <span class="tag">Structural</span></h3>
+    <figure class="fig" data-fig="deployment"><div class="figbox"><svg class="d" viewBox="0 0 600 150" role="img" aria-label="Deployment diagram">
+      <polygon points="40,45 54,31 204,31 190,45"/><polygon points="190,45 204,31 204,101 190,115"/><rect x="40" y="45" width="150" height="70"/>
+      <text x="115" y="72" text-anchor="middle" class="sm">«device»</text><text x="115" y="92" text-anchor="middle" class="b">Phone</text>
+      <polygon points="380,45 394,31 574,31 560,45"/><polygon points="560,45 574,31 574,101 560,115"/><rect x="380" y="45" width="180" height="70"/>
+      <text x="470" y="72" text-anchor="middle" class="sm">«node»</text><text x="470" y="92" text-anchor="middle" class="b">Server</text>
+      <line x1="204" y1="78" x2="380" y2="78"/><text x="288" y="70" text-anchor="middle">REST/HTTP</text>
+    </svg></div>
+    <figcaption><span class="l-th">กล่อง 3 มิติ = <b>node</b> หรือ <b>device</b> (เครื่องจริง) · เส้นทึบไม่มีหัวลูกศร = <b>communication path</b></span><span class="l-en">A 3-D box = a <b>node</b> or <b>device</b> (a real machine) · a solid line with no arrowhead = a <b>communication path</b></span></figcaption></figure>
+  </div>
+</section>
+
+<!-- ================= VOCAB ================= -->
+<section id="tab-vocab" class="stack-lg" hidden>
+  <div class="stack">
+    <h2><span class="l-th">ท่องศัพท์</span><span class="l-en">Flashcards</span></h2>
+    <p class="muted"><span class="l-th">เห็นคำอังกฤษแล้วนึกความหมายก่อน แตะการ์ดเพื่อดูเฉลย คำทั้งหมดมาจากตารางในหน้าทบทวน</span><span class="l-en">Read the term and recall its meaning first, then tap the card to check. Every card comes from the tables in the review pages.</span></p>
+    <div class="chips" id="vchips"></div>
+  </div>
+  <button class="card" id="vcard" aria-live="polite"></button>
+  <div class="row">
+    <button class="btn" id="vprev"><span class="l-th">ก่อนหน้า</span><span class="l-en">Previous</span></button>
+    <span class="score grow" id="vcount"></span>
+    <button class="btn" id="vshuf"><span class="l-th">สุ่มลำดับ</span><span class="l-en">Shuffle</span></button>
+    <button class="btn primary" id="vnext"><span class="l-th">คำถัดไป</span><span class="l-en">Next</span></button>
+  </div>
+</section>
+
+<!-- ================= QUIZ ================= -->
+<section id="tab-quiz" class="stack-lg" hidden>
+  <div class="stack">
+    <h2><span class="l-th">ฝึกข้อสอบ</span><span class="l-en">Practice questions</span></h2>
+    <p class="muted"><span class="l-th">ข้อของอาจารย์ 23 ข้อมาจาก Review Guide พร้อมเฉลยของอาจารย์ ข้อเสริมแต่งขึ้นตามเนื้อหาเดียวกัน ตัวเลือกสลับตำแหน่งทุกครั้ง</span><span class="l-en">The instructor's 23 questions come from the Review Guide, with the instructor's answers. The extra questions were written from the same material. Choices are shuffled every time.</span></p>
+    <div class="chips" id="qchips"></div>
+    <div class="row"><span class="grow"></span><button class="btn" id="qreset"></button></div>
+  </div>
+  <div class="panel stack" id="qbox">
+    <p class="score" id="qmeta"></p>
+    <div id="qfig" hidden></div>
+    <p class="qtext" id="qtext"></p>
+    <div class="choices" id="qchoices"></div>
+    <div class="exp" id="qexp" hidden></div>
+    <div class="row">
+      <button class="btn" id="qprev"><span class="l-th">ข้อก่อนหน้า</span><span class="l-en">Previous</span></button>
+      <span class="grow"></span>
+      <button class="btn primary" id="qnext"></button>
+    </div>
+  </div>
+  <p class="note" id="qempty" hidden><span class="l-th">ยังไม่มีข้อในชุดนี้ ลองทำชุดอื่นก่อน</span><span class="l-en">No questions in this set yet. Try another set first.</span></p>
+</section>
+
+</div>
+
+<script>
+(function(){
+var QUIZ = [{"id": "t1-1", "ch": 1, "src": "teacher", "q": ["อะไรแยก “software product” ออกจาก “program” ได้ดีที่สุด?", "What best distinguishes a software <em>product<\/em> from a <em>program<\/em>?"], "a": [["product ต้องเขียนด้วยภาษาคอมไพล์ program ใช้ภาษาสคริปต์", "A product must use a compiled language; a program uses scripting."], ["product ถูกวิศวกรรมให้ผู้อื่น ใช้ เชื่อถือ และพัฒนาต่อ ได้ ไม่ใช่แค่รันได้", "A product is engineered so others can use, trust, and evolve it, not just run."], ["product ต้องมี GUI เสมอ program เป็น command-line", "A product always has a GUI; a program is command-line."], ["product ขายเชิงพาณิชย์เสมอ program ฟรีเสมอ", "A product is always sold; a program is always free."]], "c": 1, "ex": ["program แค่ “ทำงานได้”; product ถูกออกแบบให้คนอื่นใช้ บำรุงรักษา และต่อยอดได้ — A/C/D เป็นเกณฑ์ผิวเผินที่ไม่จริง", "A program just “runs”; a product is built for others to use, maintain, and extend. A/C/D are superficial and false."]}, {"id": "t1-2", "ch": 1, "src": "teacher", "q": ["StudyMate ทำข้อมูลงานที่บันทึกไว้หายหลังแอปแครช ละเมิด quality attribute ใดชัดที่สุด?", "StudyMate loses saved tasks after a crash — which quality attribute fails most directly?"], "a": [["Usability", "Usability"], ["Portability", "Portability"], ["Reliability — ทำงานถูกต้องต่อเนื่องโดยไม่สูญเสียข้อมูล", "Reliability — keeps working without losing data."], ["Efficiency", "Efficiency"]], "c": 2, "ex": ["ข้อมูลหาย = reliability; ถ้าเป็น “คนอื่นเห็นข้อมูลเรา” จะเป็น security แทน", "Lost data = reliability. (If it were “others see your data,” that would be security.)"]}, {"id": "t1-3", "ch": 1, "src": "teacher", "q": ["ในกรอบ “ยุค AI” หน้าที่ใดยังเป็นของวิศวกรมนุษย์ ไม่ใช่ของ AI?", "In the “AI era” framing, which responsibility stays with the human engineer?"], "a": [["ร่างโค้ด boilerplate ชุดแรกจาก prompt", "Drafting the first boilerplate from a prompt."], ["เสนอชื่อฟังก์ชัน/ตัวแปรทางเลือก", "Suggesting alternative function/variable names."], ["สร้างค่าอินพุตตัวอย่างช่วย seed unit test", "Generating sample inputs to seed unit tests."], ["ตัดสินว่าผลลัพธ์ตรง requirement และปลอดภัยพอจะ ship ไหม", "Deciding if the result meets the requirement and is safe to ship."]], "c": 3, "ex": ["AI ร่าง/เสนอ/ช่วย seed ได้ แต่การ “ตัดสินใจ + รับผิดชอบ” ว่าถูกและปลอดภัยพอจะ ship เป็นของมนุษย์", "AI can draft/suggest/seed, but judgment and accountability for correctness and safety stay human."]}, {"id": "t1-4", "ch": 1, "src": "teacher", "q": ["กติกา AI-honesty ของวิชานี้คือ “log–verify–explain” สำหรับคนที่ใช้ AI เขียนฟังก์ชัน หมายความว่า?", "The course AI-honesty rule “log–verify–explain” requires a student who used AI to write a function to:"], "a": [["บันทึกว่าใช้ AI, ตรวจ/ทดสอบผลลัพธ์, และอธิบายโค้ดได้", "Record the AI use, check the output, and be able to explain it."], ["ปิดบังการใช้ AI ให้งานดูเป็นของตัวเองล้วน", "Hide the AI use so the work looks fully original."], ["เชื่อว่าถูกเพราะโค้ดคอมไพล์ผ่าน", "Trust it because it compiled."], ["ให้ AI เขียนได้แค่คอมเมนต์ ห้ามเขียนโค้ด", "Let AI write only comments, never code."]], "c": 0, "ex": ["AI-honesty ≠ “ห้ามใช้ AI” แต่คือ ใช้ได้ ถ้า log–verify–explain ครบ", "AI-honesty is not “no AI” — it is “use it, but log–verify–explain.”"]}, {"id": "x1", "src": "extra", "ch": 1, "q": ["ตามนิยามของ IEEE แนวทางของ software engineering มีลักษณะ 3 อย่างคืออะไร", "According to the IEEE definition, software engineering applies an approach that is:"], "a": ["systematic, disciplined, quantifiable", "fast, cheap, automatic", "creative, flexible, informal", "compiled, tested, deployed"], "c": 0, "ex": ["IEEE: the application of a systematic, disciplined, quantifiable approach to the development, operation, and maintenance of software จำ 3 คำนี้ให้ได้", "IEEE: the application of a systematic, disciplined, quantifiable approach to the development, operation, and maintenance of software. Remember these three words."]}, {"id": "x2", "src": "extra", "ch": 1, "q": ["โรงพยาบาลแห่งหนึ่งจ้างทำระบบคิวเพื่อใช้ในวอร์ดของตัวเองเท่านั้น ซอฟต์แวร์นี้เป็นประเภทใด", "A hospital pays for a queue system built only for its own wards. What type of software is this?"], "a": [["Generic product ขายในตลาดทั่วไป", "Generic product sold on the open market"], ["Custom (bespoke) software สั่งทำให้ลูกค้ารายเดียว", "Custom (bespoke) software built for one customer"], ["Embedded software ฝังในอุปกรณ์", "Embedded software inside a device"], ["Open-source library", "Open-source library"]], "c": 1, "ex": ["ทำให้ลูกค้ารายเดียวตามความต้องการของเขา = custom/bespoke ส่วน generic คือขายตลาดทั่วไป ผู้ขายคิด requirement เอง เช่น Excel, LINE", "Built for one customer, to that customer's needs = custom/bespoke. Generic means sold on the open market, with the vendor imagining the requirements (Excel, LINE)."]}, {"id": "x3", "src": "extra", "ch": 1, "q": ["นักศึกษาคนหนึ่งเปิดดูรายการงานของเพื่อนได้ทั้งที่ไม่มีสิทธิ์ ระบบนี้ละเมิด quality attribute ใด", "A student can open another student's task list without permission. Which quality attribute is violated?"], "a": ["Reliability", "Security", "Usability", "Maintainability"], "c": 1, "ex": ["คนไม่มีสิทธิ์เข้าถึงข้อมูลได้ = security ถ้าเป็นข้อมูลหายหรือระบบล่ม จึงจะเป็น reliability", "People without permission can reach the data = security. Lost data or a crash would be reliability."]}, {"id": "x4", "src": "extra", "ch": 1, "q": ["โปรเจกต์ส่งช้าไป 3 เดือน เพราะลูกค้าเปลี่ยนความต้องการทุกสัปดาห์และไม่มีใครจดไว้ ข้อใดคือสาเหตุ (root cause) ไม่ใช่อาการ", "A project is 3 months late because the client changed their needs weekly and nobody wrote them down. Which is the root cause, not a symptom?"], "a": [["ส่งงานช้า", "Late delivery"], ["งบประมาณบานปลาย", "Budget overrun"], ["Requirement ไม่ชัดและเปลี่ยนตลอด", "Unclear, shifting requirements"], ["ทีมต้องทำงานล่วงเวลา", "The team works overtime"]], "c": 2, "ex": ["ส่งช้า งบบาน ทำล่วงเวลา เป็นอาการ (symptom) สาเหตุจริงคือ requirement ไม่ชัดหรือเปลี่ยนตลอด อีกสองสาเหตุที่พบบ่อยคือวางแผนหรือประเมินเวลาผิด และการสื่อสารในทีมพัง", "Late delivery, budget overrun and overtime are symptoms. The root cause is unclear or shifting requirements. The other two common causes are bad planning or estimation, and broken team communication."]}, {"id": "x5", "src": "extra", "ch": 1, "q": ["นักพัฒนาคนใหม่ใช้เวลาหลายสัปดาห์กว่าจะแก้ฟีเจอร์เล็ก ๆ ได้ เพราะโค้ดอ่านยากและไม่มีเอกสาร ระบบนี้มีปัญหา quality attribute ใด", "A new developer needs weeks to change a small feature because the code is unreadable and undocumented. Which quality attribute is the problem?"], "a": ["Maintainability", "Security", "Performance", "Reliability"], "c": 0, "ex": ["Maintainable = นักพัฒนาคนถัดไปแก้ต่อได้ ระบบนี้ทำงานได้ แต่แก้ยาก จึงเป็นปัญหา maintainability", "Maintainable = the next developer can change it. This system works but is hard to change, so the problem is maintainability."]}, {"id": "x6", "src": "extra", "ch": 1, "q": ["AI เขียนโค้ดแล้วผ่าน automated test ทั้งหมด ข้อใดถูกต้องตามแนวคิดของวิชานี้", "AI-generated code passes all automated tests. Which statement fits this course?"], "a": [["merge และ deploy ได้เลย เพราะ AI เป็นผู้รับผิดชอบผลลัพธ์", "It may be merged and deployed at once, because the AI is responsible for the outcome"], ["ต้องมีมนุษย์ที่ระบุชื่อได้ตรวจเจตนาและความเสี่ยง แล้วเป็นผู้อนุมัติและรับผิดชอบ", "A named human must review intent and risk, then approve and own the outcome"], ["ต้องลบโค้ดทิ้งแล้วเขียนใหม่ด้วยมือทั้งหมด", "The code must be deleted and rewritten by hand"], ["ไม่ต้องบันทึกว่าใช้ AI เพราะ test ผ่านแล้ว", "No need to log the AI use, since the tests passed"]], "c": 1, "ex": ["ผ่าน test เป็นหลักฐานให้คนตรวจ ไม่ใช่ใบอนุญาตปล่อยงาน AI เสนอและช่วยทำ แต่มนุษย์เป็นเจ้าของการตัดสินใจและความรับผิดชอบ", "Passing tests is evidence for a human to review, not permission to release. AI proposes and helps; a human owns the decision and the accountability."]}, {"id": "t2-1", "ch": 2, "src": "teacher", "q": ["ข้อใดคือ 4 กิจกรรมพื้นฐานของทุกกระบวนการซอฟต์แวร์ (Sommerville)?", "Which set lists the four fundamental activities common to all software processes (Sommerville)?"], "a": [["Marketing, sales, billing, support", "Marketing, sales, billing, support."], ["Specification, development (design &amp; implementation), validation, evolution", "Specification, development (design &amp; implementation), validation, evolution."], ["Compiling, linking, packaging, shipping", "Compiling, linking, packaging, shipping."], ["Hiring, onboarding, retrospective, promotion", "Hiring, onboarding, retrospective, promotion."]], "c": 1, "ex": ["แกนของทุก process = ระบุความต้องการ → พัฒนา (ออกแบบ+สร้าง) → ตรวจสอบ → วิวัฒน์ต่อ", "Every process’s core: specify → develop (design+build) → validate → evolve."]}, {"id": "t2-2", "ch": 2, "src": "teacher", "q": ["Waterfall เหมาะกว่า Scrum มากที่สุดในสถานการณ์ใด?", "In which situation is Waterfall most defensible over Scrum?"], "a": [["สตาร์ทอัพ MVP ที่ฟีเจอร์เปลี่ยนทุกสัปดาห์ตาม feedback", "A startup MVP whose features shift weekly from feedback."], ["สัญญาระเบียบเข้ม ขอบเขตตายตัว requirement นิ่งและเข้าใจดี", "A fixed-scope, regulated contract with stable, well-understood requirements."], ["โปรโตไทป์วิจัยที่โจทย์ยังไม่ชัด", "A research prototype exploring a poorly-understood problem."], ["hackathon 48 ชั่วโมง", "A 48-hour hackathon build."]], "c": 1, "ex": ["Waterfall เด่นเมื่อ requirement นิ่ง ขอบเขตตายตัว และต้องมีเอกสาร/การรับรอง — สถานการณ์เปลี่ยนบ่อยควรใช้ iterative/Agile", "Waterfall fits stable requirements, fixed scope, and audit/certification needs; volatile settings call for iterative/Agile."]}, {"id": "t2-3", "ch": 2, "src": "teacher", "q": ["ใน Scrum ใครมีหน้าที่จัดลำดับความสำคัญของ Product Backlog?", "In Scrum, who orders and prioritizes the Product Backlog?"], "a": [["Scrum Master ผู้ขจัดอุปสรรคให้ทีม", "The Scrum Master, who removes impediments."], ["Product Owner ผู้แทนคุณค่าที่จะสร้าง", "The Product Owner, who represents the value to build."], ["Daily Scrum การซิงก์สั้น ๆ ประจำวัน", "The Daily Scrum, the team’s daily sync."], ["ผู้ทดสอบ QA ผู้ตรวจแต่ละ backlog item", "The QA tester, who verifies each item."]], "c": 1, "ex": ["Product Owner เป็นเจ้าของและจัดลำดับ backlog; Scrum Master เป็น facilitator ไม่ได้สั่งลำดับงาน", "The Product Owner owns and prioritizes the backlog; the Scrum Master facilitates, not prioritizes."]}, {"id": "t2-4", "ch": 2, "src": "teacher", "q": ["จุดประสงค์ของ Sprint Retrospective คือ?", "The purpose of the Sprint Retrospective is to:"], "a": [["สาธิต increment ที่เสร็จให้ stakeholder", "Demonstrate the finished increment to stakeholders."], ["จัดลำดับ Product Backlog สำหรับ release ถัดไป", "Re-order the Product Backlog for the next release."], ["ทบทวนว่า “ทีมทำงานกันอย่างไร” แล้วเลือกสิ่งที่จะปรับปรุงรอบหน้า", "Reflect on how the team worked and pick improvements for next Sprint."], ["มอบงานที่เหลือให้คนที่โค้ดเร็วที่สุด", "Reassign remaining tasks to the fastest coder."]], "c": 2, "ex": ["Retrospective = ปรับ “วิธีทำงานของทีม”; ส่วนการโชว์ผลิตภัณฑ์คือ Sprint Review (อย่าสับสน)", "The Retrospective improves the team’s process; showing the product is the Sprint Review — don’t confuse them."]}, {"id": "x7", "src": "extra", "ch": 2, "q": ["ข้อใดเรียงลำดับ 4 กิจกรรมพื้นฐานของ Sommerville ได้ถูกต้อง", "Which is the correct order of Sommerville's four fundamental activities?"], "a": ["Specification → Development → Validation → Evolution", "Development → Specification → Evolution → Validation", "Validation → Specification → Development → Evolution", "Specification → Validation → Development → Evolution"], "c": 0, "ex": ["กำหนดความต้องการ → พัฒนา (ออกแบบและสร้าง) → ตรวจสอบ → ปรับปรุงต่อ", "Specify the needs → develop (design and build) → validate → evolve."]}, {"id": "x8", "src": "extra", "ch": 2, "q": ["AI เขียนว่า “เมื่อพัฒนาซอฟต์แวร์เสร็จและส่งมอบให้ลูกค้าแล้ว กระบวนการซอฟต์แวร์ถือว่าจบ” ประโยคนี้ลืมกิจกรรมใด", "An AI wrote: “Once the software has been developed and delivered, the software process is complete.” Which activity does it leave out?"], "a": ["Specification", "Development", "Validation", "Evolution"], "c": 3, "ex": ["ซอฟต์แวร์ไม่เคยเสร็จ หลังส่งมอบยังต้องแก้และปรับตามการเปลี่ยนแปลง = Evolution ซึ่งเป็นส่วนใหญ่ของอายุระบบ", "Software is never done. After delivery it must still be fixed and adapted = Evolution, which is most of a system's life."]}, {"id": "x9", "src": "extra", "ch": 2, "q": ["คำถาม “เรากำลังสร้างสิ่งที่ผู้ใช้ต้องการจริงหรือเปล่า” ตรงกับคำใด", "The question “Are we building the right thing?” corresponds to:"], "a": ["Verification", "Validation", "Specification", "Compilation"], "c": 1, "ex": ["Validation = building the right thing (ตรงความต้องการผู้ใช้) ส่วน Verification = building it right (ตรงตาม spec)", "Validation = building the right thing (meets the user's need). Verification = building it right (meets the spec)."]}, {"id": "x10", "src": "extra", "ch": 2, "q": ["ข้อใดอธิบาย Agile ได้ถูกต้อง", "Which statement about Agile is correct?"], "a": [["Agile คือการพัฒนาที่ไม่มีเอกสารและไม่มีแผน", "Agile means no documentation and no plan"], ["Agile ทำเป็นรอบสั้น ๆ ส่งของที่ใช้ได้บ่อย ๆ และปรับตาม feedback โดยยังมีแผนและเอกสารเท่าที่จำเป็น", "Agile works in short cycles, ships working software often, and adapts to feedback, with just enough plans and documents"], ["Agile ต้องทำ requirement ให้ครบทุกข้อก่อนเริ่มเขียนโค้ด", "Agile requires all requirements to be complete before coding starts"], ["Agile เหมาะที่สุดกับระบบ safety-critical ที่ต้องมีการรับรอง", "Agile fits safety-critical systems needing certification best"]], "c": 1, "ex": ["Agile ไม่ได้แปลว่าไม่มีเอกสารหรือแผน แต่ให้น้ำหนักกับการตอบสนองต่อการเปลี่ยนแปลงมากกว่า ข้อสุดท้ายคือสถานการณ์ที่ plan-driven เหมาะกว่า", "Agile does not mean no documents or no plan; it values responding to change more. The last option describes where plan-driven fits better."]}, {"id": "x11", "src": "extra", "ch": 2, "q": ["ข้อใดเป็น Scrum artifact", "Which of these is a Scrum artifact?"], "a": ["Sprint Backlog", "Daily Scrum", "Scrum Master", "Sprint Review"], "c": 0, "ex": ["Artifacts มี 3 อย่าง: Product Backlog, Sprint Backlog, Increment ส่วน Daily Scrum กับ Sprint Review เป็น event และ Scrum Master เป็น role", "There are three artifacts: Product Backlog, Sprint Backlog, Increment. Daily Scrum and Sprint Review are events; Scrum Master is a role."]}, {"id": "x12", "src": "extra", "ch": 2, "q": ["ทีมสาธิต increment ที่ทำเสร็จให้ stakeholder ดูและรับ feedback เกี่ยวกับผลิตภัณฑ์ นี่คือ event ใด", "The team shows the finished increment to stakeholders and gets feedback on the product. Which event is this?"], "a": ["Sprint Retrospective", "Sprint Review", "Sprint Planning", "Daily Scrum"], "c": 1, "ex": ["Sprint Review ดูตัวผลิตภัณฑ์ ส่วน Retrospective ทบทวนวิธีทำงานของทีม สองอันนี้ข้อสอบชอบสลับ", "The Sprint Review looks at the product. The Retrospective looks at how the team works. The exam likes to swap these two."]}, {"id": "x13", "src": "extra", "ch": 2, "q": ["ทีม StudyMate ปล่อยฟีเจอร์เตือนก่อนกำหนดส่งเป็นอย่างแรก แล้วค่อยเพิ่มฟีเจอร์รายงานทีหลัง แนวทางนี้คืออะไร", "The StudyMate team ships reminders first and adds reports later. What approach is this?"], "a": [["Waterfall ทำทีละเฟสจนครบทั้งระบบ", "Waterfall, finishing each phase for the whole system"], ["Incremental จัดลำดับส่งมอบตามคุณค่า", "Incremental delivery prioritized by value"], ["Big Bang ไม่มีการวางแผน", "Big Bang with little planning"], ["Reuse-oriented ประกอบจากชิ้นส่วนสำเร็จรูป", "Reuse-oriented assembly of existing components"]], "c": 1, "ex": ["ส่งทีละก้อนที่ใช้ได้ โดยเอาของที่มีคุณค่าที่สุดก่อน = incremental (MVP)", "Shipping one usable slice at a time, most valuable first = incremental (MVP)."]}, {"id": "t3-1", "ch": 3, "src": "teacher", "q": ["“นักศึกษาเห็นได้เฉพาะงานของตัวเอง” จัดเป็นอะไร?", "“A student can only see their own tasks.” This is best classified as:"], "a": [["functional requirement เพราะบรรยายการกระทำ", "A functional requirement, since it describes an action."], ["user story เพราะระบุ role", "A user story, since it names a role."], ["acceptance test เพราะตรวจได้", "An acceptance test, since it’s checkable."], ["non-functional (security) requirement — ข้อจำกัดเชิงคุณภาพ", "A non-functional (security) requirement — a quality constraint."]], "c": 3, "ex": ["กับดัก: เห็นกริยา “เห็น” แล้วรีบตอบ FR — แต่ “จำกัดการเข้าถึงข้อมูล” เป็นข้อจำกัดความปลอดภัย = NFR", "Trap: the verb “see” lures you to FR — but restricting data access is a security constraint = NFR."]}, {"id": "t3-2", "ch": 3, "src": "teacher", "q": ["ข้อใดเป็น functional requirement?", "Which of the following is a functional requirement?"], "a": [["“แอปต้องตอบสนองแต่ละคำขอภายใน 1 วินาที”", "“The app must respond within one second.”"], ["“ผู้ใช้ทำเครื่องหมายงานที่มีอยู่ว่าเสร็จได้”", "“The user can mark any existing task as completed.”"], ["“ระบบต้อง available 99.9% ของเวลา”", "“The system must be available 99.9% of the time.”"], ["“ข้อมูลที่จัดเก็บต้องถูกเข้ารหัส”", "“All stored data must be encrypted at rest.”"]], "c": 1, "ex": ["FR = สิ่งที่ระบบ “ทำ” ได้; A/C/D เป็นข้อจำกัดเชิงคุณภาพ (เร็ว/พร้อมใช้/ปลอดภัย) = NFR", "An FR is something the system does; A/C/D are quality constraints (speed/availability/security) = NFRs."]}, {"id": "t3-3", "ch": 3, "src": "teacher", "q": ["requirement ข้อใด “อ่อน” เพราะตรวจสอบไม่ได้ (not verifiable)?", "Which requirement is weak because it is not verifiable?"], "a": [["“งานที่เสร็จแล้วต้องไม่ทำให้เกิดการเตือน”", "“A completed task must never trigger a reminder.”"], ["“การเตือนต้องมาถึงภายใน 1 นาทีจากเวลากำหนด”", "“A reminder must appear within one minute of its due time.”"], ["“ผู้ใช้เพิ่มงานที่มีชื่อและวันกำหนดส่งได้”", "“The user can add a task with a title and a due date.”"], ["“ระบบควรโหลดเร็วมากเพื่อให้ผู้ใช้รู้สึกพอใจ”", "“The system should load very quickly so users feel satisfied.”"]], "c": 3, "ex": ["“เร็วมาก/พอใจ” ไม่มีเกณฑ์ตัวเลขให้วัด — อีกสามข้อเขียน Given–When–Then/ทดสอบได้", "“Very quickly/satisfied” has no measurable threshold; the other three are testable."]}, {"id": "t3-4", "ch": 3, "src": "teacher", "q": ["การสัมภาษณ์และการสังเกตผู้ใช้ เป็นกิจกรรม requirement ประเภทใด?", "Interviews and observation are examples of which requirements activity?"], "a": [["Validation ตรวจว่าเป็น requirement ที่ถูกต้อง", "Validation — checking they’re the right ones."], ["Elicitation ค้นหาความต้องการจาก stakeholder", "Elicitation — discovering needs from stakeholders."], ["Implementation แปลง requirement เป็นโค้ด", "Implementation — turning them into code."], ["Verification ยืนยันว่าระบบตรง spec", "Verification — confirming the build matches spec."]], "c": 1, "ex": ["การเก็บความต้องการ (สัมภาษณ์/สังเกต) = elicitation; validation คือตรวจว่าถูกต้องภายหลัง", "Gathering needs (interview/observe) = elicitation; validation is checking correctness later."]}, {"id": "x14", "src": "extra", "ch": 3, "q": ["ข้อใดเป็น non-functional requirement", "Which of the following is a non-functional requirement?"], "a": [["ผู้ใช้เพิ่มงานพร้อมวันกำหนดส่งได้", "The user can add a task with a due date"], ["ผู้ใช้ดูงานของสัปดาห์นี้ได้", "The user can view this week's tasks"], ["การเตือนต้องมาถึงภายใน 1 นาทีจากเวลาที่กำหนด", "A reminder must arrive within one minute of its scheduled time"], ["ผู้ใช้ทำเครื่องหมายว่างานเสร็จได้", "The user can mark a task as done"]], "c": 2, "ex": ["ภายใน 1 นาที เป็นข้อจำกัดเชิงคุณภาพ (performance) = NFR อีกสามข้อคือสิ่งที่ระบบทำ = FR", "“Within one minute” is a quality constraint (performance) = NFR. The other three are things the system does = FRs."]}, {"id": "x15", "src": "extra", "ch": 3, "q": ["ข้อใดเป็น user story ที่ครบตามรูปแบบมาตรฐาน", "Which is a complete user story in the standard form?"], "a": [["As a user, I want fast loading.", "As a user, I want fast loading."], ["As a student, I want a reminder 1 day before a deadline, so that I submit on time.", "As a student, I want a reminder 1 day before a deadline, so that I submit on time."], ["The system shall store tasks in Firestore.", "The system shall store tasks in Firestore."], ["Students like reminders.", "Students like reminders."]], "c": 1, "ex": ["ต้องครบ 3 ส่วน: As a «role», I want «goal», so that «benefit» ข้อแรกไม่มี benefit และใช้ role ว่า user ซึ่งกว้างเกินไป", "All three parts are needed: As a «role», I want «goal», so that «benefit». The first option has no benefit and uses the too-broad role “user”."]}, {"id": "x16", "src": "extra", "ch": 3, "q": ["Acceptance criteria เขียนในรูปแบบใด", "Acceptance criteria are written in which form?"], "a": ["Given / When / Then", "As a / I want / so that", "Context / Decision / Consequence", "Model / View / Controller"], "c": 0, "ex": ["Given / When / Then = acceptance criteria ที่วัดได้ ส่วน As a / I want / so that คือ user story และ Context / Decision / Consequence คือ ADR", "Given / When / Then = measurable acceptance criteria. As a / I want / so that is a user story. Context / Decision / Consequence is an ADR."]}, {"id": "x17", "src": "extra", "ch": 3, "q": ["จุดประสงค์หลักของ SRS คืออะไร", "What is the main purpose of an SRS?"], "a": [["เป็นคู่มือสอนผู้ใช้ใช้งานระบบ", "A manual that teaches users how to use the system"], ["เป็นเอกสารข้อตกลงกลางว่าระบบต้องทำอะไร ให้ทุกฝ่ายอ้างอิงตรงกัน", "The single agreed reference of what the system must do"], ["เป็นแผนโครงสร้างโค้ดและคลาส", "A plan of the code and class structure"], ["เป็นรายงานบั๊กจากการทดสอบ", "A report of bugs found in testing"]], "c": 1, "ex": ["SRS บอกว่าระบบต้องทำอะไร ไม่ใช่คู่มือผู้ใช้ และไม่ใช่เอกสารออกแบบโค้ด", "The SRS says what the system must do. It is not a user manual and not a code-design document."]}, {"id": "x18", "src": "extra", "ch": 3, "q": ["ส่วน out-of-scope ใน SRS มีไว้เพื่ออะไร", "What is the out-of-scope section of an SRS for?"], "a": [["บอกสิ่งที่ระบบจะไม่ทำ เพื่อกัน scope creep", "To state what the system will NOT do, preventing scope creep"], ["บอกรายการบั๊กที่ยังไม่ได้แก้", "To list bugs not yet fixed"], ["บอกเทคโนโลยีที่ทีมเลือกใช้", "To name the technologies the team chose"], ["บอกชื่อสมาชิกที่ไม่ได้ทำงาน", "To name members who did no work"]], "c": 0, "ex": ["Out-of-scope = สิ่งที่ตกลงกันว่าจะไม่ทำ ช่วยกันไม่ให้ขอบเขตงานบานออกไปเรื่อย ๆ (scope creep)", "Out-of-scope = what was agreed will not be built. It stops the scope from growing without limit (scope creep)."]}, {"id": "x19", "src": "extra", "ch": 3, "q": ["FR-3 ของ StudyMate มีประโยค “งานที่ทำเสร็จแล้วจะไม่เตือน” ประโยคนี้มีไว้เพื่ออะไร", "StudyMate's FR-3 says “a completed task does not trigger a reminder.” Why is this clause there?"], "a": [["เพื่อให้ระบบทำงานเร็วขึ้น", "To make the system faster"], ["เพื่อครอบคลุมกรณีขอบ ทำให้ requirement สมบูรณ์", "To cover the edge case and make the requirement complete"], ["เพื่อให้หน้าจอสวยขึ้น", "To make the screen prettier"], ["เพื่อลดต้นทุนเซิร์ฟเวอร์", "To cut server cost"]], "c": 1, "ex": ["ประโยคนี้ปิดกรณีขอบ (edge case): งานเปิดอยู่ให้เตือน งานเสร็จแล้วให้เงียบ ทำให้ requirement ครบและทดสอบได้ทั้งสองทาง", "This clause closes the edge case: an open task reminds, a done task stays silent. It makes the requirement complete and testable both ways."]}, {"id": "x20", "src": "extra", "ch": 3, "q": ["ตามแนวทาง AI-First ข้อใดคือวิธีใช้ AI กับ requirement ที่ถูกต้อง", "Under AI-First, which is the right way to use AI for requirements?"], "a": [["สั่ง AI ว่า “เขียน requirement ของระบบให้หน่อย” แล้วใช้ตามนั้นเลย", "Ask AI to “write the requirements” and use them as they are"], ["ห้ามใช้ AI กับงาน requirement ทุกกรณี", "Never use AI for requirements"], ["ให้ AI ร่าง user story จากบันทึกสัมภาษณ์จริง แล้วตรวจเทียบกับหลักฐาน ตัดและแก้เอง", "Let AI draft stories from real interview notes, then verify against the evidence and cut or fix"], ["ให้ AI สร้างบทสัมภาษณ์ผู้ใช้ขึ้นมาแทนการสัมภาษณ์จริง", "Have AI generate user interviews instead of doing real ones"]], "c": 2, "ex": ["AI ร่างได้ แต่ต้องป้อนหลักฐานจริงและตรวจกับผู้ใช้จริง ห้ามให้ AI เขียน requirement จากอากาศ และห้ามสร้างบทสัมภาษณ์ปลอม", "AI may draft, but feed it real evidence and check against real users. Never let AI write requirements from nothing, and never fake interviews."]}, {"id": "x21", "src": "extra", "ch": 3, "q": ["ข้อใดแก้ requirement “ระบบควรเร็ว” ให้ดีที่สุด", "Which is the best rewrite of “The system should be fast”?"], "a": [["ระบบควรเร็วมาก", "The system should be very fast"], ["ผู้ใช้ควรรู้สึกว่าระบบเร็ว", "Users should feel the system is fast"], ["Dashboard ต้องโหลดภายใน 2 วินาทีบน Wi-Fi ของมหาวิทยาลัย เมื่อมีผู้ใช้พร้อมกันไม่เกิน 200 คน", "The dashboard shall load within 2 s on campus Wi-Fi with up to 200 concurrent users"], ["ระบบควรใช้เซิร์ฟเวอร์ที่แรงที่สุด", "The system should use the most powerful server"]], "c": 2, "ex": ["Requirement ที่ดีต้องตรวจสอบได้ (verifiable) คือมีตัวเลขหรือเงื่อนไขที่ test ผ่านหรือไม่ผ่านได้", "A good requirement is verifiable: it has a number or condition that a test can pass or fail."]}, {"id": "t4-1", "ch": 4, "src": "teacher", "q": ["ข้อใดจับคู่ไดอะแกรม UML กับหมวดได้ถูกต้อง?", "Which pairing of a UML diagram to its category is correct?"], "a": [["use-case = structural", "A use-case diagram is structural."], ["class = behavioural", "A class diagram is behavioural."], ["activity = behavioural", "An activity diagram is behavioural."], ["deployment = behavioural", "A deployment diagram is behavioural."]], "c": 2, "ex": ["Behavioral = use-case/activity/sequence/state; Structural = class/component/deployment", "Behavioural = use-case/activity/sequence/state; structural = class/component/deployment."]}, {"id": "t4-2", "ch": 4, "src": "teacher", "q": ["«include» ต่างจาก «extend» อย่างไร?", "The difference between «include» and «extend» is that:"], "a": [["«include» เชื่อม actor สองตัว «extend» เชื่อม use case สองอัน", "«include» links two actors; «extend» links two use cases."], ["เป็นคำเหมือนกัน ใช้แทนกันได้", "They are interchangeable synonyms."], ["«include» เป็นส่วนของ base เสมอ; «extend» ทำเมื่อมีเงื่อนไข", "«include» always runs as part of the base; «extend» is conditional."], ["«extend» ทำเสมอ ส่วน «include» เป็นทางเลือก", "«extend» always runs; «include» is optional."]], "c": 2, "ex": ["include = ทำเสมอ (mandatory), extend = เสริมเมื่อเข้าเงื่อนไข (optional) — ข้อ D สลับความหมายกัน", "include = always (mandatory); extend = conditional (optional). Option D inverts them."]}, {"id": "t4-3", "ch": 4, "src": "teacher", "q": ["AI วาดไดอะแกรมโดยลาก Actor “Student” ไปยัง use case “Add Task” ด้วยเส้น «include» — ผิดตรงไหน?", "An AI drew Actor “Student” joined to use case “Add Task” with «include». What is wrong?"], "a": [["ไม่ผิด actor include use case ได้", "Nothing — an actor may include a use case."], ["«include» ต้องเชื่อม use case สองอัน; actor→use case ต้องเป็น association", "«include» must link two use cases; actor→use case is an association."], ["หัวลูกศรต้องทึบ ไม่งั้นผิด", "The arrowhead must be solid or it’s invalid."], ["“Add Task” ควรวาดเป็น actor", "“Add Task” should be an actor."]], "c": 1, "ex": ["actor เชื่อม use case ด้วยเส้น association เสมอ; «include»/«extend» ใช้ระหว่าง use case เท่านั้น", "Actors connect to use cases by association; «include»/«extend» are between use cases only."]}, {"id": "t4-4", "ch": 4, "src": "teacher", "q": ["ในไดอะแกรม class ระหว่าง Student กับ Task มี multiplicity “1 —— *” หมายความว่า?", "The multiplicity “1 —— *” between Student and Task means:"], "a": [["Student หนึ่งคนมีได้หลาย Task; Task หนึ่งงานผูกกับ Student หนึ่งคน", "One Student has many Tasks; each Task links to one Student."], ["Student ผูกกับ Task ได้เพียงงานเดียว", "Each Student links to exactly one Task."], ["Task หนึ่งงานผูกกับ Student หลายคนพร้อมกัน", "Each Task links to many Students at once."], ["ไม่มีความสัมพันธ์ระหว่างสองคลาส", "There is no relationship between them."]], "c": 0, "ex": ["1—* อ่านว่า “หนึ่งต่อกลุ่ม”: ฝั่ง 1 (Student) มีได้หลายฝั่ง * (Task) แต่ Task แต่ละงานเป็นของ Student คนเดียว", "1—* = one-to-many: the 1 side (Student) has many on the * side (Task), each Task owned by one Student."]}, {"id": "x22", "src": "extra", "ch": 4, "q": ["UML คืออะไร", "What is UML?"], "a": [["ภาษาโปรแกรมที่คอมไพล์แล้วรันได้", "A programming language that compiles and runs"], ["กระบวนการพัฒนาซอฟต์แวร์แบบหนึ่ง", "A software development process"], ["ภาษาวาดแบบจำลองเพื่อสื่อสารการออกแบบ", "A visual modeling language for communicating design"], ["ระบบจัดการฐานข้อมูล", "A database management system"]], "c": 2, "ex": ["UML = Unified Modeling Language เป็นสัญกรณ์มาตรฐานสำหรับวาดแบบจำลอง ไม่ใช่ภาษาโปรแกรม และไม่ใช่กระบวนการ", "UML = Unified Modeling Language, a standard notation for drawing models. It is not a programming language and not a process."]}, {"id": "x23", "src": "extra", "ch": 4, "q": ["ชุดใดเป็นไดอะแกรมแบบ structural ทั้งหมด", "Which set contains only structural diagrams?"], "a": ["Class, Component, Deployment", "Use-case, Activity, Sequence", "Class, Activity, State", "Sequence, Component, Use-case"], "c": 0, "ex": ["Structural = โครงสร้าง: Class, Component, Deployment, Object ส่วน Behavioural = พฤติกรรม: Use-case, Activity, Sequence, State", "Structural: Class, Component, Deployment, Object. Behavioural: Use-case, Activity, Sequence, State."]}, {"id": "x24", "src": "extra", "ch": 4, "fig": "uc-extend", "q": ["จากรูป ข้อใดอ่านความสัมพันธ์ได้ถูกต้อง", "In the figure, which reading is correct?"], "a": [["Borrow Book ต้องทำ Reserve Book ทุกครั้ง", "Borrow Book always performs Reserve Book"], ["Borrow Book สมบูรณ์ได้เอง ส่วน Reserve Book เกิดเมื่อเข้าเงื่อนไขเท่านั้น", "Borrow Book is complete on its own; Reserve Book runs only when its condition holds"], ["Member ต่อกับ Reserve Book ด้วย «extend»", "Member is joined to Reserve Book by «extend»"], ["Reserve Book เป็น actor", "Reserve Book is an actor"]], "c": 1, "ex": ["«extend» = เสริมเมื่อมีเงื่อนไข ลูกศรชี้จาก extension (Reserve Book) กลับไปหา base (Borrow Book) ซึ่งสมบูรณ์ได้เอง", "«extend» = added only under a condition. The arrow points from the extension (Reserve Book) back to the base (Borrow Book), which is complete on its own."]}, {"id": "x25", "src": "extra", "ch": 4, "fig": "uc-include", "q": ["จากรูป «include» ระหว่าง Checkout กับ Validate Cart หมายความว่าอะไร", "In the figure, what does «include» between Checkout and Validate Cart mean?"], "a": [["Validate Cart ทำเฉพาะเมื่อลูกค้าเลือก", "Validate Cart runs only if the customer chooses it"], ["ทุกครั้งที่ Checkout ต้องทำ Validate Cart เสมอ", "Every Checkout always performs Validate Cart"], ["Customer เป็นผู้เริ่ม Validate Cart โดยตรง", "The Customer starts Validate Cart directly"], ["Validate Cart เป็น subclass ของ Checkout", "Validate Cart is a subclass of Checkout"]], "c": 1, "ex": ["«include» = ทำเสมอ ไม่มีข้อยกเว้น ลูกศรชี้จาก base (Checkout) ไปหา included (Validate Cart)", "«include» = always performed, no exception. The arrow points from the base (Checkout) to the included use case (Validate Cart)."]}, {"id": "x26", "src": "extra", "ch": 4, "q": ["ข้อใดตั้งชื่อ use case ได้ถูกหลัก", "Which is a well-formed use-case name?"], "a": ["Books", "Borrow Book", "Cart Management", "Reminder"], "c": 1, "ex": ["ชื่อ use case ต้องเป็นกริยา + นาม (verb + noun) เช่น Borrow Book, Add Task คำนามเดี่ยว ๆ ซ่อนว่าเกิดอะไรขึ้นจริง", "A use-case name is verb + noun, e.g. Borrow Book, Add Task. A bare noun hides what actually happens."]}, {"id": "x27", "src": "extra", "ch": 4, "fig": "class-mult", "q": ["จากรูป multiplicity ระหว่าง Course กับ Task หมายความว่าอะไร", "In the figure, what does the multiplicity between Course and Task mean?"], "a": [["Course หนึ่งวิชามีได้หลาย Task และ Task หนึ่งงานอยู่ใน Course เดียว", "One Course has many Tasks; each Task belongs to one Course"], ["Task หนึ่งงานอยู่ได้หลาย Course", "One Task belongs to many Courses"], ["Course หนึ่งวิชามี Task ได้งานเดียว", "One Course has exactly one Task"], ["สองคลาสนี้ไม่เกี่ยวข้องกัน", "The two classes are unrelated"]], "c": 0, "ex": ["อ่านว่า one X has how many Y: ฝั่ง 1 คือ Course ฝั่ง * คือ Task จึงเป็นหนึ่งวิชา หลายงาน ระวังอ่านกลับด้าน", "Read it as “one X has how many Y”: the 1 side is Course and the * side is Task, so one course has many tasks. Don't read it backwards."]}, {"id": "x28", "src": "extra", "ch": 4, "fig": "activity", "q": ["จากรูป สัญลักษณ์ข้าวหลามตัดที่มี [open] และ [done] คืออะไร", "In the figure, what is the diamond with [open] and [done]?"], "a": ["Initial node", "Final node", "Decision node with guards", "Action"], "c": 2, "ex": ["◆ = decision (หรือ merge) ข้อความในวงเล็บเหลี่ยมคือ guard หรือเงื่อนไขของแต่ละทาง ● คือเริ่ม ◉ คือจบ", "◆ = decision (or merge). The text in square brackets is the guard, the condition for each branch. ● is the start, ◉ is the end."]}, {"id": "x29", "src": "extra", "ch": 4, "q": ["เมื่อแปลง requirement เป็น class diagram หลักคิดเบื้องต้นคืออะไร", "When turning a requirement into a class diagram, what is the basic heuristic?"], "a": [["คำนามเป็น candidate class หรือ attribute คำกริยาเป็น method หรือความสัมพันธ์", "Nouns become candidate classes or attributes; verbs become methods or relationships"], ["คำกริยาเป็น class คำนามเป็น method", "Verbs become classes; nouns become methods"], ["ทุกประโยคเป็น actor หนึ่งตัว", "Every sentence becomes one actor"], ["ทุก NFR เป็น use case หนึ่งอัน", "Every NFR becomes one use case"]], "c": 0, "ex": ["ขีดเส้นใต้คำนามใน FR: student, task, reminder เป็น class ส่วนกริยา เช่น mark done เป็น method ส่วน NFR ไม่ปรากฏเป็น use case", "Underline the nouns in the FR: student, task, reminder become classes; verbs such as “mark done” become methods. NFRs never appear as use cases."]}, {"id": "x30", "src": "extra", "ch": 4, "q": ["ใน use-case diagram ของระบบส่งอาหาร «system» Payment Gateway เป็นอะไร", "In a food-delivery use-case diagram, what is «system» Payment Gateway?"], "a": [["Primary actor ที่เป็นผู้เริ่ม use case", "The primary actor who starts the use case"], ["Secondary (system) actor ระบบภายนอกที่ use case ต้องพึ่ง แต่ไม่ได้เป็นผู้เริ่ม", "A secondary (system) actor: an external system the use case depends on, but which never starts it"], ["Use case หนึ่งอัน", "A use case"], ["Class ในระบบ", "A class inside the system"]], "c": 1, "ex": ["Actor ไม่จำเป็นต้องเป็นคน อะไรก็ตามที่อยู่นอกระบบและแลกเปลี่ยนข้อมูลกับระบบคือ actor ระบบภายนอกเป็น secondary actor ใช้เส้น association เหมือนกัน", "An actor need not be a person. Anything outside the system that exchanges information with it is an actor. An external system is a secondary actor and uses the same association line."]}, {"id": "t5-1", "ch": 5, "src": "teacher", "q": ["Cohesion หมายถึงอะไร?", "Cohesion refers to:"], "a": [["จำนวนโมดูลอื่นที่โมดูลนี้พึ่งพา", "How many other modules a module depends on."], ["จำนวนบรรทัดโค้ดในโมดูล", "The number of lines of code in a module."], ["ความรับผิดชอบภายในโมดูลเดียว “เกาะกลุ่ม” กันแค่ไหน", "How strongly a module’s own responsibilities belong together."], ["โมดูลทำงานเร็วแค่ไหน", "How fast the module runs."]], "c": 2, "ex": ["Cohesion = ความเกาะกลุ่มภายใน (อยากได้สูง); ส่วน “พึ่งพาโมดูลอื่น” = coupling (อยากได้ต่ำ)", "Cohesion = internal focus (want high); “dependence on others” = coupling (want low)."]}, {"id": "t5-2", "ch": 5, "src": "teacher", "q": ["เส้นใดคือหัวใจที่ทำให้ไดอะแกรมเป็น MVC จริง?", "Which edge is essential to a diagram being MVC?"], "a": [["Model → View (View สังเกต/สะท้อนสถานะของ Model)", "Model → View (the View observes/reflects the Model)."], ["View → Model (View เขียนผลลงฐานข้อมูลตรง)", "View → Model (the View writes to the database directly)."], ["Controller → View เท่านั้น โดย Model ไม่เกี่ยว", "Controller → View only, Model uninvolved."], ["ท่อ Model-Controller-View ทางเดียว ไม่มีการสังเกต", "A one-way Model-Controller-View pipe, no observation."]], "c": 0, "ex": ["MVC เด่นที่ View “สังเกต” Model; ถ้าเป็นสายโซ่ View⇄Controller⇄Model ล้วน = MVP", "MVC’s hallmark is the View observing the Model; a pure View⇄Controller⇄Model chain = MVP."]}, {"id": "t5-3", "ch": 5, "src": "teacher", "q": ["สัญกรณ์ ball-and-socket (○— ประกบ —⊃) ระหว่าง component สองตัว หมายความว่า?", "The ball-and-socket notation between two components means:"], "a": [["ทั้งสอง component ถูก deploy บนเครื่องกายภาพเดียวกัน", "The two components are deployed on the same server."], ["component หนึ่ง “ให้” อินเทอร์เฟซที่อีกตัว “ต้องการ” (provided–required)", "One provides an interface the other requires (provided–required)."], ["component หนึ่งเป็น subclass ของอีกตัว", "One component is a subclass of the other."], ["ข้อมูลไหลจาก socket ไป ball เท่านั้น", "Data flows only socket → ball."]], "c": 1, "ex": ["ball-and-socket = provided–required interface (พึ่งพาเชิงตรรกะ) ไม่ใช่การวางเครื่องเดียวกัน (นั่นคือ deployment diagram)", "Ball-and-socket = provided–required interface (a logical dependency), not co-deployment (that’s a deployment diagram)."]}, {"id": "t5-4", "ch": 5, "src": "teacher", "q": ["Architecture/Design Decision Record (ADR) มีไว้เพื่ออะไรเป็นหลัก?", "An Architecture/Design Decision Record (ADR) exists mainly to:"], "a": [["บันทึกการตัดสินใจ ทางเลือกที่ชั่งน้ำหนัก และเหตุผลที่เลือก", "Record a decision, the alternatives weighed, and why it was chosen."], ["เก็บ binary ที่คอมไพล์แล้วของทั้งระบบ", "Store the compiled binary of the whole system."], ["ลิสต์บั๊กทุกตัวที่เจอตอนทดสอบ", "List every bug found during testing."], ["แทนที่ SRS ไม่ต้องเขียน requirement", "Replace the SRS so no requirements are needed."]], "c": 0, "ex": ["ADR = บันทึก “เหตุผล + ทางเลือก” ของการตัดสินใจออกแบบ ให้ทีมย้อนดูได้ว่าทำไมเลือกแบบนี้", "An ADR records the reasoning and options behind a design decision so the team can see why."]}, {"id": "x31", "src": "extra", "ch": 5, "q": ["God class ที่ทำทุกอย่างในคลาสเดียว มีลักษณะอย่างไร", "A god class that does everything in one class has:"], "a": ["High cohesion, low coupling", "Low cohesion, high coupling", "High cohesion, high coupling", "Low cohesion, low coupling"], "c": 1, "ex": ["ทำหลายเรื่องที่ไม่เกี่ยวกัน = cohesion ต่ำ และทุกส่วนต้องพึ่งมัน = coupling สูง เป้าหมายที่ดีคือ high cohesion, low coupling", "Doing many unrelated things = low cohesion; everything depending on it = high coupling. The goal is high cohesion, low coupling."]}, {"id": "x32", "src": "extra", "ch": 5, "q": ["หน้าจออ่านตารางในฐานข้อมูลโดยตรง พอเปลี่ยนชื่อคอลัมน์ หน้าจอก็พัง ปัญหานี้คืออะไร", "A screen reads database tables directly; renaming a column breaks the screen. What is this problem?"], "a": ["High coupling", "High cohesion", "Low coupling", "Over-documentation"], "c": 0, "ex": ["Coupling = โมดูลหนึ่งพึ่งพาไส้ในของอีกโมดูลมากแค่ไหน แก้ที่หนึ่งแล้วอีกที่พัง = coupling สูง ควรคุยผ่าน interface เช่น TaskRepository.getTasks()", "Coupling = how much one module depends on another's insides. Changing one place breaks another = high coupling. Talk through an interface such as TaskRepository.getTasks()."]}, {"id": "x33", "src": "extra", "ch": 5, "fig": "mvp", "q": ["จากรูป มีแต่เส้น View ⇄ Controller ⇄ Model และไม่มีเส้น Model → View รูปแบบนี้คืออะไร", "The figure shows only View ⇄ Controller ⇄ Model, with no Model → View edge. What pattern is this?"], "a": ["MVC", "MVP", "Microservices", "Client-Server"], "c": 1, "ex": ["MVC ต้องมีเส้น Model → View (View สังเกต Model) ถ้าเป็นสายโซ่ View ⇄ Controller ⇄ Model ล้วน ๆ คือ MVP", "MVC needs the Model → View edge (the View observes the Model). A pure View ⇄ Controller ⇄ Model chain is MVP."]}, {"id": "x34", "src": "extra", "ch": 5, "fig": "deployment", "q": ["จากรูป เส้นทึบที่ไม่มีหัวลูกศรระหว่างกล่อง 3 มิติสองกล่องคืออะไร", "In the figure, what is the solid line with no arrowhead between the two 3-D boxes?"], "a": ["Provided–required interface", "Communication path", "Inheritance", "«include»"], "c": 1, "ex": ["Deployment diagram: กล่อง 3 มิติคือ node หรือ device (เครื่องจริง) เส้นทึบไม่มีหัวลูกศรคือ communication path", "Deployment diagram: a 3-D box is a node or device (a real machine); a solid line with no arrowhead is a communication path."]}, {"id": "x35", "src": "extra", "ch": 5, "q": ["ถ้าต้องการแสดงว่าซอฟต์แวร์แต่ละชิ้นรันอยู่บนเครื่องไหน ควรใช้ไดอะแกรมใด", "To show which machine each piece of software runs on, which diagram do you use?"], "a": ["Component diagram", "Deployment diagram", "Use-case diagram", "Activity diagram"], "c": 1, "ex": ["Deployment = ชิ้นส่วนไปอยู่บนเครื่องไหน ส่วน Component = ชิ้นส่วนมีอะไรบ้างและต่อกันผ่าน interface อย่างไร", "Deployment = which machine each piece runs on. Component = what the pieces are and how they connect through interfaces."]}, {"id": "x36", "src": "extra", "ch": 5, "q": ["ทีมนักศึกษา 4 คน ทำโปรเจกต์ 1 เทอม ควรเริ่มด้วยสถาปัตยกรรมแบบใด", "A four-person student team with a one-semester project should start with which architecture?"], "a": ["Microservices + Kubernetes", "Monolith + Layered + Client-Server", ["แยกทุกฟีเจอร์เป็นบริการของตัวเอง", "Split every feature into its own service"], ["ไม่ต้องมีสถาปัตยกรรม", "No architecture at all"]], "c": 1, "ex": ["เลือกรูปที่เล็กที่สุดที่พอดี Microservices แก้ปัญหาทีมขนาดใหญ่ และเพิ่มความซับซ้อน ไม่เหมาะกับโปรเจกต์เทอมเดียว", "Pick the smallest shape that fits. Microservices solve a large-team problem and add complexity; they don't suit a one-semester project."]}, {"id": "x37", "src": "extra", "ch": 5, "q": ["StudyMate เลือก “งาน scheduled รายวัน” แทน “เช็คตอนเปิดแอป” เพื่อให้เตือนได้แม้ปิดแอป นี่คือตัวอย่างของอะไร", "StudyMate chose a daily scheduled job over checking on open, so reminders fire even when the app is closed. This is an example of:"], "a": [["Design decision ที่ขับด้วย NFR", "An NFR-driven design decision"], ["Functional requirement ข้อใหม่", "A new functional requirement"], ["Heuristic evaluation", "A heuristic evaluation"], ["Gold-plating", "Gold-plating"]], "c": 0, "ex": ["การเลือกวิธีออกแบบเพื่อตอบข้อจำกัดเชิงคุณภาพ (NFR) คือ NFR-driven design decision ข้อนี้ยึดตาม Review Guide ส่วนสไลด์สัปดาห์ 5 เขียนตัวอย่างกลับกัน (เลือก check-on-open) แต่ประเด็นเดียวกันคือ NFR เป็นตัวบังคับการตัดสินใจ", "Choosing a design to satisfy a quality constraint (NFR) is an NFR-driven design decision. This follows the Review Guide; the Week 5 slides show the example the other way round (check-on-open chosen), but the point is the same: the NFR forces the decision."]}, {"id": "x38", "src": "extra", "ch": 5, "q": ["ADR แบบ 3 บรรทัดประกอบด้วยอะไร", "A three-line ADR consists of:"], "a": ["Context, Decision, Consequence", "Given, When, Then", "Role, Goal, Benefit", "Model, View, Controller"], "c": 0, "ex": ["ADR = Architecture Decision Record: Context (FR/NFR ใดบังคับให้ต้องเลือก) Decision (เลือกอะไร) Consequence (ได้อะไร เสียอะไร) เก็บเหตุผล ไม่ได้เก็บโค้ด", "ADR = Architecture Decision Record: Context (which FR/NFR forces the choice), Decision (what was chosen), Consequence (what you gain and give up). It stores reasons, not code."]}, {"id": "x39", "src": "extra", "ch": 5, "q": ["ในสถาปัตยกรรมแบบ Layered ข้อใดถูกต้อง", "In a Layered architecture, which is correct?"], "a": [["UI เรียกฐานข้อมูลโดยตรงได้เพื่อความเร็ว", "The UI may call the database directly for speed"], ["แต่ละชั้นคุยกับชั้นที่อยู่ติดกันเท่านั้น UI ไม่แตะฐานข้อมูลโดยตรง", "Each layer talks only to its neighbour; the UI never touches the database directly"], ["ทุกชั้นต้องรันอยู่บนเครื่องคนละเครื่อง", "Every layer must run on a different machine"], ["ชั้น Data เป็นผู้ตัดสินกฎธุรกิจ", "The Data layer decides the business rules"]], "c": 1, "ex": ["Presentation → Business logic → Data แต่ละชั้นทำหน้าที่เดียว (separation of concerns) และคุยกับชั้นข้าง ๆ ผ่าน contract จึงเป็น low coupling", "Presentation → Business logic → Data. Each layer has one job (separation of concerns) and talks to its neighbour through a contract, which gives low coupling."]}, {"id": "x40", "src": "extra", "ch": 5, "fig": "sequence", "q": ["จากรูป sequence diagram เส้นประหัวลูกศรโปร่งคืออะไร", "In the sequence diagram, what is a dashed arrow with an open arrowhead?"], "a": ["A call (message)", "A return", "An alt fragment", "A lifeline"], "c": 1, "ex": ["เส้นทึบหัวทึบ = call เส้นประหัวโปร่ง = return กรอบ alt = ทางเลือก (if/else) เส้นประแนวตั้งใต้ชื่อวัตถุคือ lifeline", "Solid line with a filled head = call. Dashed line with an open head = return. An alt frame = alternatives (if/else). The dashed vertical line under an object is its lifeline."]}, {"id": "t6-1", "ch": 6, "src": "teacher", "q": ["Heuristic evaluation อธิบายได้ดีที่สุดว่าอะไร?", "Heuristic evaluation is best described as:"], "a": [["การทดสอบโหลดวัดเวลาตอบสนองภายใต้ความเครียด", "A load test measuring response time under stress."], ["เซสชันที่ผู้ใช้จริงทำงานตามโจทย์แล้วสังเกต", "A session watching real users complete set tasks."], ["สแกนอัตโนมัติหาช่องโหว่ความปลอดภัยในโค้ด", "An automated scan for security flaws in code."], ["ผู้เชี่ยวชาญตรวจอินเทอร์เฟซเทียบกับหลักการ usability ที่รู้กัน", "Experts inspecting an interface against known usability principles."]], "c": 3, "ex": ["heuristic evaluation = ผู้เชี่ยวชาญตรวจเทียบหลักการ; ข้อ B คือ user testing (ผู้ใช้จริง) — คู่สับสนคลาสสิก", "Heuristic evaluation = expert inspection vs principles; option B is user testing (real users) — the classic confusion."]}, {"id": "t6-2", "ch": 6, "src": "teacher", "q": ["การลบรายการทันทีโดยไม่มีกล่องยืนยันและ undo ไม่ได้ ละเมิด heuristic ใดมากที่สุด?", "Deleting an item instantly, with no confirmation and no undo, most violates which heuristic?"], "a": [["Consistency and standards", "Consistency and standards."], ["Recognition rather than recall", "Recognition rather than recall."], ["Aesthetic and minimalist design", "Aesthetic and minimalist design."], ["User control and freedom (เช่น undo / ทางออกฉุกเฉิน)", "User control and freedom (undo / emergency exit)."]], "c": 3, "ex": ["ผู้ใช้ต้องมีทางถอย (undo/cancel) — การลบถาวรทันทีตัดอิสระผู้ใช้ = ละเมิด user control & freedom", "Users need a way back (undo/cancel); instant permanent delete removes that = violates user control & freedom."]}, {"id": "t6-3", "ch": 6, "src": "teacher", "q": ["ข้อใดเป็น accessibility requirement ตาม WCAG / หลัก POUR?", "Which is an accessibility requirement (per WCAG / the POUR principles)?"], "a": [["ใช้ฟอนต์หลากหลายที่สุดเพื่อความหลากหลาย", "Use as many font families as possible."], ["ทำเครื่องหมายช่องบังคับกรอกด้วย “สีแดงอย่างเดียว”", "Mark required fields using only the colour red."], ["ทำให้ข้อความทุกจุดขนาดเท่ากันหมด", "Make every text the exact same size."], ["คุม contrast ให้พอ (≥ 4.5:1) และไม่สื่อด้วยสีอย่างเดียว", "Keep enough contrast (≥ 4.5:1) and never rely on colour alone."]], "c": 3, "ex": ["POUR/WCAG AA: contrast ข้อความ ≥ 4.5:1 และห้ามสื่อความหมายด้วยสีอย่างเดียว; A/B/C เป็น anti-pattern", "POUR/WCAG AA: text contrast ≥ 4.5:1 and never colour-alone; A/B/C are anti-patterns."]}, {"id": "x41", "src": "extra", "ch": 6, "q": ["ผู้ใช้กด Save แล้วหน้าจอไม่แสดงอะไรเลย จึงไม่รู้ว่าบันทึกสำเร็จหรือยัง ละเมิด heuristic ข้อใด", "A user taps Save and the screen shows nothing, so they cannot tell if it worked. Which heuristic is violated?"], "a": ["Visibility of system status", "Aesthetic and minimalist design", "Flexibility and efficiency of use", "Help and documentation"], "c": 0, "ex": ["ระบบต้องบอกสถานะให้ผู้ใช้เห็น เช่น Saving… แล้ว Saved ✓ หรือ progress bar", "The system must show its status, e.g. Saving… then Saved ✓, or a progress bar."]}, {"id": "x42", "src": "extra", "ch": 6, "q": ["ทำไม heuristic evaluation จึงให้คะแนน severity 0–4 กับแต่ละปัญหา", "Why does a heuristic evaluation rate each problem's severity from 0 to 4?"], "a": [["เพื่อจัดลำดับว่าจะแก้อะไรก่อน", "To prioritize what to fix first"], ["เพื่อให้คะแนนผู้ประเมิน", "To grade the evaluators"], ["เพื่อนับจำนวนผู้ใช้", "To count the users"], ["เพื่อวัดความเร็วของระบบ", "To measure system speed"]], "c": 0, "ex": ["0 = ไม่เป็นปัญหา ไปจนถึง 4 = หายนะ ใช้เพื่อแก้ปัญหาที่กระทบผู้ใช้มากที่สุดก่อน", "0 = not a problem, up to 4 = catastrophe. It is used to fix the problems that hurt users most first."]}, {"id": "x43", "src": "extra", "ch": 6, "q": ["แอปแสดงข้อความ “Error 0x0007F” โดยไม่บอกว่าเกิดอะไรและต้องทำอย่างไร ละเมิด heuristic ข้อใดมากที่สุด", "An app shows “Error 0x0007F” with no explanation and no way forward. Which heuristic is most violated?"], "a": ["Help users recognize, diagnose, and recover from errors", "User control and freedom", "Consistency and standards", "Recognition rather than recall"], "c": 0, "ex": ["ข้อความ error ต้องเป็นภาษาคนธรรมดาและบอกวิธีแก้ เช่น Couldn't save — check your connection. [Retry]", "Error messages must use plain language and say how to fix the problem, e.g. Couldn't save — check your connection. [Retry]"]}, {"id": "x44", "src": "extra", "ch": 6, "q": ["POUR ในหลัก accessibility ย่อมาจากอะไร", "In accessibility, what does POUR stand for?"], "a": ["Perceivable, Operable, Understandable, Robust", "Portable, Open, Usable, Reliable", "Performance, Operation, Usability, Recovery", "Plan, Organize, Use, Review"], "c": 0, "ex": ["Perceivable รับรู้ได้ · Operable ใช้งานได้ · Understandable เข้าใจได้ · Robust ทนทาน ตามมาตรฐาน WCAG", "Perceivable · Operable · Understandable · Robust, from the WCAG standard."]}, {"id": "x45", "src": "extra", "ch": 6, "q": ["แอปใช้ไอคอนรูปปฏิทินและคำที่ผู้ใช้คุ้นเคย แทนรหัสภายในของระบบ ตรงกับ heuristic ข้อใด", "An app uses a calendar icon and familiar words instead of internal system codes. Which heuristic does this follow?"], "a": ["Match between system and the real world", "Error prevention", "Flexibility and efficiency of use", "Visibility of system status"], "c": 0, "ex": ["ใช้ภาษาและสัญลักษณ์ที่ผู้ใช้คุ้นเคยจากโลกจริง = Match between system and the real world", "Using language and symbols users already know from the real world = Match between system and the real world."]}, {"id": "x46", "src": "extra", "ch": 6, "q": ["ทีมให้นักศึกษาจริง 5 คนลองเพิ่มงานในแอป พร้อมพูดสิ่งที่คิดออกมา แล้วทีมสังเกตโดยไม่ช่วย วิธีนี้คืออะไร", "A team asks 5 real students to add a task while thinking aloud, and watches without helping. What is this?"], "a": ["Heuristic evaluation", "Usability (user) testing", "Unit testing", "Code review"], "c": 1, "ex": ["มีผู้ใช้จริงมาทำงานจริง = user testing ส่วน heuristic evaluation คือผู้เชี่ยวชาญตรวจ UI เทียบกับหลักการ ไม่มีผู้ใช้จริง", "Real users doing a real task = user testing. A heuristic evaluation is experts checking the UI against principles, with no real users."]}];
+var MODS = ['c1','c2','c3','c4','c5','c6'];
+var TABS = ['start','learn','uml','vocab','quiz'];
+var $ = function(s){ return document.querySelector(s); };
+var $$ = function(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); };
+var store = {
+  get: function(k,d){ try{ var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set: function(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function shuffle(a){ a = a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+/* T(th, en): both languages as a pair of spans; CSS shows the one that matches html[data-lang] */
+function T(th,en){ return th===en ? th : '<span class="l-th">'+th+'</span><span class="l-en">'+en+'</span>'; }
+function pair(x){ return (typeof x==='string') ? [x,x] : x; }
+
+$$('table').forEach(function(t){ if(t.parentNode.className==='tw') return; var d=document.createElement('div'); d.className='tw'; t.parentNode.insertBefore(d,t); d.appendChild(t); });
+
+/* ---------- language ---------- */
+function setLang(l){
+  if(l!=='en') l='th';
+  document.documentElement.setAttribute('data-lang', l);
+  document.documentElement.lang = l;
+  $$('.lang button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.lang===l ? 'true':'false'); });
+  store.set('se-lang', l);
+}
+$$('.lang button').forEach(function(b){ b.addEventListener('click', function(){ setLang(b.dataset.lang); }); });
+setLang(store.get('se-lang','th'));
+
+/* ---------- tabs and chapters ---------- */
+function showTab(tab){
+  $$('.tabs nav button').forEach(function(b){ b.setAttribute('aria-selected', b.dataset.tab===tab ? 'true':'false'); });
+  TABS.forEach(function(t){ $('#tab-'+t).hidden = (t!==tab); });
+  store.set('se-tab', tab);
+}
+function showMod(m){
+  $$('.mod').forEach(function(s){ s.hidden = (s.dataset.m!==m); });
+  $$('#modchips .chip').forEach(function(c){ c.setAttribute('aria-pressed', c.dataset.mod===m ? 'true':'false'); });
+  store.set('se-mod', m);
+}
+$$('.tabs nav button').forEach(function(b){ b.addEventListener('click', function(){ showTab(b.dataset.tab); window.scrollTo(0,0); }); });
+$$('#modchips .chip').forEach(function(c){ c.addEventListener('click', function(){ showMod(c.dataset.mod); }); });
+function route(){
+  var h = (location.hash||'').replace('#','');
+  if(MODS.indexOf(h)>=0){ showTab('learn'); showMod(h); window.scrollTo(0,0); return true; }
+  if(TABS.indexOf(h)>=0){ showTab(h); window.scrollTo(0,0); return true; }
+  return false;
+}
+window.addEventListener('hashchange', route);
+showMod(store.get('se-mod','c1'));
+if(!route()) showTab(store.get('se-tab','start'));
+
+/* ---------- flashcards (built from the term tables) ---------- */
+var CARDS = [];
+$$('table.terms').forEach(function(t){
+  var holder = t.closest('[data-m]'); var m = holder ? holder.dataset.m : 'pairs';
+  Array.prototype.forEach.call(t.rows, function(r){
+    if(r.cells.length<2 || r.cells[0].tagName!=='TD') return;
+    CARDS.push({ m:m, en:r.cells[0].innerHTML, th:r.cells[1].innerHTML, hint:r.cells[2] ? r.cells[2].innerHTML : '' });
+  });
+});
+var vSet='all', vList=[], vPos=0, vOpen=false;
+var vLabels = {all:['ทั้งหมด','All'], pairs:['คู่ที่คล้ายกัน','Look-alike pairs'], c1:['บท 1','Ch 1'], c2:['บท 2','Ch 2'], c3:['บท 3','Ch 3'], c4:['บท 4','Ch 4'], c5:['บท 5','Ch 5'], c6:['บท 5+','Ch 5+']};
+function vBuild(doShuffle){
+  vList = CARDS.filter(function(c){ return vSet==='all' || c.m===vSet; });
+  if(doShuffle) vList = shuffle(vList);
+  vPos = 0; vOpen = false; vRender();
+}
+function vRender(){
+  var c = vList[vPos];
+  var h = '<span class="en">'+c.en+'</span>';
+  h += vOpen ? '<span class="th">'+c.th+'</span>'+(c.hint ? '<span class="hint">'+c.hint+'</span>' : '') : '<span class="hint">'+T('แตะเพื่อดูความหมาย','Tap to see the meaning')+'</span>';
+  $('#vcard').innerHTML = h;
+  $('#vcount').innerHTML = (vPos+1)+' / '+vList.length+' · '+T(vLabels[c.m][0], vLabels[c.m][1]);
+  $('#vprev').disabled = vPos===0;
+}
+Object.keys(vLabels).forEach(function(k){
+  var b = document.createElement('button'); b.className='chip'; b.innerHTML=T(vLabels[k][0], vLabels[k][1]); b.dataset.v=k;
+  b.setAttribute('aria-pressed', k===vSet ? 'true':'false');
+  b.addEventListener('click', function(){ vSet=k; $$('#vchips .chip').forEach(function(x){ x.setAttribute('aria-pressed', x.dataset.v===k ? 'true':'false'); }); vBuild(false); });
+  $('#vchips').appendChild(b);
+});
+$('#vcard').addEventListener('click', function(){ vOpen=!vOpen; vRender(); });
+$('#vnext').addEventListener('click', function(){ vPos=(vPos+1)%vList.length; vOpen=false; vRender(); });
+$('#vprev').addEventListener('click', function(){ if(vPos>0){ vPos--; vOpen=false; vRender(); } });
+$('#vshuf').addEventListener('click', function(){ vBuild(true); });
+vBuild(false);
+
+/* ---------- quiz ---------- */
+var res = store.get('se-quiz', {});   /* id -> 1 correct, 0 wrong */
+var qSet = store.get('se-qset','teacher'), qList=[], qPos=0;
+var qLabels = {teacher:['ของอาจารย์','Instructor\'s'], c1:['บท 1','Ch 1'], c2:['บท 2','Ch 2'], c3:['บท 3','Ch 3'], c4:['บท 4','Ch 4'], c5:['บท 5','Ch 5'], c6:['บท 5+','Ch 5+'], fig:['ข้ออ่านรูป','Diagram items'], all:['ทั้งหมด','All'], wrong:['ข้อที่เคยผิด','Missed']};
+var RESET = T('ล้างคะแนน','Reset scores');
+function inSet(q,set){
+  if(set==='all') return true;
+  if(set==='teacher') return q.src==='teacher';
+  if(set==='fig') return !!q.fig;
+  if(set==='wrong') return res[q.id]===0;
+  return 'c'+q.ch===set;
+}
+function qItems(set){ return QUIZ.filter(function(q){ return inSet(q,set); }); }
+function qChips(){
+  $('#qchips').innerHTML='';
+  Object.keys(qLabels).forEach(function(k){
+    var items=qItems(k), b=document.createElement('button'); b.className='chip'; b.dataset.q=k;
+    var count;
+    if(k==='wrong') count=' '+items.length;
+    else { var ok=0; items.forEach(function(q){ if(res[q.id]===1) ok++; }); count=' '+ok+'/'+items.length; }
+    b.innerHTML=T(qLabels[k][0], qLabels[k][1])+count; b.setAttribute('aria-pressed', k===qSet ? 'true':'false');
+    b.addEventListener('click', function(){ qStart(k); });
+    $('#qchips').appendChild(b);
+  });
+}
+function qStart(set){
+  qSet=set; store.set('se-qset',set); qList=qItems(set); qPos=0;
+  if(set!=='wrong'){ for(var i=0;i<qList.length;i++){ if(res[qList[i].id]===undefined){ qPos=i; break; } } }
+  qChips(); qRender();
+}
+function qRender(){
+  var empty = qList.length===0;
+  $('#qbox').hidden = empty; $('#qempty').hidden = !empty;
+  if(empty) return;
+  var q=qList[qPos], past=res[q.id], ch=(q.ch===6 ? '5+' : q.ch);
+  $('#qmeta').innerHTML = '<span class="tag">'+(q.src==='teacher' ? T('ข้อของอาจารย์','Instructor item') : T('ข้อเสริม','Extra item'))+'</span> '
+    + T('บท '+ch+' · ข้อที่ '+(qPos+1)+' จาก '+qList.length, 'Ch '+ch+' · Question '+(qPos+1)+' of '+qList.length)
+    + (past===1 ? T(' · เคยตอบถูก',' · answered correctly before') : past===0 ? T(' · เคยตอบผิด',' · missed before') : '');
+  var figBox=$('#qfig');
+  if(q.fig){ var src=document.querySelector('[data-fig="'+q.fig+'"] svg'); figBox.innerHTML = src ? '<div class="figbox">'+src.outerHTML+'</div>' : ''; figBox.hidden=!src; }
+  else { figBox.innerHTML=''; figBox.hidden=true; }
+  $('#qtext').innerHTML = T(q.q[0], q.q[1]);
+  $('#qexp').hidden = true;
+  var box=$('#qchoices'); box.innerHTML='';
+  shuffle(q.a.map(function(_,i){ return i; })).forEach(function(i){
+    var p=pair(q.a[i]);
+    var b=document.createElement('button'); b.className='choice'; b.dataset.i=i;
+    b.innerHTML = T(p[0], p[1]);
+    b.addEventListener('click', function(){ qAnswer(q,i); });
+    box.appendChild(b);
+  });
+  $('#qprev').disabled = qPos===0;
+  $('#qnext').innerHTML = qPos===qList.length-1 ? T('กลับไปข้อแรก','Back to the first') : T('ข้อถัดไป','Next');
+}
+function qAnswer(q,i){
+  var ok = (i===q.c);
+  $$('#qchoices .choice').forEach(function(b){
+    b.disabled=true; var bi=Number(b.dataset.i);
+    if(bi===q.c) b.classList.add('ok'); else if(bi===i) b.classList.add('no');
+  });
+  res[q.id] = ok ? 1 : 0; store.set('se-quiz', res);
+  var e=$('#qexp'); e.className='exp '+(ok?'ok':'no'); e.hidden=false;
+  var ex=pair(q.ex), ans=pair(q.a[q.c]);
+  e.innerHTML = '<strong>'+(ok ? T('ถูก','Correct') : T('ยังไม่ถูก','Not quite'))+'</strong> '
+    + T('คำตอบคือ: '+ans[0], 'The answer is: '+ans[1]) + '<br>' + T(ex[0], ex[1]);
+  qChips();
+}
+$('#qnext').addEventListener('click', function(){ qPos = (qPos+1)%qList.length; qRender(); window.scrollTo(0, $('#qbox').offsetTop-70); });
+$('#qprev').addEventListener('click', function(){ if(qPos>0){ qPos--; qRender(); } });
+var armed=false;
+$('#qreset').innerHTML = RESET;
+$('#qreset').addEventListener('click', function(){
+  var b=this;
+  if(!armed){ armed=true; b.innerHTML=T('กดอีกครั้งเพื่อยืนยัน','Tap again to confirm'); setTimeout(function(){ armed=false; b.innerHTML=RESET; }, 4000); return; }
+  armed=false; b.innerHTML=RESET; res={}; store.set('se-quiz',res); qStart(qSet==='wrong' ? 'teacher' : qSet);
+});
+qStart(qSet);
+})();
+</script>
+</body>
+</html>
