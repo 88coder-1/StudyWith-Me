@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intro2SE Week 2 — Agile Software Engineering Methods</title>
+<style>
+/* Intro2SE HTML slide-deck theme + engine
+   Matches the Intro2SE pptx (intro2se-weekNN.fig) look:
+   Space Grotesk + JetBrains Mono, #EEF0F3 bg, colored-circle motif,
+   white cards, red/yellow/blue/green accents.
+   Keyboard-navigable single-slide-at-a-time deck. Print = all slides. */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root{
+  --bg:#EEF0F3; --ink:#0B0F19; --text:#3A4250; --muted:#7A8290;
+  --border:#E4E7EC; --border-2:#C8CCD3; --white:#FFFFFF; --panel:#F7F8FA;
+  --yellow:#FFC233; --red:#FF5A47; --blue:#2D5BFF; --green:#16B670;
+  --disp:"Space Grotesk",-apple-system,"Segoe UI","Noto Sans Thai",sans-serif;
+  --mono:"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+  --shadow:0 1.2vh 3vh rgba(11,15,25,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--disp);color:var(--text);background:#0b1b2e}
+
+#deck{position:relative;height:100vh;width:100vw;overflow:hidden}
+.slide{
+  position:absolute;inset:0;display:none;flex-direction:column;
+  padding:4.5vh 6vw 6vh;
+  background:linear-gradient(150deg,#f2f4f7 0%,#e9ecf1 100%);
+  overflow:hidden;
+}
+.slide.active{display:flex;animation:f .3s ease}
+@keyframes f{from{opacity:0;transform:translateY(1vh)}to{opacity:1;transform:none}}
+
+/* ---- top chrome bar ---- */
+.chrome{
+  display:flex;align-items:center;justify-content:space-between;gap:1vw;
+  font-family:var(--mono);font-weight:700;font-size:1.05vw;color:var(--ink);
+  padding-bottom:2.2vh;flex:0 0 auto;
+}
+.chrome .l{display:flex;align-items:center;gap:.7vw;min-width:0}
+.chrome .play{color:var(--blue)}
+.chrome .crumb{color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chrome .count{color:var(--muted);font-weight:500;white-space:nowrap}
+
+/* body region */
+.body{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.body.top{justify-content:flex-start}
+
+/* ---- typography ---- */
+.kicker{font-family:var(--mono);font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  font-size:1.05vw;color:var(--muted);margin-bottom:1.4vh;display:block}
+.kicker.blue{color:var(--blue)} .kicker.red{color:var(--red)}
+.kicker.green{color:var(--green)} .kicker.gold{color:#a67a00}
+h1.head{font-family:var(--disp);font-weight:700;color:var(--ink);
+  font-size:4.6vw;line-height:1.05;letter-spacing:-.01em;margin-bottom:1.4vh}
+h2.head{font-family:var(--disp);font-weight:700;color:var(--ink);
+  font-size:3.2vw;line-height:1.1;letter-spacing:-.01em;margin-bottom:2vh}
+.dek{font-size:1.7vw;line-height:1.5;color:var(--text);max-width:80%;margin-bottom:2.4vh}
+.dek.narrow{max-width:64%}
+p{margin:0 0 1vh} strong{color:var(--ink);font-weight:700}
+.sub{font-size:1.35vw;color:var(--muted);margin-top:1vh}
+
+/* ---- title slide ---- */
+.title-slide .kicker{font-size:1.2vw}
+.title-slide h1.head{font-size:6vw;max-width:62%}
+.title-slide .lead{font-size:1.7vw;color:var(--text);max-width:52%;margin-top:3vh;line-height:1.5}
+.circles{position:absolute;right:6vw;top:50%;transform:translateY(-50%);width:34vw;height:70vh}
+.circles i{position:absolute;border-radius:50%;display:block}
+.circles .c1{width:13vw;height:13vw;background:var(--blue);right:6vw;top:6vh}
+.circles .c2{width:9vw;height:9vw;background:var(--green);left:0;top:34vh}
+.circles .c3{width:7vw;height:7vw;background:var(--yellow);right:0;top:40vh}
+.circles .c4{width:15vw;height:15vw;background:var(--red);right:9vw;bottom:2vh}
+
+/* ---- generic grids ---- */
+.grid{display:grid;gap:1.4vw}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+
+/* ---- browser cards (mac dots) ---- */
+.bcard{background:var(--white);border-radius:1.2vw;box-shadow:var(--shadow);
+  padding:2.4vh 1.7vw;display:flex;flex-direction:column;min-width:0}
+.bcard .dots{display:flex;gap:.5vw;margin-bottom:2vh}
+.bcard .dots i{width:.85vw;height:.85vw;border-radius:50%;display:block}
+.bcard .dots i:nth-child(1){background:var(--red)}
+.bcard .dots i:nth-child(2){background:var(--yellow)}
+.bcard .dots i:nth-child(3){background:var(--green)}
+.bcard .lbl{font-family:var(--mono);font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  font-size:1vw;color:var(--muted);margin-bottom:1.2vh}
+.bcard h3{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.9vw;line-height:1.1;margin-bottom:1.4vh}
+.bcard p{font-size:1.35vw;line-height:1.45;color:var(--text)}
+.bcard .foot{margin-top:auto;padding-top:1.6vh}
+
+/* chip row */
+.chips{display:flex;align-items:center;gap:.7vw;flex-wrap:wrap}
+.chips .chip{font-family:var(--mono);font-weight:500;font-size:1.1vw;color:var(--text);
+  background:var(--panel);border-radius:999px;padding:.7vh 1vw}
+.chips .chip.hot{background:#ffe9e6;color:var(--red)}
+.chips .arw{color:var(--muted);font-size:1.1vw}
+.squares{display:flex;gap:.6vw}
+.squares i{width:2.4vw;height:2.4vw;border-radius:.5vw;display:block}
+.squares .y{background:var(--yellow)} .squares .r{background:var(--red)} .squares .g{background:var(--green)}
+
+/* ---- big color cards (red/yellow/green) ---- */
+.ccard{border-radius:1.2vw;padding:3vh 1.8vw;display:flex;flex-direction:column;color:#fff;min-height:52vh}
+.ccard.red{background:var(--red)} .ccard.yellow{background:var(--yellow);color:var(--ink)}
+.ccard.green{background:var(--green)} .ccard.blue{background:var(--blue)}
+.ccard .lbl{font-family:var(--mono);font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  font-size:1vw;opacity:.8;margin-bottom:2vh}
+.ccard h3{font-family:var(--disp);font-weight:700;font-size:2.3vw;line-height:1.05;margin-bottom:2.2vh}
+.ccard p{font-size:1.35vw;line-height:1.45}
+.ccard .ico{margin-top:auto;align-self:flex-end;font-size:3vw;opacity:.9}
+
+/* ---- stage/step light cards (with progress bar or chip) ---- */
+.scard{background:var(--white);border-radius:1.1vw;box-shadow:var(--shadow);
+  padding:2.4vh 1.4vw;display:flex;flex-direction:column;min-width:0}
+.scard .lbl{font-family:var(--mono);font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  font-size:.92vw;color:var(--muted);margin-bottom:1vh}
+.scard h3{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.5vw;line-height:1.1;margin-bottom:1.2vh}
+.scard p{font-size:1.15vw;line-height:1.4;color:var(--text);flex:1}
+.scard .bar{display:flex;gap:.3vw;margin-top:1.6vh}
+.scard .bar i{height:.7vh;flex:1;border-radius:999px;background:var(--border-2)}
+.scard .bar.n1 i:nth-child(-n+1),.scard .bar.n2 i:nth-child(-n+2),
+.scard .bar.n3 i:nth-child(-n+3),.scard .bar.n4 i:nth-child(-n+4),
+.scard .bar.n5 i:nth-child(-n+5){background:var(--col,var(--blue))}
+.scard.c-red{--col:var(--red)} .scard.c-yellow{--col:var(--yellow)}
+.scard.c-blue{--col:var(--blue)} .scard.c-green{--col:var(--green)}
+.scard .chip{align-self:flex-start;margin-top:1.4vh;font-family:var(--mono);font-weight:500;
+  font-size:1vw;color:var(--text);background:var(--panel);border-radius:.5vw;padding:.5vh .9vw}
+
+/* ---- do / don't two cards ---- */
+.dcard{background:var(--white);border-radius:1.2vw;box-shadow:var(--shadow);padding:2.6vh 1.8vw}
+.dcard .pill{display:inline-block;font-family:var(--mono);font-weight:700;font-size:1vw;
+  color:#fff;border-radius:999px;padding:.5vh 1.1vw;margin-bottom:1.8vh}
+.dcard.do .pill{background:var(--green)} .dcard.dont .pill{background:var(--red)}
+.dcard .item{padding:1.2vh 0;border-top:1px solid var(--border)}
+.dcard .item:first-of-type{border-top:none}
+.dcard .item h4{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.4vw;margin-bottom:.5vh}
+.dcard .item p{font-size:1.15vw;line-height:1.4;color:var(--text)}
+
+/* ---- list + panel ---- */
+.listpanel{display:grid;grid-template-columns:1fr 1.05fr;gap:3vw;align-items:center}
+.expl h4{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.6vw;margin:1.8vh 0 .6vh}
+.expl h4:first-child{margin-top:0}
+.expl p{font-size:1.3vw;line-height:1.45;color:var(--text)}
+.panel{background:var(--white);border-radius:1.2vw;box-shadow:var(--shadow);padding:1vh 1.6vw}
+.panel .row{display:flex;align-items:center;gap:1vw;padding:1.6vh .4vw;border-top:1px solid var(--border)}
+.panel .row:first-child{border-top:none}
+.panel .row .sq{width:1.6vw;height:1.6vw;border-radius:.4vw;flex:0 0 auto}
+.panel .row .n{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.5vw;flex:0 0 auto;width:1.6vw}
+.panel .row .txt{font-size:1.3vw;color:var(--ink);flex:1}
+.panel .row .tag{font-family:var(--mono);font-size:1vw;color:var(--muted)}
+.b-blue{background:var(--blue)} .b-red{background:var(--red)}
+.b-yellow{background:var(--yellow)} .b-green{background:var(--green)} .b-purple{background:#7C4DFF}
+
+/* ---- pills (before you leave) ---- */
+.pillrows{display:flex;flex-direction:column;gap:1.4vh}
+.pillrow{display:flex;align-items:center;gap:1.4vw}
+.pillrow .k{font-size:1.4vw;color:var(--ink);width:12vw;flex:0 0 auto}
+.pillrow .v{font-family:var(--mono);font-weight:500;font-size:1.35vw;color:#fff;
+  border-radius:999px;padding:1.1vh 1.6vw;flex:1}
+
+/* ---- quote ---- */
+.quote{background:var(--panel);border-left:.5vw solid var(--yellow);border-radius:0 1vw 1vw 0;
+  padding:2.6vh 2vw}
+.quote p{font-size:2.2vw;line-height:1.35;color:var(--ink);font-weight:500}
+.quote .by{font-size:1.4vw;color:var(--muted);font-style:italic;margin-top:1.6vh}
+
+/* ---- horizontal flow ---- */
+.flow{display:flex;align-items:stretch;gap:1vw;flex-wrap:nowrap}
+.flow .node{background:var(--white);border-radius:1vw;box-shadow:var(--shadow);
+  padding:2vh 1.2vw;flex:1;display:flex;flex-direction:column;justify-content:center;min-width:0;text-align:center}
+.flow .node .t{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.4vw;line-height:1.1}
+.flow .node .s{font-size:1vw;color:var(--muted);margin-top:.6vh}
+.flow .arw{align-self:center;color:var(--muted);font-size:1.8vw;flex:0 0 auto}
+.flow .node.on-blue{background:var(--blue);color:#fff} .flow .node.on-blue .t{color:#fff}
+.flow .node.on-green{background:var(--green);color:#fff} .flow .node.on-green .t{color:#fff}
+
+/* ---- table ---- */
+.table-wrap{overflow:auto;border-radius:1vw;box-shadow:var(--shadow);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;background:var(--white);font-size:1.25vw}
+thead th{font-family:var(--mono);font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+  font-size:1vw;color:#fff;background:var(--ink);text-align:left;padding:1.4vh 1.1vw}
+tbody td{padding:1.4vh 1.1vw;border-top:1px solid var(--border);vertical-align:top;line-height:1.35}
+tbody tr:nth-child(even){background:var(--panel)}
+td.b,th.b{font-weight:700;color:var(--ink)}
+
+/* summary 2x2 (dark) */
+.slide.dark{background:linear-gradient(150deg,#141a4a 0%,#0f1440 100%)}
+.slide.dark h2.head,.slide.dark .kicker{color:#fff}
+.quad{display:grid;grid-template-columns:1fr 1fr;gap:2.6vh 3vw;margin-top:1vh}
+.quad .q h4{font-family:var(--disp);font-weight:700;color:#fff;font-size:1.9vw;margin-bottom:.8vh}
+.quad .q p{font-size:1.3vw;line-height:1.45;color:#cfd4ea}
+.quad .q .tag{font-family:var(--mono);font-size:1vw;color:#8b93c7;text-transform:uppercase;letter-spacing:.06em}
+
+/* footer line */
+.foot-note{margin-top:2.4vh;font-size:1.2vw;color:var(--muted)}
+.rule{height:1px;background:var(--border);margin:2vh 0}
+
+/* ---- deck controls ---- */
+.bar{position:fixed;bottom:0;left:0;height:.6vh;background:var(--blue);transition:width .3s;z-index:6}
+.hint{position:fixed;bottom:1.6vh;left:50%;transform:translateX(-50%);font-family:var(--mono);
+  font-size:.85vw;color:var(--muted);z-index:6}
+
+/* ---- print: every slide on its own page ---- */
+@media print{
+  #deck{height:auto;overflow:visible}
+  .slide{display:flex!important;position:relative;height:100vh;page-break-after:always;
+    inset:auto;break-inside:avoid}
+  .bar,.hint{display:none}
+}
+
+</style>
+</head>
+<body>
+<div id="deck">
+
+<!-- 1 · TITLE -->
+<section class="slide title-slide active">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· Agile methods</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">WEEK 2 · BASED ON SOMMERVILLE, CH. 3</span>
+    <h1 class="head">Agile Software Development</h1>
+    <p class="lead">Balancing discipline and flexibility in modern engineering — from rigid planning to agile adaptability. Emphasises <strong>individuals &amp; customer collaboration</strong>, <strong>working software</strong> over documentation, and <strong>responding to change</strong> over following a plan.</p>
+  </div>
+  <div class="circles"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></div>
+</section>
+
+<!-- 2 · CHALLENGE OF RAPID CHANGE -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· Why Agile</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">THE DRIVER</span>
+    <h2 class="head">The challenge of rapid change</h2>
+    <div class="grid g2" style="align-items:center">
+      <div class="expl">
+        <h4>The Driver</h4><p>Rapid development and delivery are now the critical requirements for software systems.</p>
+        <h4>The Problem</h4><p>Business environments change faster than comprehensive software specifications can be written.</p>
+        <h4>The Trade-off</h4><p>Organizations often trade software quality or complete requirements for faster time-to-market.</p>
+      </div>
+      <div class="quote">
+        <p>"By the time the software is available for use, the original reason for its procurement may have changed so radically that the software is effectively useless."</p>
+        <div class="by">— Ian Sommerville</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · PLAN-DRIVEN VS AGILE -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· Two approaches</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">PROCESS</span>
+    <h2 class="head">Plan-driven vs Agile development</h2>
+    <div class="grid g2">
+      <div class="bcard"><div class="dots"><i></i><i></i><i></i></div>
+        <div class="lbl">Plan-driven</div><h3>Separate, sequential stages</h3>
+        <p>Requirements → design → implementation → testing. The output of one stage is the input to the next, and the process relies on <strong>explicit documentation</strong>.</p>
+        <div class="foot chips"><span class="chip">requirements</span><span class="arw">→</span><span class="chip">design</span><span class="arw">→</span><span class="chip">build</span><span class="arw">→</span><span class="chip">test</span></div>
+      </div>
+      <div class="bcard"><div class="dots"><i></i><i></i><i></i></div>
+        <div class="lbl">Agile</div><h3>Interleaved activities</h3>
+        <p>Specification and design happen <em>during</em> implementation. Agile relies on <strong>implicit knowledge and team communication</strong> rather than heavy documents.</p>
+        <div class="foot chips"><span class="chip hot">spec</span><span class="arw">↺</span><span class="chip hot">design</span><span class="arw">↺</span><span class="chip hot">build</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 · AGILE MANIFESTO -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· Values</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">VALUING THE HUMAN ELEMENT OVER THE BUREAUCRATIC</span>
+    <h2 class="head">The Agile Manifesto</h2>
+    <div style="display:flex;flex-direction:column;gap:2.2vh;font-size:2vw">
+      <div style="display:flex;align-items:center;gap:1.4vw"><span style="color:var(--muted);text-decoration:line-through;width:34vw">Processes and tools</span><span style="color:var(--yellow);font-size:1.8vw">➜</span><span style="color:var(--ink);font-weight:700">Individuals and interactions</span></div>
+      <div style="display:flex;align-items:center;gap:1.4vw"><span style="color:var(--muted);text-decoration:line-through;width:34vw">Comprehensive documentation</span><span style="color:var(--yellow);font-size:1.8vw">➜</span><span style="color:var(--ink);font-weight:700">Working software</span></div>
+      <div style="display:flex;align-items:center;gap:1.4vw"><span style="color:var(--muted);text-decoration:line-through;width:34vw">Contract negotiation</span><span style="color:var(--yellow);font-size:1.8vw">➜</span><span style="color:var(--ink);font-weight:700">Customer collaboration</span></div>
+      <div style="display:flex;align-items:center;gap:1.4vw"><span style="color:var(--muted);text-decoration:line-through;width:34vw">Following a plan</span><span style="color:var(--yellow);font-size:1.8vw">➜</span><span style="color:var(--ink);font-weight:700">Responding to change</span></div>
+    </div>
+    <p class="foot-note">While there is value in the items on the left, we value the items on the right more.</p>
+  </div>
+</section>
+
+<!-- 5 · WHEN TO USE AGILE -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· Fit</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">DECISION</span>
+    <h2 class="head">When to use Agile?</h2>
+    <div class="grid g2">
+      <div class="bcard" style="border-top:.6vh solid var(--green)">
+        <div class="lbl" style="color:var(--green)">The sweet spot</div>
+        <p style="font-size:1.35vw;line-height:1.6"><strong>Product:</strong> small to medium-sized custom systems.<br><strong>Team:</strong> small, co-located teams with informal communication.<br><strong>Client:</strong> customers willing to be continuously involved.</p>
+      </div>
+      <div class="bcard" style="border-top:.6vh solid var(--muted)">
+        <div class="lbl">When plan-driven is better</div>
+        <p style="font-size:1.35vw;line-height:1.6"><strong>Scale:</strong> large, complex systems requiring pre-analysis.<br><strong>Criticality:</strong> safety-critical systems needing safety cases (certification).<br><strong>Geography:</strong> distributed teams with infrequent communication.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · XP -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· Extreme Programming</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">PUSHING GOOD PRACTICES TO "EXTREME" LEVELS</span>
+    <h2 class="head">Extreme Programming (XP)</h2>
+    <div style="display:flex;flex-direction:column;gap:2vh;font-size:1.7vw">
+      <div style="display:flex;align-items:center;gap:1.2vw"><span style="color:var(--muted);width:26vw">Code reviews are good</span><span style="color:var(--yellow);font-size:1.6vw">➜</span><span><strong>Pair Programming</strong> <span style="color:var(--muted);font-size:1.2vw">— review continuously</span></span></div>
+      <div style="display:flex;align-items:center;gap:1.2vw"><span style="color:var(--muted);width:26vw">Testing is good</span><span style="color:var(--yellow);font-size:1.6vw">➜</span><span><strong>Test-First Development</strong> <span style="color:var(--muted);font-size:1.2vw">— test before coding</span></span></div>
+      <div style="display:flex;align-items:center;gap:1.2vw"><span style="color:var(--muted);width:26vw">Simplicity is good</span><span style="color:var(--yellow);font-size:1.6vw">➜</span><span><strong>Refactoring</strong> <span style="color:var(--muted);font-size:1.2vw">— continuous simplification</span></span></div>
+      <div style="display:flex;align-items:center;gap:1.2vw"><span style="color:var(--muted);width:26vw">Customer feedback is good</span><span style="color:var(--yellow);font-size:1.6vw">➜</span><span><strong>On-site Customer</strong> <span style="color:var(--muted);font-size:1.2vw">— customer present full-time</span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 · XP PRACTICES: CLEAN CODE -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· XP practices</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">XP PRACTICES</span>
+    <h2 class="head">Keeping code clean</h2>
+    <div class="grid g3">
+      <div class="scard c-yellow"><div class="lbl">Practice 01</div><h3>Incremental Planning</h3><p>Requirements are recorded on story cards. Releases are very small and frequent.</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-yellow"><div class="lbl">Practice 02</div><h3>Simple Design</h3><p>Design only for current requirements. Designing for future change is often wasted effort.</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-yellow"><div class="lbl">Practice 03</div><h3>Refactoring</h3><p>Developers refactor continuously. Code is kept simple and maintainable as improvements are found.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 · XP PRACTICES: COLLABORATION -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· XP practices</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">XP PRACTICES</span>
+    <h2 class="head">Collaboration and ownership</h2>
+    <div class="grid g3">
+      <div class="scard c-blue"><div class="lbl">People</div><h3>Pair Programming</h3><p>Two programmers work at one workstation. One writes code, the other reviews it immediately — diffusing knowledge across the team.</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-blue"><div class="lbl">Code</div><h3>Collective Ownership</h3><p>No single person "owns" a module. Any pair can improve any part of the code at any time.</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-blue"><div class="lbl">Pace</div><h3>Sustainable Pace</h3><p>Large amounts of overtime are unacceptable. A rested team is a reliable team.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 · USER STORIES -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· Requirements</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">LIGHTWEIGHT REQUIREMENTS</span>
+    <h2 class="head">Requirements as user stories</h2>
+    <div class="listpanel">
+      <div class="expl">
+        <h4>The Concept</h4><p>Replace heavy documentation with "story cards" and scenarios.</p>
+        <h4>The Conversation</h4><p>The card is a placeholder for a discussion between developer and customer.</p>
+        <h4>The Task</h4><p>The team breaks these stories down into implementation tasks.</p>
+      </div>
+      <div class="bcard"><div class="lbl">Story card · example</div><h3>Prescribing Medication</h3>
+        <p style="font-family:var(--mono);font-size:1.2vw;line-height:1.5">Kate is a doctor who wishes to prescribe medication for a patient. She selects "current medication" or "new medication" from the patient record. The system checks the dose against the approved range and asks her to confirm.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 · TEST-FIRST -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· Testing</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">WRITE THE TEST BEFORE THE CODE</span>
+    <h2 class="head">Test-first development</h2>
+    <div class="flow">
+      <div class="node"><div class="t">Write Test</div><div class="s">it will fail initially</div></div>
+      <div class="arw">→</div>
+      <div class="node on-blue"><div class="t">Run Test → Fail ✗</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">Write Code</div><div class="s">just enough to pass</div></div>
+      <div class="arw">→</div>
+      <div class="node on-green"><div class="t">Run Test → Pass ✓</div></div>
+    </div>
+    <div class="quote" style="margin-top:3vh;border-left-color:var(--blue)"><p style="font-size:1.7vw">The resulting test suite acts as a <strong>safety net</strong> — an automated regression suite that runs every time the code is changed.</p></div>
+  </div>
+</section>
+
+<!-- 11 · SCRUM MANAGEMENT FRAMEWORK -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· Scrum</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">MANAGING THE PROCESS, NOT THE CODE</span>
+    <h2 class="head">The Scrum management framework</h2>
+    <p class="dek">Scrum facilitates a psychological shift from "command and control" to "self-organizing teams".</p>
+    <div class="grid g2">
+      <div class="bcard"><div class="lbl" style="color:var(--red)">✗ Command &amp; Control</div><h3>Top-down hierarchy</h3><p>A PM directs middle management, who direct the workers. Decisions flow one way — down.</p></div>
+      <div class="bcard"><div class="lbl" style="color:var(--green)">✓ Self-Organizing Team</div><h3>The team decides how</h3><p>The team makes decisions on execution together. It decides <em>how</em> to do the work, not just what.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 · SCRUM WORKFLOW -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· Scrum</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">THE RHYTHM</span>
+    <h2 class="head">The Scrum workflow</h2>
+    <div class="flow">
+      <div class="node"><div class="t">Product Backlog</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">Sprint Backlog</div><div class="s">via sprint planning</div></div>
+      <div class="arw">→</div>
+      <div class="node on-blue"><div class="t">The Sprint</div><div class="s">2–4 weeks · daily scrum ↺</div></div>
+      <div class="arw">→</div>
+      <div class="node on-green"><div class="t">Shippable Increment ✓</div><div class="s">via sprint review</div></div>
+    </div>
+    <p class="foot-note">Each sprint is a short, fixed cycle that ends in something that runs.</p>
+  </div>
+</section>
+
+<!-- 13 · SCRUM ROLES & ARTIFACTS -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· Scrum</span></span><span class="count"></span></div>
+  <div class="body top" style="justify-content:center">
+    <span class="kicker">ROLES &amp; ARTIFACTS</span>
+    <h2 class="head">Who does what in Scrum</h2>
+    <div class="grid g3" style="margin-bottom:1.8vh">
+      <div class="scard c-blue"><div class="lbl">Role</div><h3>Product Owner</h3><p>Represents the customer; prioritizes the backlog.</p></div>
+      <div class="scard c-blue"><div class="lbl">Role</div><h3>Scrum Master</h3><p>Facilitator; removes obstacles and protects the team.</p></div>
+      <div class="scard c-blue"><div class="lbl">Role</div><h3>Development Team</h3><p>Self-organizing group (&lt;7 people) executing the work.</p></div>
+    </div>
+    <div class="grid g2">
+      <div class="scard c-yellow"><div class="lbl">Artifact</div><h3>Product Backlog</h3><p>The prioritized wish-list of all work.</p></div>
+      <div class="scard c-yellow"><div class="lbl">Artifact</div><h3>Sprint Backlog</h3><p>Specific tasks selected for the current sprint.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 · CASE STUDY -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· Case study</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">APPLYING THEORY TO PRACTICE</span>
+    <h2 class="head">Case study: the UX Insight Auditor</h2>
+    <div class="listpanel">
+      <div class="expl">
+        <h4>Project context</h4><p>A tool for researchers to record, replay, and analyze user behavior on websites.</p>
+        <h4>Goal</h4><p>Apply XP user stories and Scrum planning to move from concept to action.</p>
+        <h4>Key features</h4><p>Session recording · heatmap visualization · auditor dashboard.</p>
+      </div>
+      <div class="bcard"><div class="dots"><i></i><i></i><i></i></div><div class="lbl">Auditor dashboard</div>
+        <h3>Record · replay · analyze</h3>
+        <p>A researcher records a real session, then replays it with a heatmap overlay to see exactly where users clicked and struggled.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 · WORKSHOP: USER STORIES -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· Workshop</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">WORKSHOP · STEP 1</span>
+    <h2 class="head">Designing user stories</h2>
+    <div class="grid g2">
+      <div class="bcard"><div class="lbl">Auditor role</div>
+        <p style="font-family:var(--mono);font-size:1.4vw;line-height:1.55">As a <strong>UX Auditor</strong>, I want to replay a recorded session so that I can see exactly where the user clicked.</p></div>
+      <div class="bcard"><div class="lbl">Manager role</div>
+        <p style="font-family:var(--mono);font-size:1.4vw;line-height:1.55">As a <strong>Product Manager</strong>, I want to view a heatmap of high-traffic areas so I can optimize page layout.</p></div>
+    </div>
+    <p class="foot-note"><strong>Note:</strong> each card represents a unit of business value, not a technical specification.</p>
+  </div>
+</section>
+
+<!-- 16 · WORKSHOP: PRODUCT BACKLOG -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· Workshop</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker gold">WORKSHOP · STEP 2</span>
+    <h2 class="head">Building the product backlog</h2>
+    <div class="pillrows">
+      <div class="pillrow"><span class="k" style="width:6vw">Highest</span><span class="v" style="background:var(--yellow);color:var(--ink)">Session Recording Engine — essential for data collection</span></div>
+      <div class="pillrow"><span class="k" style="width:6vw"></span><span class="v" style="background:var(--yellow);color:var(--ink)">Basic Replay Interface — essential for viewing</span></div>
+      <div class="pillrow"><span class="k" style="width:6vw"></span><span class="v" style="background:var(--blue)">User Authentication — security</span></div>
+      <div class="pillrow"><span class="k" style="width:6vw"></span><span class="v" style="background:var(--blue)">Heatmap Generation — high value</span></div>
+      <div class="pillrow"><span class="k" style="width:6vw">Lowest</span><span class="v" style="background:var(--muted)">PDF Export of Reports — nice to have</span></div>
+    </div>
+    <p class="foot-note">Prioritization is based on business value — implementation details are not yet specified.</p>
+  </div>
+</section>
+
+<!-- 17 · WORKSHOP: SPRINT PLAN -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· Workshop</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">WORKSHOP · STEP 3</span>
+    <h2 class="head">The sprint plan (Sprint 1)</h2>
+    <div class="grid g2">
+      <div class="bcard"><div class="lbl">Product backlog</div>
+        <p style="font-size:1.3vw;line-height:1.8">Session Recording Engine<br>Basic Replay Interface<br>User Authentication<br>Heatmap Generation<br>PDF Export of Reports</p></div>
+      <div class="bcard" style="border-top:.6vh solid var(--blue)"><div class="lbl" style="color:var(--blue)">Sprint 1 container</div>
+        <h3 style="font-size:1.6vw">Goal: enable data capture &amp; basic replay</h3>
+        <p style="font-size:1.25vw;line-height:1.5"><strong>Session Recording story</strong> — implement JS tracker (4h) · design DB schema (2h)<br><strong>Replay Interface story</strong> — build video-player overlay (6h)</p></div>
+    </div>
+    <p class="foot-note">The team and Product Owner agree on what fits into the 2-week cycle.</p>
+  </div>
+</section>
+
+<!-- 18 · SCALING AGILE -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· Limits</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker red">THE REALITY</span>
+    <h2 class="head">Scaling Agile has limits</h2>
+    <div class="grid g3">
+      <div class="scard c-red"><div class="lbl" style="color:var(--red)">⚠ Limit 01</div><h3>System of Systems</h3><p>Large systems are often collections of standalone systems. Agile struggles with cross-system negotiation.</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-red"><div class="lbl" style="color:var(--red)">⚠ Limit 02</div><h3>External Regulations</h3><p>Safety-critical systems (e.g. FAA certification) require extensive documentation Agile often deprioritizes.</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-red"><div class="lbl" style="color:var(--red)">⚠ Limit 03</div><h3>Procurement</h3><p>Fixed-price contracts conflict with Agile's flexible scope.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 19 · MAINTENANCE RISKS -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· Evolution</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">THE TRADE-OFF</span>
+    <h2 class="head">Maintenance &amp; evolution risks</h2>
+    <div class="listpanel">
+      <div class="expl">
+        <h4>The Risk</h4><p>Agile relies on team continuity. If the team breaks up, knowledge is lost.</p>
+        <h4>The Reality</h4><p>Traditional documentation is often outdated anyway.</p>
+        <h4>The Solution</h4><p>Automated test suites act as living documentation for new developers.</p>
+      </div>
+      <div>
+        <div class="bcard" style="margin-bottom:1.4vh"><div class="lbl">Implicit knowledge</div><h3 style="font-size:1.6vw">The team knows the code</h3></div>
+        <div class="bcard"><div class="lbl">Documentation</div><h3 style="font-size:1.6vw">Manuals are sparse</h3></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 20 · SUMMARY -->
+<section class="slide dark">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w2-agile.fig <span class="crumb">· Summary</span></span><span class="count" style="color:#8b93c7"></span></div>
+  <div class="body">
+    <span class="kicker">TAKEAWAYS</span>
+    <h2 class="head">Agility with discipline</h2>
+    <div class="quad">
+      <div class="q"><div class="tag">Context matters</div><h4>Best for dynamic work</h4><p>Dynamic environments and small/medium teams.</p></div>
+      <div class="q"><div class="tag">Engineering discipline</div><h4>XP keeps you fast</h4><p>Testing and refactoring are required to maintain speed.</p></div>
+      <div class="q"><div class="tag">Management structure</div><h4>Scrum gives rhythm</h4><p>Scrum provides visibility and a steady cadence.</p></div>
+      <div class="q"><div class="tag">The goal</div><h4>"Just enough" process</h4><p>Not "no documentation" — just enough process to deliver software.</p></div>
+    </div>
+  </div>
+</section>
+
+</div>
+<div class="bar" id="bar"></div><span class="hint">← / → · click edges · Home / End · Ctrl/⌘-P to print</span>
+<script>
+/* Intro2SE slide-deck engine — keyboard + click nav, progress bar, counter. */
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0, bar=document.getElementById('bar'), cur=document.getElementById('cur');
+  function fill(n){ slides.forEach(function(s,k){
+      var count=s.querySelector('.count');
+      if(count) count.textContent=String(k+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+  });}
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){ s.classList.toggle('active',k===i); });
+    if(bar) bar.style.width=((i+1)/slides.length*100)+'%';
+    if(cur) cur.textContent=(i+1)+' / '+slides.length;
+  }
+  fill();
+  document.addEventListener('keydown',function(e){
+    if(['ArrowRight','ArrowDown',' ','PageDown'].indexOf(e.key)>-1){e.preventDefault();show(i+1);}
+    else if(['ArrowLeft','ArrowUp','PageUp'].indexOf(e.key)>-1){e.preventDefault();show(i-1);}
+    else if(e.key==='Home'){show(0);} else if(e.key==='End'){show(slides.length-1);}
+  });
+  document.getElementById('deck').addEventListener('click',function(e){
+    if(e.target.closest('a')) return;
+    if(e.clientX<innerWidth*0.25) show(i-1); else show(i+1);
+  });
+  show(0);
+})();
+
+</script>
+</body>
+</html>

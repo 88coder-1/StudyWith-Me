@@ -1,0 +1,1000 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intro2SE Week 6 — Construction &amp; Version Control (Git/GitHub)</title>
+<style>
+/* Intro2SE HTML slide-deck theme + engine
+   Matches the Intro2SE pptx (intro2se-weekNN.fig) look:
+   Space Grotesk + JetBrains Mono, #EEF0F3 bg, colored-circle motif,
+   white cards, red/yellow/blue/green accents.
+   Keyboard-navigable single-slide-at-a-time deck. Print = all slides. */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root{
+  --bg:#EEF0F3; --ink:#0B0F19; --text:#3A4250; --muted:#7A8290;
+  --border:#E4E7EC; --border-2:#C8CCD3; --white:#FFFFFF; --panel:#F7F8FA;
+  --yellow:#FFC233; --red:#FF5A47; --blue:#2D5BFF; --green:#16B670;
+  --disp:"Space Grotesk",-apple-system,"Segoe UI","Noto Sans Thai",sans-serif;
+  --mono:"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+  --shadow:0 1.2vh 3vh rgba(11,15,25,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--disp);color:var(--text);background:#0b1b2e}
+
+#deck{position:relative;height:100vh;width:100vw;overflow:hidden}
+.slide{
+  position:absolute;inset:0;display:none;flex-direction:column;
+  padding:4.5vh 6vw 6vh;
+  background:linear-gradient(150deg,#f2f4f7 0%,#e9ecf1 100%);
+  overflow:hidden;
+}
+.slide.active{display:flex;animation:f .3s ease}
+@keyframes f{from{opacity:0;transform:translateY(1vh)}to{opacity:1;transform:none}}
+
+/* ---- top chrome bar ---- */
+.chrome{
+  display:flex;align-items:center;justify-content:space-between;gap:1vw;
+  font-family:var(--mono);font-weight:700;font-size:1.05vw;color:var(--ink);
+  padding-bottom:2.2vh;flex:0 0 auto;
+}
+.chrome .l{display:flex;align-items:center;gap:.7vw;min-width:0}
+.chrome .play{color:var(--blue)}
+.chrome .crumb{color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chrome .count{color:var(--muted);font-weight:500;white-space:nowrap}
+
+/* body region */
+.body{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.body.top{justify-content:flex-start}
+
+/* ---- typography ---- */
+.kicker{font-family:var(--mono);font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  font-size:1.05vw;color:var(--muted);margin-bottom:1.4vh;display:block}
+.kicker.blue{color:var(--blue)} .kicker.red{color:var(--red)}
+.kicker.green{color:var(--green)} .kicker.gold{color:#a67a00}
+h1.head{font-family:var(--disp);font-weight:700;color:var(--ink);
+  font-size:4.6vw;line-height:1.05;letter-spacing:-.01em;margin-bottom:1.4vh}
+h2.head{font-family:var(--disp);font-weight:700;color:var(--ink);
+  font-size:3.2vw;line-height:1.1;letter-spacing:-.01em;margin-bottom:2vh}
+.dek{font-size:1.7vw;line-height:1.5;color:var(--text);max-width:80%;margin-bottom:2.4vh}
+.dek.narrow{max-width:64%}
+p{margin:0 0 1vh} strong{color:var(--ink);font-weight:700}
+.sub{font-size:1.35vw;color:var(--muted);margin-top:1vh}
+
+/* ---- title slide ---- */
+.title-slide .kicker{font-size:1.2vw}
+.title-slide h1.head{font-size:6vw;max-width:62%}
+.title-slide .lead{font-size:1.7vw;color:var(--text);max-width:52%;margin-top:3vh;line-height:1.5}
+.circles{position:absolute;right:6vw;top:50%;transform:translateY(-50%);width:34vw;height:70vh}
+.circles i{position:absolute;border-radius:50%;display:block}
+.circles .c1{width:13vw;height:13vw;background:var(--blue);right:6vw;top:6vh}
+.circles .c2{width:9vw;height:9vw;background:var(--green);left:0;top:34vh}
+.circles .c3{width:7vw;height:7vw;background:var(--yellow);right:0;top:40vh}
+.circles .c4{width:15vw;height:15vw;background:var(--red);right:9vw;bottom:2vh}
+
+/* ---- generic grids ---- */
+.grid{display:grid;gap:1.4vw}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+
+/* ---- browser cards (mac dots) ---- */
+.bcard{background:var(--white);border-radius:1.2vw;box-shadow:var(--shadow);
+  padding:2.4vh 1.7vw;display:flex;flex-direction:column;min-width:0}
+.bcard .dots{display:flex;gap:.5vw;margin-bottom:2vh}
+.bcard .dots i{width:.85vw;height:.85vw;border-radius:50%;display:block}
+.bcard .dots i:nth-child(1){background:var(--red)}
+.bcard .dots i:nth-child(2){background:var(--yellow)}
+.bcard .dots i:nth-child(3){background:var(--green)}
+.bcard .lbl{font-family:var(--mono);font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  font-size:1vw;color:var(--muted);margin-bottom:1.2vh}
+.bcard h3{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.9vw;line-height:1.1;margin-bottom:1.4vh}
+.bcard p{font-size:1.35vw;line-height:1.45;color:var(--text)}
+.bcard .foot{margin-top:auto;padding-top:1.6vh}
+
+/* chip row */
+.chips{display:flex;align-items:center;gap:.7vw;flex-wrap:wrap}
+.chips .chip{font-family:var(--mono);font-weight:500;font-size:1.1vw;color:var(--text);
+  background:var(--panel);border-radius:999px;padding:.7vh 1vw}
+.chips .chip.hot{background:#ffe9e6;color:var(--red)}
+.chips .arw{color:var(--muted);font-size:1.1vw}
+.squares{display:flex;gap:.6vw}
+.squares i{width:2.4vw;height:2.4vw;border-radius:.5vw;display:block}
+.squares .y{background:var(--yellow)} .squares .r{background:var(--red)} .squares .g{background:var(--green)}
+
+/* ---- big color cards (red/yellow/green) ---- */
+.ccard{border-radius:1.2vw;padding:3vh 1.8vw;display:flex;flex-direction:column;color:#fff;min-height:52vh}
+.ccard.red{background:var(--red)} .ccard.yellow{background:var(--yellow);color:var(--ink)}
+.ccard.green{background:var(--green)} .ccard.blue{background:var(--blue)}
+.ccard .lbl{font-family:var(--mono);font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  font-size:1vw;opacity:.8;margin-bottom:2vh}
+.ccard h3{font-family:var(--disp);font-weight:700;font-size:2.3vw;line-height:1.05;margin-bottom:2.2vh}
+.ccard p{font-size:1.35vw;line-height:1.45}
+.ccard .ico{margin-top:auto;align-self:flex-end;font-size:3vw;opacity:.9}
+
+/* ---- stage/step light cards (with progress bar or chip) ---- */
+.scard{background:var(--white);border-radius:1.1vw;box-shadow:var(--shadow);
+  padding:2.4vh 1.4vw;display:flex;flex-direction:column;min-width:0}
+.scard .lbl{font-family:var(--mono);font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  font-size:.92vw;color:var(--muted);margin-bottom:1vh}
+.scard h3{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.5vw;line-height:1.1;margin-bottom:1.2vh}
+.scard p{font-size:1.15vw;line-height:1.4;color:var(--text);flex:1}
+.scard .bar{display:flex;gap:.3vw;margin-top:1.6vh}
+.scard .bar i{height:.7vh;flex:1;border-radius:999px;background:var(--border-2)}
+.scard .bar.n1 i:nth-child(-n+1),.scard .bar.n2 i:nth-child(-n+2),
+.scard .bar.n3 i:nth-child(-n+3),.scard .bar.n4 i:nth-child(-n+4),
+.scard .bar.n5 i:nth-child(-n+5){background:var(--col,var(--blue))}
+.scard.c-red{--col:var(--red)} .scard.c-yellow{--col:var(--yellow)}
+.scard.c-blue{--col:var(--blue)} .scard.c-green{--col:var(--green)}
+.scard .chip{align-self:flex-start;margin-top:1.4vh;font-family:var(--mono);font-weight:500;
+  font-size:1vw;color:var(--text);background:var(--panel);border-radius:.5vw;padding:.5vh .9vw}
+
+/* ---- do / don't two cards ---- */
+.dcard{background:var(--white);border-radius:1.2vw;box-shadow:var(--shadow);padding:2.6vh 1.8vw}
+.dcard .pill{display:inline-block;font-family:var(--mono);font-weight:700;font-size:1vw;
+  color:#fff;border-radius:999px;padding:.5vh 1.1vw;margin-bottom:1.8vh}
+.dcard.do .pill{background:var(--green)} .dcard.dont .pill{background:var(--red)}
+.dcard .item{padding:1.2vh 0;border-top:1px solid var(--border)}
+.dcard .item:first-of-type{border-top:none}
+.dcard .item h4{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.4vw;margin-bottom:.5vh}
+.dcard .item p{font-size:1.15vw;line-height:1.4;color:var(--text)}
+
+/* ---- list + panel ---- */
+.listpanel{display:grid;grid-template-columns:1fr 1.05fr;gap:3vw;align-items:center}
+.expl h4{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.6vw;margin:1.8vh 0 .6vh}
+.expl h4:first-child{margin-top:0}
+.expl p{font-size:1.3vw;line-height:1.45;color:var(--text)}
+.panel{background:var(--white);border-radius:1.2vw;box-shadow:var(--shadow);padding:1vh 1.6vw}
+.panel .row{display:flex;align-items:center;gap:1vw;padding:1.6vh .4vw;border-top:1px solid var(--border)}
+.panel .row:first-child{border-top:none}
+.panel .row .sq{width:1.6vw;height:1.6vw;border-radius:.4vw;flex:0 0 auto}
+.panel .row .n{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.5vw;flex:0 0 auto;width:1.6vw}
+.panel .row .txt{font-size:1.3vw;color:var(--ink);flex:1}
+.panel .row .tag{font-family:var(--mono);font-size:1vw;color:var(--muted)}
+.b-blue{background:var(--blue)} .b-red{background:var(--red)}
+.b-yellow{background:var(--yellow)} .b-green{background:var(--green)} .b-purple{background:#7C4DFF}
+
+/* ---- pills (before you leave) ---- */
+.pillrows{display:flex;flex-direction:column;gap:1.4vh}
+.pillrow{display:flex;align-items:center;gap:1.4vw}
+.pillrow .k{font-size:1.4vw;color:var(--ink);width:12vw;flex:0 0 auto}
+.pillrow .v{font-family:var(--mono);font-weight:500;font-size:1.35vw;color:#fff;
+  border-radius:999px;padding:1.1vh 1.6vw;flex:1}
+
+/* ---- quote ---- */
+.quote{background:var(--panel);border-left:.5vw solid var(--yellow);border-radius:0 1vw 1vw 0;
+  padding:2.6vh 2vw}
+.quote p{font-size:2.2vw;line-height:1.35;color:var(--ink);font-weight:500}
+.quote .by{font-size:1.4vw;color:var(--muted);font-style:italic;margin-top:1.6vh}
+
+/* ---- horizontal flow ---- */
+.flow{display:flex;align-items:stretch;gap:1vw;flex-wrap:nowrap}
+.flow .node{background:var(--white);border-radius:1vw;box-shadow:var(--shadow);
+  padding:2vh 1.2vw;flex:1;display:flex;flex-direction:column;justify-content:center;min-width:0;text-align:center}
+.flow .node .t{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.4vw;line-height:1.1}
+.flow .node .s{font-size:1vw;color:var(--muted);margin-top:.6vh}
+.flow .arw{align-self:center;color:var(--muted);font-size:1.8vw;flex:0 0 auto}
+.flow .node.on-blue{background:var(--blue);color:#fff} .flow .node.on-blue .t{color:#fff}
+.flow .node.on-green{background:var(--green);color:#fff} .flow .node.on-green .t{color:#fff}
+
+/* ---- table ---- */
+.table-wrap{overflow:auto;border-radius:1vw;box-shadow:var(--shadow);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;background:var(--white);font-size:1.25vw}
+thead th{font-family:var(--mono);font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+  font-size:1vw;color:#fff;background:var(--ink);text-align:left;padding:1.4vh 1.1vw}
+tbody td{padding:1.4vh 1.1vw;border-top:1px solid var(--border);vertical-align:top;line-height:1.35}
+tbody tr:nth-child(even){background:var(--panel)}
+td.b,th.b{font-weight:700;color:var(--ink)}
+
+/* summary 2x2 (dark) */
+.slide.dark{background:linear-gradient(150deg,#141a4a 0%,#0f1440 100%)}
+.slide.dark h2.head,.slide.dark .kicker{color:#fff}
+.quad{display:grid;grid-template-columns:1fr 1fr;gap:2.6vh 3vw;margin-top:1vh}
+.quad .q h4{font-family:var(--disp);font-weight:700;color:#fff;font-size:1.9vw;margin-bottom:.8vh}
+.quad .q p{font-size:1.3vw;line-height:1.45;color:#cfd4ea}
+.quad .q .tag{font-family:var(--mono);font-size:1vw;color:#8b93c7;text-transform:uppercase;letter-spacing:.06em}
+
+/* footer line */
+.foot-note{margin-top:2.4vh;font-size:1.2vw;color:var(--muted)}
+.rule{height:1px;background:var(--border);margin:2vh 0}
+
+/* ---- deck controls ---- */
+.bar{position:fixed;bottom:0;left:0;height:.6vh;background:var(--blue);transition:width .3s;z-index:6}
+.hint{position:fixed;bottom:1.6vh;left:50%;transform:translateX(-50%);font-family:var(--mono);
+  font-size:.85vw;color:var(--muted);z-index:6}
+
+/* ---- print: every slide on its own page ---- */
+@media print{
+  #deck{height:auto;overflow:visible}
+  .slide{display:flex!important;position:relative;height:100vh;page-break-after:always;
+    inset:auto;break-inside:avoid}
+  .bar,.hint{display:none}
+}
+
+/* ---- embedded figure images (from Week2.pptx) ---- */
+.fig{display:block;margin:0 auto;max-width:100%;max-height:44vh;height:auto;width:auto;
+  background:#fff;border-radius:1vw;box-shadow:var(--shadow);padding:1.6vh 1.6vw}
+.fig.sm{max-height:28vh}
+.figcap{text-align:center;font-family:var(--mono);font-size:1vw;color:var(--muted);margin-top:.9vh}
+
+</style>
+<style>
+  /* deeper green for SVG box fills carrying text — theme green (#16B670) fails AA on white (~2.6:1); this passes (~5:1) */
+  :root{ --gbox:#0B7A4A; }
+  /* dark closing slide: invert the chrome bar text (ink-on-navy ≈ invisible otherwise) */
+  .slide.dark .chrome .l{ color:#e8ecf7; }
+  .slide.dark .chrome .crumb, .slide.dark .chrome .count{ color:#aeb6dd; }
+  /* dark code block (git log, snippets, prompt) */
+  .code{background:#0f1440;border-radius:1vw;padding:2vh 1.6vw;font-family:var(--mono);
+    font-size:1.05vw;line-height:1.7;color:#c8d0f0;overflow:auto;white-space:pre}
+  .code.sm{font-size:.95vw;line-height:1.6}
+  .code .k{color:#7aa2ff}.code .c{color:#8891b8}.code .s{color:#7ee0b8}.code .g{color:#ffcf6b}.code .r{color:#ff8f7d}
+  .codecap{font-family:var(--mono);font-size:1vw;color:var(--muted);margin:.2vh 0 1vh}
+  /* numbered fundamentals panel */
+  .num-row{display:flex;align-items:flex-start;gap:1.1vw;padding:1.5vh .4vw;border-top:1px solid var(--border)}
+  .num-row:first-child{border-top:none}
+  .num-row .n{font-family:var(--mono);font-weight:700;color:#fff;background:var(--blue);
+    width:2.2vw;height:2.2vw;border-radius:.5vw;display:flex;align-items:center;justify-content:center;
+    font-size:1.15vw;flex:0 0 auto}
+  .num-row .n.g{background:var(--green)} .num-row .n.y{background:var(--yellow);color:var(--ink)}
+  .num-row .n.r{background:var(--red)} .num-row .n.p{background:#7C4DFF}
+  .num-row h4{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.5vw;margin-bottom:.3vh}
+  .num-row p{font-size:1.2vw;line-height:1.4;color:var(--text)}
+  /* label chip inline */
+  .lead-tag{display:inline-block;font-family:var(--mono);font-weight:700;font-size:.9vw;letter-spacing:.04em;
+    text-transform:uppercase;color:#fff;background:var(--blue);border-radius:.4vw;padding:.4vh .8vw;margin-bottom:1.2vh}
+  .lead-tag.g{background:var(--green)} .lead-tag.r{background:var(--red)} .lead-tag.y{background:var(--yellow);color:var(--ink)}
+  /* flow arrow label */
+  .flow .arw small{display:block;font-family:var(--mono);font-size:.7vw;color:var(--muted);text-align:center}
+  .flow.wrap{flex-wrap:wrap;gap:1.2vh 1vw}
+  /* red flow node (theme only ships on-blue / on-green) */
+  .flow .node.on-red{background:var(--red);color:#fff} .flow .node.on-red .t{color:#fff}
+  /* inline code — subtle mono chip on light surfaces */
+  code{font-family:var(--mono);font-size:.9em;background:var(--panel);border-radius:.3vw;padding:.1vh .45vw;color:var(--ink)}
+  .foot-note code{font-size:.95em}
+  /* shave a few px off dense scard+foot-note slides so nothing clips at 16:9 */
+  .scard{padding-top:2vh;padding-bottom:2vh}
+  .scard .bar{margin-top:1.2vh}
+  .body > .foot-note:last-child{margin-top:1.9vh}
+  /* "IN PLAIN TERMS" — a plain-language restatement / analogy for Year-1 readers */
+  .plain{background:#EAF1FF;border-left:.5vw solid var(--blue);border-radius:0 .7vw .7vw 0;
+    padding:1.15vh 1.2vw;margin-top:1.6vh}
+  .plain .lab{display:inline-block;font-family:var(--mono);font-weight:700;font-size:.82vw;
+    letter-spacing:.05em;text-transform:uppercase;color:var(--blue);margin-bottom:.35vh}
+  .plain p{font-size:1.18vw;line-height:1.42;color:var(--ink);margin:0}
+  .plain.g{background:#E4F6EE;border-left-color:var(--green)} .plain.g .lab{color:#0B7A4A}
+  .plain.r{background:#FFECE9;border-left-color:var(--red)} .plain.r .lab{color:#C43A2B}
+  .slide.dark .plain{background:#16224a} .slide.dark .plain p{color:#e8ecf7}
+  /* compact SVG figure block with a mono caption */
+  .figblock{margin:.6vh 0 0}
+  .figblock .cap{font-family:var(--mono);font-size:.92vw;color:var(--muted);text-align:center;margin-top:.4vh}
+</style>
+</head>
+<body>
+<div id="deck">
+
+<!-- 0 · TITLE -->
+<section class="slide title-slide active">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Construction · Git/GitHub</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">WEEK 6 · CH6 / CH25 · CONSTRUCTION &amp; VERSION CONTROL</span>
+    <h1 class="head">You designed it. Now <em>build</em> it — and track every change.</h1>
+    <p class="lead">Last week you decided <strong>how</strong> the system is shaped. This week you turn design into <strong>code</strong> you can explain, and put every change under <strong>version control</strong> — Git &amp; GitHub — so nothing is ever lost and every commit says <em>why</em>.</p>
+  </div>
+  <div class="circles"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></div>
+</section>
+
+<!-- 1 · GOLDEN THREAD -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Where we are</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">THE GOLDEN THREAD · ONE STEP FURTHER</span>
+    <h2 class="head">Construction is where the design becomes real</h2>
+    <div class="flow" style="margin-bottom:2.4vh">
+      <div class="node"><div class="t">Problem</div><div class="s">Wk 3</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">FR / NFR</div><div class="s">Wk 3 · SRS</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">Model</div><div class="s">Wk 4 · UML</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">Design</div><div class="s">Wk 5</div></div>
+      <div class="arw">→</div>
+      <div class="node on-blue"><div class="t">Code</div><div class="s" style="color:#cfe0ff">Wk 6 · today</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">Test</div><div class="s">Wk 7</div></div>
+    </div>
+    <div class="grid g3">
+      <div class="scard c-blue"><div class="lbl">Part 1</div><h3>Construction</h3><p>Write code that stays simple, readable, and easy to verify — the SWEBOK fundamentals.</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-green"><div class="lbl">Part 2 · 3</div><h3>Version control</h3><p>Git &amp; the GitHub team workflow: commit, history, branch, pull request.</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-red"><div class="lbl">Part 4</div><h3>AI-assisted coding</h3><p>Generate with AI → read it → test it → be ready to explain every line.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+    </div>
+    <p class="foot-note">Due this week: submit the <strong>M3 Design Document</strong> (part of the 12% M3 Design + Prototype) · <strong>R2 — your response to the review (1%)</strong>. The graded output is a <strong>working prototype</strong>, demoed live — there is no separate graded build.</p>
+  </div>
+</section>
+
+<!-- 2 · WHAT IS CONSTRUCTION -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Part 1 · Construction</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">SWEBOK V4 · CODE COMPLETE (McCONNELL)</span>
+    <h2 class="head">"Construction" is more than typing code</h2>
+    <p class="dek narrow">SWEBOK: construction is mostly <strong>coding and debugging</strong> — but also <strong>detailed design, unit testing, and integration</strong>. McConnell adds: it's the <strong>one activity guaranteed to happen on every project</strong>.</p>
+    <div class="listpanel" style="grid-template-columns:1fr 1.12fr">
+      <div class="expl">
+        <h4>Code is the real description</h4>
+        <p>Diagrams drift; the <strong>source code is often the only accurate, up-to-date description</strong> of what the software really does.</p>
+        <h4>Where quality is won or lost</h4>
+        <p>Code is the ultimate deliverable — quality is built in <em>while you code</em>, not bolted on later.</p>
+      </div>
+      <div class="panel">
+        <div class="row"><span class="sq b-blue"></span><span class="txt">Design &amp; write classes and routines</span></div>
+        <div class="row"><span class="sq b-green"></span><span class="txt">Name variables &amp; constants well</span></div>
+        <div class="row"><span class="sq b-yellow"></span><span class="txt">Choose control structures; organize blocks</span></div>
+        <div class="row"><span class="sq b-red"></span><span class="txt">Unit-test &amp; debug your own code</span></div>
+        <div class="row"><span class="sq b-purple"></span><span class="txt">Review teammates' code; have yours reviewed</span></div>
+        <div class="row"><span class="sq b-blue"></span><span class="txt">Format, comment &amp; integrate the pieces</span></div>
+      </div>
+    </div>
+    <p class="foot-note">Links to <strong>Configuration Mgmt</strong> (construction makes the most items to track → Git), <strong>Quality</strong>, and <strong>Management</strong>. Reading: Sommerville Ch7, Ch25 · SWEBOK <em>Software Construction</em> · McConnell, <em>Code Complete</em>.</p>
+  </div>
+</section>
+
+<!-- 3 · FIVE FUNDAMENTALS -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Construction fundamentals</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">FIVE THINGS GOOD CODE DOES · SWEBOK</span>
+    <h2 class="head">Five fundamentals of construction</h2>
+    <div class="listpanel" style="grid-template-columns:1fr 1.25fr">
+      <div class="expl">
+        <p class="dek narrow" style="margin:0">These are the goals behind every "good practice" you'll hear. The first three are what we work on today; the last two you already met (reuse a library; follow a style).</p>
+        <p class="foot-note">The one to remember: <strong>minimize complexity</strong> — a human has to read this code later, and that human is often you.</p>
+      </div>
+      <div class="panel">
+        <div class="num-row"><div class="n">1</div><div><h4>Minimize complexity</h4><p>Simple, readable code &gt; clever code. This drives almost every other rule.</p></div></div>
+        <div class="num-row"><div class="n g">2</div><div><h4>Anticipate &amp; embrace change</h4><p>Build so the next change is easy — agile, small pieces, clear seams.</p></div></div>
+        <div class="num-row"><div class="n y">3</div><div><h4>Construct for verification</h4><p>Write code so bugs are <em>easy to find</em> — standards, logs, testable shape.</p></div></div>
+        <div class="num-row"><div class="n r">4</div><div><h4>Reuse assets</h4><p>Use existing libraries/components instead of reinventing — but only trusted ones.</p></div></div>
+        <div class="num-row"><div class="n p">5</div><div><h4>Apply standards</h4><p>Naming, layout, error handling — a shared style so the team reads as one.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 · MINIMIZE COMPLEXITY -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Minimize complexity</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">FUNDAMENTAL #1</span>
+    <h2 class="head">Simple &amp; readable beats clever</h2>
+    <div class="grid g2" style="align-items:start">
+      <div>
+        <span class="lead-tag r">❌ Clever — nobody can read it</span>
+        <div class="code sm">def a(t,l): return [x <span class="k">for</span> x <span class="k">in</span> l
+  <span class="k">if</span> (x[<span class="s">'d'</span>]-now()).days&lt;=<span class="g">1</span> <span class="k">and</span> <span class="k">not</span> x[<span class="s">'c'</span>]]</div>
+        <p class="foot-note">One line, cryptic names, does three things. A bug here is invisible.</p>
+      </div>
+      <div>
+        <span class="lead-tag g">✅ Readable — one job, clear names</span>
+        <div class="code sm"><span class="k">def</span> <span class="g">tasks_due_soon</span>(tasks):
+  <span class="c"># due within 1 day and not done (FR-3)</span>
+  soon = []
+  <span class="k">for</span> task <span class="k">in</span> tasks:
+    days_left = (task.due_date - today()).days
+    <span class="k">if</span> days_left &lt;= <span class="g">1</span> <span class="k">and</span> <span class="k">not</span> task.done:
+      soon.append(task)
+  <span class="k">return</span> soon</div>
+      </div>
+    </div>
+    <div class="figblock" style="margin-top:1vh">
+      <svg viewBox="0 0 700 96" style="width:100%;height:13vh;display:block;margin:0 auto">
+        <defs><marker id="am" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--muted)"/></marker></defs>
+        <!-- simple: 1 path -->
+        <text x="150" y="18" font-family="var(--mono)" font-size="13" fill="var(--green)" font-weight="700" text-anchor="middle">simple · 1 route</text>
+        <line x1="60" y1="58" x2="240" y2="58" stroke="var(--muted)" stroke-width="3" marker-end="url(#am)"/>
+        <circle cx="60" cy="58" r="8" fill="var(--green)"/><circle cx="150" cy="58" r="7" fill="var(--border-2)"/><circle cx="240" cy="58" r="8" fill="var(--ink)"/>
+        <!-- branchy: many paths -->
+        <text x="520" y="18" font-family="var(--mono)" font-size="13" fill="var(--red)" font-weight="700" text-anchor="middle">every if / loop adds a route</text>
+        <circle cx="400" cy="58" r="8" fill="var(--red)"/>
+        <path d="M400,58 C440,58 450,34 500,34" fill="none" stroke="var(--muted)" stroke-width="3"/>
+        <path d="M400,58 L500,58" fill="none" stroke="var(--muted)" stroke-width="3"/>
+        <path d="M400,58 C440,58 450,82 500,82" fill="none" stroke="var(--muted)" stroke-width="3"/>
+        <circle cx="500" cy="34" r="6" fill="var(--border-2)"/><circle cx="500" cy="58" r="6" fill="var(--border-2)"/><circle cx="500" cy="82" r="6" fill="var(--border-2)"/>
+        <path d="M500,34 C560,34 570,58 620,58" fill="none" stroke="var(--muted)" stroke-width="3"/>
+        <path d="M500,58 L620,58" fill="none" stroke="var(--muted)" stroke-width="3" marker-end="url(#am)"/>
+        <path d="M500,82 C560,82 570,58 620,58" fill="none" stroke="var(--muted)" stroke-width="3"/>
+        <circle cx="620" cy="58" r="8" fill="var(--ink)"/>
+      </svg>
+      <p class="cap">More routes through a function = more places a bug can hide, and more cases a test must cover.</p>
+    </div>
+    <p class="foot-note"><strong>Cyclomatic complexity</strong> (McCabe, 1976) is just a way to <strong>count those routes</strong> — more branches = harder to test and understand. So: fewer branches, smaller functions, clearer names. Rule of thumb: <strong>one function does one thing</strong>.</p>
+  </div>
+</section>
+
+<!-- 5 · READABLE CODE & NAMING -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Readable code</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">FUNDAMENTAL #5 · APPLYING STANDARDS (LIGHT)</span>
+    <h2 class="head">Readable code &amp; naming</h2>
+    <div class="grid g2">
+      <div class="dcard do">
+        <span class="pill">DO</span>
+        <div class="item"><h4>Name for meaning</h4><p><code>tasks_due_soon</code>, not <code>a</code>. A name should say what it is without a comment.</p></div>
+        <div class="item"><h4>Small functions</h4><p>If you can't see the whole function on one screen, split it.</p></div>
+        <div class="item"><h4>One consistent style</h4><p>Agree on naming/format across the team — let a formatter enforce it.</p></div>
+      </div>
+      <div class="dcard dont">
+        <span class="pill">DON'T</span>
+        <div class="item"><h4>Cryptic abbreviations</h4><p><code>t</code>, <code>l</code>, <code>tmp2</code> — future-you won't remember what they meant.</p></div>
+        <div class="item"><h4>Comment the obvious, hide the tricky</h4><p>Explain <em>why</em>, not <em>what</em>. Delete dead code, don't comment it out.</p></div>
+        <div class="item"><h4>Copy-paste the same block 5×</h4><p>Duplication = five places to fix the same bug. Make it a function.</p></div>
+      </div>
+    </div>
+    <p class="foot-note">This is <em>light</em> today — the point is habits, not a style rulebook. AI writes cleaner code when your prompt asks for readable names and small functions.</p>
+  </div>
+</section>
+
+<!-- NAMING EXAMPLES -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Naming examples</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">GOOD NAMES · BEFORE → AFTER</span>
+    <h2 class="head">A name should tell you what it holds</h2>
+    <div class="grid g2" style="align-items:start">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>❌ Cryptic</th><th>✅ Clear</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td class="b"><code>a</code>, <code>x</code></td><td><code>tasks_due_soon</code></td><td>says what it holds</td></tr>
+            <tr><td class="b"><code>d</code></td><td><code>due_date</code></td><td>full word, no guessing</td></tr>
+            <tr><td class="b"><code>tmp2</code></td><td><code>filtered_tasks</code></td><td>describes the content</td></tr>
+            <tr><td class="b"><code>flag</code></td><td><code>is_overdue</code></td><td>a boolean reads yes/no</td></tr>
+            <tr><td class="b"><code>calc()</code></td><td><code>days_until_due()</code></td><td>verb + what it returns</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <p class="codecap">Same logic, two names</p>
+        <div class="code sm"><span class="c"># ❌ what does this even do?</span>
+def f(a, d):
+  return [t for t in a if t.d &lt; d]
+
+<span class="c"># ✅ reads like a sentence</span>
+def tasks_due_before(tasks, cutoff):
+  return [t for t in tasks
+          if t.due_date &lt; cutoff]</div>
+      </div>
+    </div>
+    <p class="foot-note">Rule of thumb: if you need a comment to explain a <em>name</em>, the name isn't done yet. Ask your AI for clear names in the prompt — it will follow.</p>
+  </div>
+</section>
+
+<!-- 6 · NAMING DONE PROPERLY (Code Complete + Python) -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Naming, properly</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker blue">FUNDAMENTAL #5 · CODE COMPLETE + PYTHON</span>
+    <h2 class="head">Naming, done properly</h2>
+    <div class="grid g2" style="align-items:start">
+      <div>
+        <div class="num-row" style="border-top:none;padding-top:0"><div class="n">1</div><div><h4>Just-right length (Goldilocks)</h4><p>Gorla &amp; Benander (1990): debugging was easiest when names averaged <strong>10–16 characters</strong>. Not <code>x</code> / <code>tmp</code>; not <code>roll_no_of_a_student</code>.</p></div></div>
+        <div class="num-row"><div class="n g">2</div><div><h4>Loop variables</h4><p><code>i</code>, <code>j</code>, <code>k</code> are fine for short loops. Used outside the loop or nested? Give it a real name — <code>record_count</code>.</p></div></div>
+        <div class="num-row"><div class="n y">3</div><div><h4>Use opposites precisely</h4><p><code>begin/end</code>, <code>min/max</code>, <code>first/last</code>, <code>next/previous</code> — consistent pairs read faster.</p></div></div>
+      </div>
+      <div>
+        <p class="codecap">Python naming conventions</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Kind</th><th>Style</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td class="b">Variable / function</td><td>snake_case</td><td><code>due_date</code>, <code>add_task()</code></td></tr>
+              <tr><td class="b">Class</td><td>PascalCase</td><td><code>TaskRepository</code></td></tr>
+              <tr><td class="b">Constant</td><td>UPPER_SNAKE</td><td><code>MAX_TASKS</code></td></tr>
+              <tr><td class="b">Module / package</td><td>lowercase</td><td><code>tasks.py</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <p class="foot-note">Code is <strong>read far more than it's written</strong> — favour read-time clarity. And tell your AI the convention in the prompt, so its draft matches your codebase.</p>
+  </div>
+</section>
+
+<!-- 7 · CONSTRUCT FOR VERIFICATION -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Construct for verification</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">FUNDAMENTAL #3 · A BRIDGE TO WEEK 7</span>
+    <h2 class="head">Write code so bugs are easy to find</h2>
+    <p class="dek">SWEBOK calls this <strong>constructing for verification</strong>: shape the code today so that you — and the tester next week — can find faults fast.</p>
+    <div class="grid g3">
+      <div class="scard c-green"><div class="lbl">Structure</div><h3>Testable shape</h3><p>Small functions that take input and return output are easy to unit-test (Week 7).</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-blue"><div class="lbl">Standards</div><h3>Follow conventions</h3><p>Consistent style makes code reviews and reading fast — you spot the odd one out.</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-yellow"><div class="lbl">Visibility</div><h3>Log behaviour</h3><p>Record what the program did, so when it breaks you can see <em>where</em>.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+    </div>
+    <p class="foot-note">You're not testing yet — you're making next week's testing possible. Design → Code → <strong>Test</strong> is one continuous thread.</p>
+  </div>
+</section>
+
+<!-- 7 · WHY VERSION CONTROL -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Part 2 · Version control</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">THE PROBLEM VERSION CONTROL SOLVES</span>
+    <h2 class="head">You've already lived this pain</h2>
+    <div class="grid g3">
+      <div class="bcard"><span class="lbl">Naming chaos</span><h3>report_final_v2_FINAL_really.docx</h3><p>Which one is the real one? Version control gives you <strong>one file</strong> with a full history.</p></div>
+      <div class="bcard"><span class="lbl">Overwrite</span><h3>"You saved over my part!"</h3><p>Two teammates edit the same file. Git <strong>merges</strong> both — or tells you exactly where they clash.</p></div>
+      <div class="bcard"><span class="lbl">Mystery bug</span><h3>"It worked yesterday…"</h3><p>Git shows <strong>what changed, when, and by whom</strong> — and lets you go back to a working version.</p></div>
+    </div>
+    <p class="foot-note">Version control is not optional in a real team. It's the <strong>save button for the whole project's history</strong>.</p>
+  </div>
+</section>
+
+<!-- 8 · WHAT GIT TRACKS -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· What Git tracks</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">GIT = A TIMELINE OF SNAPSHOTS</span>
+    <h2 class="head">Every commit is a snapshot with a reason</h2>
+    <div class="code" style="margin-bottom:2vh">$ git log --oneline
+<span class="g">a1b2c3d</span> feat: add task with due date (FR-1)      <span class="c">← Priya · 2h ago</span>
+<span class="g">9f8e7d6</span> fix: reject empty task title (FR-1)      <span class="c">← Nan · yesterday</span>
+<span class="g">4c5b6a7</span> feat: mark task done (FR-2)              <span class="c">← Aran · yesterday</span>
+<span class="g">0011223</span> chore: initial project structure        <span class="c">← Priya · 2 days ago</span></div>
+    <p class="dek" style="margin:0">Each line answers <strong>what changed</strong>, <strong>who</strong>, <strong>when</strong>, and — from the message — <strong>why</strong>. This log <em>is</em> your project's memory.</p>
+    <div class="plain g"><span class="lab">In plain terms · a word you'll meet</span>
+      <p>SWEBOK calls each tracked file a <strong>"configuration item"</strong> — that just means <em>every file that makes up the product</em>: code, tests, docs. Keeping them all versioned together is a real engineering job, not just using a tool.</p></div>
+  </div>
+</section>
+
+<!-- 9 · THE CORE GIT LOOP -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· The core loop</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">THE ONE LOOP YOU'LL REPEAT ALL SEMESTER</span>
+    <h2 class="head">Edit → stage → commit → repeat</h2>
+    <div class="flow" style="margin:1vh 0 2.4vh">
+      <div class="node"><div class="t">Working files</div><div class="s">you edit code</div></div>
+      <div class="arw">→<small>git add</small></div>
+      <div class="node on-blue"><div class="t">Staging</div><div class="s" style="color:#cfe0ff">what goes in next</div></div>
+      <div class="arw">→<small>git commit</small></div>
+      <div class="node on-green"><div class="t">History</div><div class="s" style="color:#d6f5e6">saved snapshot</div></div>
+      <div class="arw">→<small>git push</small></div>
+      <div class="node"><div class="t">GitHub</div><div class="s">shared with team</div></div>
+    </div>
+    <div class="code sm">git status        <span class="c"># what did I change?</span>
+git add tasks.py  <span class="c"># stage this file</span>
+git commit -m <span class="s">"feat: add task with due date (FR-1)"</span>
+git push          <span class="c"># send it to GitHub</span></div>
+    <div class="plain g"><span class="lab">In plain terms · think of a box</span>
+      <p><code>git add</code> = <strong>put</strong> the changes you want into a box · <code>git commit</code> = <strong>seal &amp; label</strong> the box (one snapshot + a message that says why) · <code>git push</code> = <strong>ship</strong> the box to the team on GitHub. Keep boxes small and pack them often.</p></div>
+  </div>
+</section>
+
+<!-- 10 · A GOOD COMMIT -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· A good commit</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker green">THE GOLDEN THREAD, IN YOUR COMMIT LOG</span>
+    <h2 class="head">A good commit is small, and says <em>why</em></h2>
+    <div class="grid g2" style="align-items:start">
+      <div>
+        <span class="lead-tag g">✅ Good</span>
+        <div class="code sm"><span class="g">feat:</span> add task with due date (FR-1)
+
+- validate the title is not empty
+- store due_date as an ISO date
+- return the new task id</div>
+        <p class="foot-note">One logical change. First line = type + what + <strong>the FR it delivers</strong>.</p>
+      </div>
+      <div>
+        <span class="lead-tag r">❌ Bad</span>
+        <div class="code sm"><span class="r">stuff</span>
+<span class="r">fixed it</span>
+<span class="r">asdf</span>
+<span class="r">update (200 files changed)</span></div>
+        <p class="foot-note">Says nothing; bundles everything. A reviewer — and future-you — is lost.</p>
+      </div>
+    </div>
+    <p class="foot-note">Rule for this course: <strong>reference the FR</strong> in the message — <code>feat: … (FR-1)</code>. That's the Golden Thread reaching all the way into your history: Problem → FR → Design → <strong>commit</strong>.</p>
+  </div>
+</section>
+
+<!-- 11 · BRANCH & MERGE -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Branch &amp; merge</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">WORK IN PARALLEL WITHOUT BREAKING MAIN</span>
+    <h2 class="head">A branch is a safe parallel line</h2>
+    <svg viewBox="0 0 640 190" style="width:100%;height:28vh;display:block;margin:.5vh auto">
+      <!-- main line -->
+      <line x1="40" y1="140" x2="600" y2="140" stroke="var(--gbox)" stroke-width="5"/>
+      <text x="40" y="168" font-family="var(--mono)" font-size="15" fill="var(--gbox)" font-weight="700">main</text>
+      <circle cx="90" cy="140" r="9" fill="var(--gbox)"/>
+      <circle cx="470" cy="140" r="11" fill="var(--gbox)"/>
+      <text x="470" y="172" font-family="var(--mono)" font-size="13" fill="var(--muted)" text-anchor="middle">merge</text>
+      <circle cx="560" cy="140" r="9" fill="var(--gbox)"/>
+      <!-- feature branch -->
+      <path d="M90,140 C150,140 150,70 210,70 L410,70 C470,70 470,140 470,140" fill="none" stroke="var(--blue)" stroke-width="5"/>
+      <text x="210" y="52" font-family="var(--mono)" font-size="15" fill="var(--blue)" font-weight="700">feat/add-task</text>
+      <circle cx="260" cy="70" r="9" fill="var(--blue)"/>
+      <circle cx="360" cy="70" r="9" fill="var(--blue)"/>
+    </svg>
+    <div class="grid g3">
+      <div class="scard c-green"><div class="lbl">Branch</div><h3>Split off</h3><p><code>git branch feat/add-task</code> — work without touching <code>main</code>.</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-blue"><div class="lbl">Commit</div><h3>Build there</h3><p>Commit freely on your branch; <code>main</code> stays stable for everyone.</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-yellow"><div class="lbl">Merge</div><h3>Bring it back</h3><p>When it's done and reviewed, merge into <code>main</code>.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+    </div>
+    <div class="plain"><span class="lab">In plain terms</span>
+      <p>A branch is like doing <strong>"Save As" on the whole project</strong> so you can experiment freely. If it works, you <em>merge</em> it back into <code>main</code>; if it doesn't, you throw the copy away and <code>main</code> was never touched.</p></div>
+  </div>
+</section>
+
+<!-- 12 · MERGE CONFLICT -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Merge conflict</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker red">WHEN TWO PEOPLE EDIT THE SAME LINES</span>
+    <h2 class="head">A merge conflict is normal — read it, don't fear it</h2>
+    <div class="code" style="margin-bottom:1.6vh"><span class="r">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span>          <span class="c"># your version</span>
+    max_tasks = <span class="g">50</span>
+<span class="r">=======</span>
+    max_tasks = <span class="g">100</span>       <span class="c"># your teammate's version</span>
+<span class="r">&gt;&gt;&gt;&gt;&gt;&gt;&gt; feat/limits</span>    <span class="c"># the other branch</span></div>
+    <p class="dek" style="margin:0">Git is telling you: "you both changed this line — <strong>you</strong> decide which is right." Open the file, pick (or combine) the correct code, delete the <code>&lt;&lt;&lt;</code>/<code>===</code>/<code>&gt;&gt;&gt;</code> markers, then commit the resolution.</p>
+    <div class="plain r"><span class="lab">In plain terms</span>
+      <p>It's like two people editing the <strong>same sentence</strong> in one shared document. Git doesn't guess — it <strong>pauses and asks you</strong> which wording to keep. Nothing is lost or broken; you just choose, then save.</p></div>
+    <p class="foot-note">⚠️ Never "fix" it with <code>git push --force</code> — that erases a teammate's work instead of resolving the clash. Never force-push a branch other people share.</p>
+  </div>
+</section>
+
+<!-- 13 · PULL REQUEST -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Pull request</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">THE TEAM'S QUALITY GATE</span>
+    <h2 class="head">A Pull Request = "please review, then merge"</h2>
+    <div class="flow" style="margin:1vh 0 2.4vh">
+      <div class="node"><div class="t">Push branch</div><div class="s">feat/add-task</div></div>
+      <div class="arw">→</div>
+      <div class="node on-blue"><div class="t">Open PR</div><div class="s" style="color:#cfe0ff">propose the change</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">Teammate reviews</div><div class="s">reads the diff, comments</div></div>
+      <div class="arw">→</div>
+      <div class="node on-green"><div class="t">Merge to main</div><div class="s" style="color:#d6f5e6">after approval</div></div>
+    </div>
+    <p class="dek" style="margin:0">The PR shows the <strong>diff</strong> — exactly what lines changed. A teammate reads it before it reaches <code>main</code>. This is where <strong>code review</strong> lives (we go deeper in Week 9).</p>
+    <div class="plain g"><span class="lab">In plain terms</span>
+      <p>A Pull Request is like <strong>handing your homework to a classmate to check</strong> before you turn it in to the teacher (<code>main</code>). They read it, suggest fixes, and only then does it become part of the shared project.</p></div>
+    <p class="foot-note">Why it matters: no single person can quietly break <code>main</code>, and everyone learns the codebase by reading each other's changes.</p>
+  </div>
+</section>
+
+<!-- 14 · GITHUB -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Part 3 · GitHub</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">GIT IS THE TOOL · GITHUB IS THE SHARED HOME</span>
+    <h2 class="head">GitHub hosts the repo the whole team shares</h2>
+    <div class="figblock">
+      <svg viewBox="0 0 700 150" style="width:100%;height:20vh;display:block;margin:0 auto">
+        <!-- laptop (local) -->
+        <rect x="40" y="44" width="150" height="82" rx="7" fill="var(--white)" stroke="var(--border-2)" stroke-width="2.5"/>
+        <rect x="58" y="60" width="114" height="50" rx="3" fill="var(--panel)"/>
+        <rect x="26" y="126" width="178" height="10" rx="4" fill="var(--border-2)"/>
+        <text x="115" y="90" font-family="var(--mono)" font-size="13" fill="var(--muted)" text-anchor="middle">local repo</text>
+        <text x="115" y="26" font-family="var(--disp)" font-size="16" font-weight="700" fill="var(--ink)" text-anchor="middle">Your laptop</text>
+        <!-- cloud (GitHub) -->
+        <g fill="var(--green)">
+          <ellipse cx="560" cy="92" rx="72" ry="30"/>
+          <circle cx="516" cy="80" r="26"/><circle cx="560" cy="66" r="30"/><circle cx="604" cy="82" r="24"/>
+        </g>
+        <text x="560" y="98" font-family="var(--disp)" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">GitHub</text>
+        <text x="560" y="26" font-family="var(--disp)" font-size="16" font-weight="700" fill="var(--ink)" text-anchor="middle">Shared cloud</text>
+        <!-- push arrow: laptop -> cloud -->
+        <defs>
+          <marker id="ab" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="var(--blue)"/></marker>
+          <marker id="ay" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#B8860B"/></marker>
+        </defs>
+        <line x1="210" y1="66" x2="470" y2="66" stroke="var(--blue)" stroke-width="4" marker-end="url(#ab)"/>
+        <text x="338" y="56" font-family="var(--mono)" font-size="13" fill="var(--blue)" font-weight="700" text-anchor="middle">git push →  send your commits up</text>
+        <!-- pull arrow: cloud -> laptop -->
+        <line x1="470" y1="112" x2="210" y2="112" stroke="#B8860B" stroke-width="4" marker-end="url(#ay)"/>
+        <text x="338" y="132" font-family="var(--mono)" font-size="13" fill="#B8860B" font-weight="700" text-anchor="middle">git pull ←  get teammates' commits</text>
+      </svg>
+      <p class="cap"><code>git clone</code> = your very first copy of the whole repo (you do it once) · after that you <code>push</code> up and <code>pull</code> down.</p>
+    </div>
+    <div class="grid g4">
+      <div class="scard c-blue"><div class="lbl">clone</div><h3>Get a copy</h3><p>Download the whole repo + its history to your machine.</p><div class="bar n1"><i></i><i></i><i></i><i></i></div></div>
+      <div class="scard c-green"><div class="lbl">push</div><h3>Send changes</h3><p>Upload your commits so teammates can see them.</p><div class="bar n2"><i></i><i></i><i></i><i></i></div></div>
+      <div class="scard c-yellow"><div class="lbl">pull</div><h3>Get changes</h3><p>Download teammates' latest commits into your copy.</p><div class="bar n3"><i></i><i></i><i></i><i></i></div></div>
+      <div class="scard c-red"><div class="lbl">PR</div><h3>Review &amp; merge</h3><p>Propose, discuss, and approve changes in the browser.</p><div class="bar n4"><i></i><i></i><i></i><i></i></div></div>
+    </div>
+    <p class="foot-note">Git works offline on your laptop. GitHub is where the team's single shared truth lives — plus PRs, issues, and history in the browser.</p>
+  </div>
+</section>
+
+<!-- 15 · TEAM WORKFLOW -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Team workflow</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">THE WORKFLOW YOUR TEAM USES FROM TODAY</span>
+    <h2 class="head">One protected main, many short branches</h2>
+    <svg viewBox="0 0 640 175" style="width:100%;height:31vh;display:block;margin:1vh auto">
+      <line x1="40" y1="130" x2="600" y2="130" stroke="var(--gbox)" stroke-width="5"/>
+      <text x="40" y="158" font-family="var(--mono)" font-size="14" fill="var(--gbox)" font-weight="700">main (protected)</text>
+      <circle cx="90" cy="130" r="8" fill="var(--gbox)"/>
+      <circle cx="330" cy="130" r="10" fill="var(--gbox)"/>
+      <circle cx="560" cy="130" r="10" fill="var(--gbox)"/>
+      <!-- branch A -->
+      <path d="M90,130 C140,130 140,70 190,70 L250,70 C310,70 310,130 330,130" fill="none" stroke="var(--blue)" stroke-width="4"/>
+      <text x="150" y="56" font-family="var(--mono)" font-size="13" fill="var(--blue)" font-weight="700">feat/add-task → PR</text>
+      <!-- branch B -->
+      <path d="M330,130 C390,130 390,70 440,70 L490,70 C540,70 540,130 560,130" fill="none" stroke="var(--red)" stroke-width="4"/>
+      <text x="400" y="56" font-family="var(--mono)" font-size="13" fill="var(--red)" font-weight="700">feat/mark-done → PR</text>
+    </svg>
+    <div class="grid g3">
+      <div class="bcard"><span class="lbl">Rule 1</span><h3>Never commit to main directly</h3><p>Every change arrives through a branch + PR.</p></div>
+      <div class="bcard"><span class="lbl">Rule 2</span><h3>Small branches, merge often</h3><p>One feature per branch; don't let it drift for weeks.</p></div>
+      <div class="bcard"><span class="lbl">Rule 3</span><h3>Everyone commits</h3><p>Each member's name appears in the history — that's your individual proof.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 16 · BASELINE & SECRETS -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· main = baseline</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">SWEBOK · SCM · WHAT TO TRACK, WHAT TO HIDE</span>
+    <h2 class="head">main is your baseline — keep it clean</h2>
+    <div class="grid g2">
+      <div class="dcard do">
+        <span class="pill">TRACK IN GIT</span>
+        <div class="item"><h4>Source code &amp; tests</h4><p>The real deliverable and its safety net.</p></div>
+        <div class="item"><h4>README, CLAUDE.md, docs</h4><p>How to run it and how the AI should help.</p></div>
+        <div class="item"><h4>Tag releases</h4><p>Mark a working version — a <em>baseline</em> you can return to.</p></div>
+      </div>
+      <div class="dcard dont">
+        <span class="pill">NEVER COMMIT</span>
+        <div class="item"><h4>Secrets &amp; API keys</h4><p>Passwords, tokens, <code>.env</code> — once pushed, treat them as leaked.</p></div>
+        <div class="item"><h4>Generated junk</h4><p><code>node_modules/</code>, build output — list them in <code>.gitignore</code>.</p></div>
+        <div class="item"><h4>Personal data</h4><p>Real user data belongs nowhere near a repo (PDPA — Week 9).</p></div>
+      </div>
+    </div>
+    <p class="foot-note">A <code>.gitignore</code> file tells Git what to leave out. Add it on day one, before the first push.</p>
+  </div>
+</section>
+
+<!-- 17 · VIBE CODING DONE RIGHT -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Part 4 · AI-assisted coding</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker red">AI-FIRST · BUT YOU OWN EVERY LINE</span>
+    <h2 class="head">Vibe coding, done like an engineer</h2>
+    <div class="quote" style="margin-bottom:2.4vh"><p>AI writes the first draft. <strong>You</strong> are the engineer who reads it, tests it, and can explain it.</p></div>
+    <div class="flow">
+      <div class="node on-red"><div class="t">Generate</div><div class="s" style="color:#ffd9d3">AI drafts the code</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">Read</div><div class="s">understand every line</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">Test</div><div class="s">run it on real input</div></div>
+      <div class="arw">→</div>
+      <div class="node on-green"><div class="t">Explain</div><div class="s" style="color:#d6f5e6">be ready to defend it</div></div>
+    </div>
+    <p class="foot-note">If you can't explain a line, it isn't done — it's a liability you'll own at the oral exam and in production.</p>
+  </div>
+</section>
+
+<!-- 18 · THE AI-ASSISTED LOOP -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· The AI loop</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker red">FROM DESIGN TO A COMMITTED, VERIFIED CHANGE</span>
+    <h2 class="head">The loop, end to end</h2>
+    <div class="flow wrap" style="margin:1vh 0 2vh">
+      <div class="node"><div class="t">Design + FR</div><div class="s">Wk 5 output</div></div>
+      <div class="arw">→</div>
+      <div class="node on-blue"><div class="t">Prompt AI</div><div class="s" style="color:#cfe0ff">give it the FR + rules</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">AI draft</div><div class="s">a function</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">Read &amp; fix</div><div class="s">names, edge cases</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">Run &amp; test</div><div class="s">real input</div></div>
+      <div class="arw">→</div>
+      <div class="node on-green"><div class="t">Commit</div><div class="s" style="color:#d6f5e6">feat: … (FR-1)</div></div>
+    </div>
+    <p class="dek" style="margin:0">If the test fails or you don't understand the code, <strong>loop back to the prompt</strong> — refine it, don't paste code you can't defend.</p>
+    <p class="foot-note">Your <strong>AI Usage Log</strong> records what you asked and what you changed — you bring it to the oral exam.</p>
+  </div>
+</section>
+
+<!-- 19 · COMMON AI FAILURES -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· AI coding failures</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker red">WHAT TO CATCH BEFORE YOU COMMIT</span>
+    <h2 class="head">Five ways AI code goes wrong</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:26%">Failure</th><th style="width:40%">What it looks like</th><th>How you catch it</th></tr></thead>
+        <tbody>
+          <tr><td class="b">Hallucinated API</td><td>Calls a function or library that doesn't exist.</td><td>Run it — it errors. Check the real docs.</td></tr>
+          <tr><td class="b">Missing edge cases</td><td>Works on the happy path; breaks on empty / null / huge input.</td><td>Test the boundaries yourself (Week 7).</td></tr>
+          <tr><td class="b">Over-engineering</td><td>Adds config, layers, options no FR asked for.</td><td>Trace to a requirement — no FR, cut it.</td></tr>
+          <tr><td class="b">Untrusted dependency</td><td>Suggests an obscure package to <code>pip install</code>.</td><td>SWEBOK: dependencies are supply-chain risk — verify before adding.</td></tr>
+          <tr><td class="b">Silent wrong logic</td><td>Runs fine, gives the wrong answer.</td><td>Read it against the acceptance criteria.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="foot-note">AI is fast at the first draft and blind to your context. The reading, testing, and judgement are the parts <strong>you</strong> are graded on.</p>
+  </div>
+</section>
+
+<!-- 20 · STUDYMATE WORKED EXAMPLE -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· StudyMate · FR-1</span></span><span class="count"></span></div>
+  <div class="body top">
+    <span class="kicker red">WORKED EXAMPLE · IMPLEMENT "ADD TASK" (FR-1)</span>
+    <h2 class="head">Generate → read → commit</h2>
+    <div class="grid g2" style="align-items:start">
+      <div>
+        <p class="codecap">1 · The prompt (FR + rules)</p>
+        <div class="code sm">Write <span class="g">add_task(title, due_date)</span> for StudyMate.
+FR-1: a student adds a task with a
+title and a due date.
+- title must not be empty → ValueError
+- due_date is ISO <span class="s">'YYYY-MM-DD'</span>
+- return the new task as a dict + id
+Keep it simple and readable.</div>
+      </div>
+      <div>
+        <p class="codecap">2 · Read the draft, then commit</p>
+        <div class="code sm"><span class="k">def</span> <span class="g">add_task</span>(title, due_date):
+  <span class="k">if</span> <span class="k">not</span> title.strip():
+    <span class="k">raise</span> ValueError(<span class="s">"title required"</span>)
+  <span class="k">return</span> {
+    <span class="s">"id"</span>: next_id(),
+    <span class="s">"title"</span>: title,
+    <span class="s">"due_date"</span>: due_date,
+    <span class="s">"done"</span>: <span class="k">False</span>,
+  }</div>
+        <p class="codecap" style="margin-top:.8vh">3 · <span style="color:var(--green)">git commit -m "feat: add task with due date (FR-1)"</span></p>
+      </div>
+    </div>
+    <p class="foot-note">Notice: you can explain <em>every</em> line — the empty-title check maps straight to FR-1's acceptance criterion. That's the standard.</p>
+  </div>
+</section>
+
+<!-- 21 · GIT CHEAT SHEET -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Cheat sheet</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">KEEP THIS OPEN DURING THE STUDIO</span>
+    <h2 class="head">The commands you need today</h2>
+    <div class="grid g2" style="align-items:start">
+      <div class="code sm"><span class="c"># one time, per project</span>
+git init
+git remote add origin &lt;github-url&gt;
+<span class="c"># create .gitignore first!</span>
+
+<span class="c"># the everyday loop</span>
+git status
+git add &lt;file&gt;
+git commit -m <span class="s">"feat: ... (FR-1)"</span>
+git push</div>
+      <div class="code sm"><span class="c"># branching</span>
+git branch feat/add-task
+git checkout feat/add-task
+<span class="c"># ...commit your work...</span>
+git push origin feat/add-task
+<span class="c"># then open a Pull Request on GitHub</span>
+
+<span class="c"># get teammates' latest</span>
+git pull
+git log --oneline    <span class="c"># see history</span></div>
+    </div>
+    <p class="foot-note">First time on a machine: set your name once — <code>git config --global user.name "Your Name"</code> and <code>user.email</code>. Then your commits are attributed to you.</p>
+  </div>
+</section>
+
+<!-- 22 · TEAM STUDIO -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Team studio</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">TEAM STUDIO · ~55 MIN · THIS STARTS M4 BUILD</span>
+    <h2 class="head">Set up the repo &amp; land the first real commit</h2>
+    <div class="grid g3">
+      <div class="scard c-blue"><div class="lbl">Station A · 15 min</div><h3>Create the repo</h3><p>One member makes the GitHub repo, adds a <code>.gitignore</code> + <code>README</code>, invites the team. <strong>Every member clones it</strong>.</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-green"><div class="lbl">Station B · 25 min</div><h3>Implement one FR with AI</h3><p>Pick one FR. Prompt AI → read the draft → run it → fix names/edge cases. Explain it to each other.</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-red"><div class="lbl">Station C · 15 min</div><h3>Everyone commits</h3><p>Each member makes ≥1 commit with a message like <code>feat: … (FR-#)</code>, then <code>push</code>. Check the history shows all names.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+    </div>
+    <p class="foot-note">Leave with: a live GitHub repo, one FR implemented, and a commit from <strong>every</strong> member. This <strong>hardens your M3 prototype</strong> — construction &amp; Git are skills you apply, assessed on the written exam, not a separately graded build.</p>
+  </div>
+</section>
+
+<!-- 23 · DUE THIS WEEK -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Due this week</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">DELIVERABLES · WEEK 6</span>
+    <h2 class="head">What's due, and how R2 works</h2>
+    <div class="grid g3" style="margin-bottom:2vh">
+      <div class="ccard blue" style="min-height:34vh"><div class="lbl">Submit · W6</div><h3>M3 Design Document</h3><p>Architecture + class/sequence diagrams + one screen wireframe + one ADR. Part of <strong>M3 Design + Prototype (12%)</strong>.</p><div class="ico">📐</div></div>
+      <div class="ccard green" style="min-height:34vh"><div class="lbl">Due</div><h3>R2 — response (1%)</h3><p>Reply to the R1 review you received: per issue, <strong>changed</strong> (say what) or <strong>rejected with a reason</strong>.</p><div class="ico">🔁</div></div>
+      <div class="ccard red" style="min-height:34vh"><div class="lbl">Build toward · W10</div><h3>Working Prototype</h3><p>The course <strong>output</strong> — a prototype a user can try, demoed live for the <strong>Prototype Demo (3%)</strong>. Construction/Git are understand-only skills to get there.</p><div class="ico">🔨</div></div>
+    </div>
+    <p class="foot-note"><strong>R2 is not "we fixed everything"</strong> — a reasoned rejection is a valid, graded engineering response. Address every issue the reviewers raised.</p>
+  </div>
+</section>
+
+<!-- 24 · AI CRITIQUE -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· AI Critique #6</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker red">🧠 AI CRITIQUE #6 · LAST 10 MIN · ON A4</span>
+    <h2 class="head">Spot it · explain it · fix it</h2>
+    <div class="quote" style="border-left-color:var(--red);margin-bottom:2.4vh"><p>"Just put the API key straight in the code and commit it — <code>API_KEY = "sk-live-9f2a…"</code>. The repo is private, so it's fine."</p><p class="by">— an AI coding assistant, confidently</p></div>
+    <div class="grid g3">
+      <div class="scard c-red"><div class="lbl">1 · Spot</div><h3>What's wrong?</h3><p>A real secret (<code>sk-live-…</code>) is going into a commit — and into the shared history. Is "private repo" actually safe?</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-yellow"><div class="lbl">2 · Explain</div><h3>Why is it wrong?</h3><p>Once pushed, treat the key as leaked. Git keeps it in history even after you delete the line — and teammates, forks &amp; a future public repo all carry it.</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-green"><div class="lbl">3 · Fix</div><h3>The right way</h3><p>Put it in <code>.env</code>, add <code>.env</code> to <code>.gitignore</code>, load from the environment. Already pushed? <strong>Revoke/rotate the key now</strong> — deleting the line is not enough.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+    </div>
+    <p class="foot-note">Hand in your A4 before you leave — this is your attendance + AI-critique mark for the week.</p>
+  </div>
+</section>
+
+<!-- 25 · SUMMARY -->
+<section class="slide dark">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w6-construction.fig <span class="crumb">· Summary</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">WEEK 6 · IN FOUR LINES</span>
+    <h2 class="head">Build it small, track it all, own every line</h2>
+    <div class="quad">
+      <div class="q"><div class="tag">Construction</div><h4>Simple, readable, verifiable</h4><p>Minimize complexity, name for meaning, and shape code so bugs are easy to find.</p></div>
+      <div class="q"><div class="tag">Version control</div><h4>Every change is a commit that says why</h4><p>Small commits, FR reference in the message, branch + PR — Git is the project's memory.</p></div>
+      <div class="q"><div class="tag">GitHub</div><h4>One protected main, many short branches</h4><p>Everyone commits; nothing reaches main without a review.</p></div>
+      <div class="q"><div class="tag">AI-First</div><h4>Generate → read → test → explain</h4><p>AI drafts; you're the engineer. Never commit code you can't defend.</p></div>
+    </div>
+    <p class="foot-note" style="color:#8b93c7">Due this week: M3 Design Document · R2 response (1%). The graded output is a working prototype (demoed live); construction, Git &amp; testing are understand-only skills on the exams — no graded repo. Next: Week 7 — Unit testing (concept).</p>
+  </div>
+</section>
+
+</div>
+<div class="bar" id="bar"></div><span class="hint">← / → · click edges · Home / End · Ctrl/⌘-P to print</span>
+<script>
+/* Intro2SE slide-deck engine — keyboard + click nav, progress bar, counter. */
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0, bar=document.getElementById('bar'), cur=document.getElementById('cur');
+  function fill(n){ slides.forEach(function(s,k){
+      var count=s.querySelector('.count');
+      if(count) count.textContent=String(k+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+  });}
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){ s.classList.toggle('active',k===i); });
+    if(bar) bar.style.width=((i+1)/slides.length*100)+'%';
+    if(cur) cur.textContent=(i+1)+' / '+slides.length;
+  }
+  fill();
+  document.addEventListener('keydown',function(e){
+    if(['ArrowRight','ArrowDown',' ','PageDown'].indexOf(e.key)>-1){e.preventDefault();show(i+1);}
+    else if(['ArrowLeft','ArrowUp','PageUp'].indexOf(e.key)>-1){e.preventDefault();show(i-1);}
+    else if(e.key==='Home'){show(0);} else if(e.key==='End'){show(slides.length-1);}
+  });
+  document.getElementById('deck').addEventListener('click',function(e){
+    if(e.target.closest('a')) return;
+    if(e.clientX<innerWidth*0.25) show(i-1); else show(i+1);
+  });
+  show(0);
+})();
+
+</script>
+</body>
+</html>

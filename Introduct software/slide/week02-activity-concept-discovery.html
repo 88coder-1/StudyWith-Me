@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intro2SE Activity — Concept Discovery</title>
+<style>
+/* Intro2SE HTML slide-deck theme + engine
+   Matches the Intro2SE pptx (intro2se-weekNN.fig) look:
+   Space Grotesk + JetBrains Mono, #EEF0F3 bg, colored-circle motif,
+   white cards, red/yellow/blue/green accents.
+   Keyboard-navigable single-slide-at-a-time deck. Print = all slides. */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root{
+  --bg:#EEF0F3; --ink:#0B0F19; --text:#3A4250; --muted:#7A8290;
+  --border:#E4E7EC; --border-2:#C8CCD3; --white:#FFFFFF; --panel:#F7F8FA;
+  --yellow:#FFC233; --red:#FF5A47; --blue:#2D5BFF; --green:#16B670;
+  --disp:"Space Grotesk",-apple-system,"Segoe UI","Noto Sans Thai",sans-serif;
+  --mono:"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+  --shadow:0 1.2vh 3vh rgba(11,15,25,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--disp);color:var(--text);background:#0b1b2e}
+
+#deck{position:relative;height:100vh;width:100vw;overflow:hidden}
+.slide{
+  position:absolute;inset:0;display:none;flex-direction:column;
+  padding:4.5vh 6vw 6vh;
+  background:linear-gradient(150deg,#f2f4f7 0%,#e9ecf1 100%);
+  overflow:hidden;
+}
+.slide.active{display:flex;animation:f .3s ease}
+@keyframes f{from{opacity:0;transform:translateY(1vh)}to{opacity:1;transform:none}}
+
+/* ---- top chrome bar ---- */
+.chrome{
+  display:flex;align-items:center;justify-content:space-between;gap:1vw;
+  font-family:var(--mono);font-weight:700;font-size:1.05vw;color:var(--ink);
+  padding-bottom:2.2vh;flex:0 0 auto;
+}
+.chrome .l{display:flex;align-items:center;gap:.7vw;min-width:0}
+.chrome .play{color:var(--blue)}
+.chrome .crumb{color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chrome .count{color:var(--muted);font-weight:500;white-space:nowrap}
+
+/* body region */
+.body{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.body.top{justify-content:flex-start}
+
+/* ---- typography ---- */
+.kicker{font-family:var(--mono);font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  font-size:1.05vw;color:var(--muted);margin-bottom:1.4vh;display:block}
+.kicker.blue{color:var(--blue)} .kicker.red{color:var(--red)}
+.kicker.green{color:var(--green)} .kicker.gold{color:#a67a00}
+h1.head{font-family:var(--disp);font-weight:700;color:var(--ink);
+  font-size:4.6vw;line-height:1.05;letter-spacing:-.01em;margin-bottom:1.4vh}
+h2.head{font-family:var(--disp);font-weight:700;color:var(--ink);
+  font-size:3.2vw;line-height:1.1;letter-spacing:-.01em;margin-bottom:2vh}
+.dek{font-size:1.7vw;line-height:1.5;color:var(--text);max-width:80%;margin-bottom:2.4vh}
+.dek.narrow{max-width:64%}
+p{margin:0 0 1vh} strong{color:var(--ink);font-weight:700}
+.sub{font-size:1.35vw;color:var(--muted);margin-top:1vh}
+
+/* ---- title slide ---- */
+.title-slide .kicker{font-size:1.2vw}
+.title-slide h1.head{font-size:6vw;max-width:62%}
+.title-slide .lead{font-size:1.7vw;color:var(--text);max-width:52%;margin-top:3vh;line-height:1.5}
+.circles{position:absolute;right:6vw;top:50%;transform:translateY(-50%);width:34vw;height:70vh}
+.circles i{position:absolute;border-radius:50%;display:block}
+.circles .c1{width:13vw;height:13vw;background:var(--blue);right:6vw;top:6vh}
+.circles .c2{width:9vw;height:9vw;background:var(--green);left:0;top:34vh}
+.circles .c3{width:7vw;height:7vw;background:var(--yellow);right:0;top:40vh}
+.circles .c4{width:15vw;height:15vw;background:var(--red);right:9vw;bottom:2vh}
+
+/* ---- generic grids ---- */
+.grid{display:grid;gap:1.4vw}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+
+/* ---- browser cards (mac dots) ---- */
+.bcard{background:var(--white);border-radius:1.2vw;box-shadow:var(--shadow);
+  padding:2.4vh 1.7vw;display:flex;flex-direction:column;min-width:0}
+.bcard .dots{display:flex;gap:.5vw;margin-bottom:2vh}
+.bcard .dots i{width:.85vw;height:.85vw;border-radius:50%;display:block}
+.bcard .dots i:nth-child(1){background:var(--red)}
+.bcard .dots i:nth-child(2){background:var(--yellow)}
+.bcard .dots i:nth-child(3){background:var(--green)}
+.bcard .lbl{font-family:var(--mono);font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  font-size:1vw;color:var(--muted);margin-bottom:1.2vh}
+.bcard h3{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.9vw;line-height:1.1;margin-bottom:1.4vh}
+.bcard p{font-size:1.35vw;line-height:1.45;color:var(--text)}
+.bcard .foot{margin-top:auto;padding-top:1.6vh}
+
+/* chip row */
+.chips{display:flex;align-items:center;gap:.7vw;flex-wrap:wrap}
+.chips .chip{font-family:var(--mono);font-weight:500;font-size:1.1vw;color:var(--text);
+  background:var(--panel);border-radius:999px;padding:.7vh 1vw}
+.chips .chip.hot{background:#ffe9e6;color:var(--red)}
+.chips .arw{color:var(--muted);font-size:1.1vw}
+.squares{display:flex;gap:.6vw}
+.squares i{width:2.4vw;height:2.4vw;border-radius:.5vw;display:block}
+.squares .y{background:var(--yellow)} .squares .r{background:var(--red)} .squares .g{background:var(--green)}
+
+/* ---- big color cards (red/yellow/green) ---- */
+.ccard{border-radius:1.2vw;padding:3vh 1.8vw;display:flex;flex-direction:column;color:#fff;min-height:52vh}
+.ccard.red{background:var(--red)} .ccard.yellow{background:var(--yellow);color:var(--ink)}
+.ccard.green{background:var(--green)} .ccard.blue{background:var(--blue)}
+.ccard .lbl{font-family:var(--mono);font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  font-size:1vw;opacity:.8;margin-bottom:2vh}
+.ccard h3{font-family:var(--disp);font-weight:700;font-size:2.3vw;line-height:1.05;margin-bottom:2.2vh}
+.ccard p{font-size:1.35vw;line-height:1.45}
+.ccard .ico{margin-top:auto;align-self:flex-end;font-size:3vw;opacity:.9}
+
+/* ---- stage/step light cards (with progress bar or chip) ---- */
+.scard{background:var(--white);border-radius:1.1vw;box-shadow:var(--shadow);
+  padding:2.4vh 1.4vw;display:flex;flex-direction:column;min-width:0}
+.scard .lbl{font-family:var(--mono);font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  font-size:.92vw;color:var(--muted);margin-bottom:1vh}
+.scard h3{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.5vw;line-height:1.1;margin-bottom:1.2vh}
+.scard p{font-size:1.15vw;line-height:1.4;color:var(--text);flex:1}
+.scard .bar{display:flex;gap:.3vw;margin-top:1.6vh}
+.scard .bar i{height:.7vh;flex:1;border-radius:999px;background:var(--border-2)}
+.scard .bar.n1 i:nth-child(-n+1),.scard .bar.n2 i:nth-child(-n+2),
+.scard .bar.n3 i:nth-child(-n+3),.scard .bar.n4 i:nth-child(-n+4),
+.scard .bar.n5 i:nth-child(-n+5){background:var(--col,var(--blue))}
+.scard.c-red{--col:var(--red)} .scard.c-yellow{--col:var(--yellow)}
+.scard.c-blue{--col:var(--blue)} .scard.c-green{--col:var(--green)}
+.scard .chip{align-self:flex-start;margin-top:1.4vh;font-family:var(--mono);font-weight:500;
+  font-size:1vw;color:var(--text);background:var(--panel);border-radius:.5vw;padding:.5vh .9vw}
+
+/* ---- do / don't two cards ---- */
+.dcard{background:var(--white);border-radius:1.2vw;box-shadow:var(--shadow);padding:2.6vh 1.8vw}
+.dcard .pill{display:inline-block;font-family:var(--mono);font-weight:700;font-size:1vw;
+  color:#fff;border-radius:999px;padding:.5vh 1.1vw;margin-bottom:1.8vh}
+.dcard.do .pill{background:var(--green)} .dcard.dont .pill{background:var(--red)}
+.dcard .item{padding:1.2vh 0;border-top:1px solid var(--border)}
+.dcard .item:first-of-type{border-top:none}
+.dcard .item h4{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.4vw;margin-bottom:.5vh}
+.dcard .item p{font-size:1.15vw;line-height:1.4;color:var(--text)}
+
+/* ---- list + panel ---- */
+.listpanel{display:grid;grid-template-columns:1fr 1.05fr;gap:3vw;align-items:center}
+.expl h4{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.6vw;margin:1.8vh 0 .6vh}
+.expl h4:first-child{margin-top:0}
+.expl p{font-size:1.3vw;line-height:1.45;color:var(--text)}
+.panel{background:var(--white);border-radius:1.2vw;box-shadow:var(--shadow);padding:1vh 1.6vw}
+.panel .row{display:flex;align-items:center;gap:1vw;padding:1.6vh .4vw;border-top:1px solid var(--border)}
+.panel .row:first-child{border-top:none}
+.panel .row .sq{width:1.6vw;height:1.6vw;border-radius:.4vw;flex:0 0 auto}
+.panel .row .n{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.5vw;flex:0 0 auto;width:1.6vw}
+.panel .row .txt{font-size:1.3vw;color:var(--ink);flex:1}
+.panel .row .tag{font-family:var(--mono);font-size:1vw;color:var(--muted)}
+.b-blue{background:var(--blue)} .b-red{background:var(--red)}
+.b-yellow{background:var(--yellow)} .b-green{background:var(--green)} .b-purple{background:#7C4DFF}
+
+/* ---- pills (before you leave) ---- */
+.pillrows{display:flex;flex-direction:column;gap:1.4vh}
+.pillrow{display:flex;align-items:center;gap:1.4vw}
+.pillrow .k{font-size:1.4vw;color:var(--ink);width:12vw;flex:0 0 auto}
+.pillrow .v{font-family:var(--mono);font-weight:500;font-size:1.35vw;color:#fff;
+  border-radius:999px;padding:1.1vh 1.6vw;flex:1}
+
+/* ---- quote ---- */
+.quote{background:var(--panel);border-left:.5vw solid var(--yellow);border-radius:0 1vw 1vw 0;
+  padding:2.6vh 2vw}
+.quote p{font-size:2.2vw;line-height:1.35;color:var(--ink);font-weight:500}
+.quote .by{font-size:1.4vw;color:var(--muted);font-style:italic;margin-top:1.6vh}
+
+/* ---- horizontal flow ---- */
+.flow{display:flex;align-items:stretch;gap:1vw;flex-wrap:nowrap}
+.flow .node{background:var(--white);border-radius:1vw;box-shadow:var(--shadow);
+  padding:2vh 1.2vw;flex:1;display:flex;flex-direction:column;justify-content:center;min-width:0;text-align:center}
+.flow .node .t{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.4vw;line-height:1.1}
+.flow .node .s{font-size:1vw;color:var(--muted);margin-top:.6vh}
+.flow .arw{align-self:center;color:var(--muted);font-size:1.8vw;flex:0 0 auto}
+.flow .node.on-blue{background:var(--blue);color:#fff} .flow .node.on-blue .t{color:#fff}
+.flow .node.on-green{background:var(--green);color:#fff} .flow .node.on-green .t{color:#fff}
+
+/* ---- table ---- */
+.table-wrap{overflow:auto;border-radius:1vw;box-shadow:var(--shadow);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;background:var(--white);font-size:1.25vw}
+thead th{font-family:var(--mono);font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+  font-size:1vw;color:#fff;background:var(--ink);text-align:left;padding:1.4vh 1.1vw}
+tbody td{padding:1.4vh 1.1vw;border-top:1px solid var(--border);vertical-align:top;line-height:1.35}
+tbody tr:nth-child(even){background:var(--panel)}
+td.b,th.b{font-weight:700;color:var(--ink)}
+
+/* summary 2x2 (dark) */
+.slide.dark{background:linear-gradient(150deg,#141a4a 0%,#0f1440 100%)}
+.slide.dark h2.head,.slide.dark .kicker{color:#fff}
+.quad{display:grid;grid-template-columns:1fr 1fr;gap:2.6vh 3vw;margin-top:1vh}
+.quad .q h4{font-family:var(--disp);font-weight:700;color:#fff;font-size:1.9vw;margin-bottom:.8vh}
+.quad .q p{font-size:1.3vw;line-height:1.45;color:#cfd4ea}
+.quad .q .tag{font-family:var(--mono);font-size:1vw;color:#8b93c7;text-transform:uppercase;letter-spacing:.06em}
+
+/* footer line */
+.foot-note{margin-top:2.4vh;font-size:1.2vw;color:var(--muted)}
+.rule{height:1px;background:var(--border);margin:2vh 0}
+
+/* ---- deck controls ---- */
+.bar{position:fixed;bottom:0;left:0;height:.6vh;background:var(--blue);transition:width .3s;z-index:6}
+.hint{position:fixed;bottom:1.6vh;left:50%;transform:translateX(-50%);font-family:var(--mono);
+  font-size:.85vw;color:var(--muted);z-index:6}
+
+/* ---- print: every slide on its own page ---- */
+@media print{
+  #deck{height:auto;overflow:visible}
+  .slide{display:flex!important;position:relative;height:100vh;page-break-after:always;
+    inset:auto;break-inside:avoid}
+  .bar,.hint{display:none}
+}
+
+</style>
+<style>
+  .twocol{display:grid;grid-template-columns:.9fr 1.1fr;gap:2.5vw;align-items:center}
+  .callout{background:#101735;color:#fff;border-radius:1.2vw;padding:2.5vh 2vw}
+  .callout h3{font-size:2vw;color:#fff;margin-bottom:1vh}
+  .callout p{font-size:1.3vw;line-height:1.45;color:#d6dbef}
+  .time-badge{display:inline-block;background:var(--ink);color:#fff;border-radius:999px;
+    padding:.45vh .75vw;font:700 .85vw var(--mono);margin-left:.6vw;vertical-align:middle}
+  .checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:1vh 1.3vw}
+  .check{background:#fff;border-radius:.8vw;padding:1.2vh 1vw;box-shadow:var(--shadow);
+    font-size:1.05vw;color:var(--ink)}
+  .check::before{content:"✓";color:var(--green);font-weight:700;margin-right:.6vw}
+  .prompt{background:#fff;border-radius:1vw;box-shadow:var(--shadow);padding:1.7vh 1.4vw;
+    font-size:1.15vw;line-height:1.4;color:var(--ink)}
+  .prompt .n{font-family:var(--mono);font-weight:700;color:var(--blue);margin-right:.7vw}
+  .worksheet{display:grid;grid-template-columns:repeat(4,1fr);gap:1.1vw}
+  .worksheet .scard{min-height:25vh}
+  .source-note{font-family:var(--mono);font-size:.75vw;color:var(--muted);margin-top:1vh}
+  @page{size:16in 9in;margin:0}
+  @media print{
+    html,body{width:16in;height:9in;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .slide{
+      width:16in;height:9in;overflow:hidden!important;isolation:isolate;
+      break-after:page!important;page-break-after:always!important;
+      break-inside:avoid!important;page-break-inside:avoid!important
+    }
+    .slide:last-child{break-after:auto!important;page-break-after:auto!important}
+    .slide.active{animation:none!important;transform:none!important}
+    .circles{display:none!important}
+    #bar,.hint{display:none!important}
+    .scard .bar{display:flex!important}
+    .scard,.bcard,.ccard,.dcard,.panel,.flow .node,.quote{box-shadow:none!important}
+  }
+</style>
+</head>
+<body>
+<div id="deck">
+
+<!-- 01 · TITLE -->
+<section class="slide title-slide active">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· Team activity</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">SDLC STAGE 1 · CONCEPT DISCOVERY</span>
+    <h1 class="head">From Pain Point to Project Proposal</h1>
+    <p class="lead">Form a team, investigate a real problem, and create evidence for the first SDLC decision gate.</p>
+  </div>
+  <div class="circles"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></div>
+</section>
+
+<!-- 02 · SDLC CONNECTION -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· SDLC connection</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">SWEBOK STAGE 1 · CONCEPT</span>
+    <h2 class="head">Where this activity fits in the SDLC</h2>
+    <div class="flow">
+      <div class="node on-blue"><div class="t">Problem Discovery</div><div class="s" style="color:#cfe0ff">what is happening?</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">Stakeholder Needs</div><div class="s">who needs what?</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">Feasibility</div><div class="s">valuable and possible?</div></div>
+      <div class="arw">→</div>
+      <div class="node on-green"><div class="t">Project Concept</div><div class="s" style="color:#d6f5e6">what should we explore?</div></div>
+    </div>
+    <div style="text-align:center;font-size:2.4vw;color:var(--muted);line-height:1;margin:1.4vh 0">↓</div>
+    <div class="flow">
+      <div class="node" style="background:#7C4DFF"><div class="t" style="color:#fff">Detailed Requirements</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">Architecture</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">Implementation</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">V&amp;V</div></div>
+      <div class="arw">→</div>
+      <div class="node on-green"><div class="t">Deployment</div></div>
+    </div>
+    <p class="foot-note"><strong>Today:</strong> validate the problem and concept. Detailed design and coding come only after the decision gate.</p>
+  </div>
+</section>
+
+<!-- 03 · OUTCOMES -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· Outcomes</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">BY THE END OF THE ACTIVITY</span>
+    <h2 class="head">Your team will produce four things</h2>
+    <div class="grid g4">
+      <div class="scard c-blue"><div class="lbl">01</div><h3>A balanced team</h3><p>Clear roles and shared working agreements.</p><div class="bar n1"><i></i><i></i><i></i><i></i></div></div>
+      <div class="scard c-green"><div class="lbl">02</div><h3>Problem evidence</h3><p>Observed pain points and real user statements.</p><div class="bar n2"><i></i><i></i><i></i><i></i></div></div>
+      <div class="scard c-yellow"><div class="lbl">03</div><h3>A problem statement</h3><p>User, need, context, and impact.</p><div class="bar n3"><i></i><i></i><i></i><i></i></div></div>
+      <div class="scard c-red"><div class="lbl">04</div><h3>A project concept</h3><p>Alternatives, assumptions, and next evidence.</p><div class="bar n4"><i></i><i></i><i></i><i></i></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 · TIMELINE -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· Timeline</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">120-MINUTE WORKSHOP</span>
+    <h2 class="head">The path from observation to decision</h2>
+    <div class="grid g4">
+      <div class="scard"><div class="lbl">0–15 min</div><h3>Form the team</h3><p>Skills, roles, and working agreement.</p></div>
+      <div class="scard"><div class="lbl">15–25 min</div><h3>List pain points</h3><p>Individual experience before group influence.</p></div>
+      <div class="scard"><div class="lbl">25–45 min</div><h3>Collect evidence</h3><p>Short interviews with people outside the team.</p></div>
+      <div class="scard"><div class="lbl">45–65 min</div><h3>Cluster and select</h3><p>Compare frequency, impact, and feasibility.</p></div>
+      <div class="scard"><div class="lbl">65–85 min</div><h3>Frame the problem</h3><p>Write a focused, evidence-based statement.</p></div>
+      <div class="scard"><div class="lbl">85–100 min</div><h3>Explore concepts</h3><p>Generate alternatives before choosing.</p></div>
+      <div class="scard"><div class="lbl">100–115 min</div><h3>Pitch and critique</h3><p>Evidence, scope, assumptions, and test.</p></div>
+      <div class="scard c-green"><div class="lbl">115–120 min</div><h3>Decision gate</h3><p>Proceed, investigate, revise, or stop.</p><div class="bar n4"><i></i><i></i><i></i><i></i></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 · ACTIVITY MAP A -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· SWEBOK mapping</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">ACTIVITY → SDLC PROCESS</span>
+    <h2 class="head">How the first activities build the Concept stage</h2>
+    <div class="grid g2">
+      <div class="bcard" style="border-top:.6vh solid var(--blue)"><div class="lbl">Form the team</div><h3>Organizational enabling + technical management</h3><p>Establish capability, roles, coordination, and responsibility.</p></div>
+      <div class="bcard" style="border-top:.6vh solid var(--green)"><div class="lbl">Find pain points</div><h3>Business / Mission Analysis</h3><p>Identify the problem, expected value, and operational context.</p></div>
+      <div class="bcard" style="border-top:.6vh solid var(--yellow)"><div class="lbl">Interview users</div><h3>Stakeholder Needs Definition</h3><p>Collect evidence about real needs, behavior, and impact.</p></div>
+      <div class="bcard" style="border-top:.6vh solid var(--red)"><div class="lbl">Cluster and select</div><h3>Feasibility + Risk Analysis</h3><p>Choose a meaningful problem that can be investigated safely.</p></div>
+    </div>
+    <p class="source-note">SWEBOK V4 / ISO/IEC/IEEE 12207 process perspective.</p>
+  </div>
+</section>
+
+<!-- 06 · ACTIVITY MAP B -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· Transition to requirements</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">CONCEPT → DEVELOPMENT</span>
+    <h2 class="head">How the remaining activities create the handoff</h2>
+    <div class="grid g2">
+      <div class="bcard" style="border-top:.6vh solid var(--blue)"><div class="lbl">Write the problem statement</div><h3>Beginning of Requirements Definition</h3><p>Translate evidence into a focused user, need, context, and impact.</p></div>
+      <div class="bcard" style="border-top:.6vh solid #7C4DFF"><div class="lbl">Propose alternatives</div><h3>Concept Exploration</h3><p>Compare possible directions without committing to full system design.</p></div>
+      <div class="bcard" style="border-top:.6vh solid var(--yellow)"><div class="lbl">Pitch and receive feedback</div><h3>Concept Validation</h3><p>Check whether the team understands the correct problem.</p></div>
+      <div class="bcard" style="border-top:.6vh solid var(--green)"><div class="lbl">Problem–Opportunity Brief</div><h3>Concept-stage deliverable</h3><p>Becomes an input to detailed Requirements Engineering.</p></div>
+    </div>
+    <p class="foot-note">A project title is not the output. Evidence and a justified decision are the output.</p>
+  </div>
+</section>
+
+<!-- 05 · TEAM -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· Step 1</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">FORM THE TEAM <span class="time-badge">15 MIN</span></span>
+    <h2 class="head">Create a team with complementary strengths</h2>
+    <div class="grid g4">
+      <div class="bcard"><div class="lbl">Facilitator</div><h3>Guide the process</h3><p>Protect time and make sure every voice is heard.</p></div>
+      <div class="bcard"><div class="lbl">Researcher</div><h3>Seek evidence</h3><p>Interview users and preserve their exact words.</p></div>
+      <div class="bcard"><div class="lbl">Recorder</div><h3>Make thinking visible</h3><p>Capture pain points, clusters, and decisions.</p></div>
+      <div class="bcard"><div class="lbl">Challenger / Presenter</div><h3>Test assumptions</h3><p>Ask “How do we know?” and communicate the result.</p></div>
+    </div>
+    <p class="foot-note"><strong>Team size:</strong> 4–5 students. Rotate roles during future activities.</p>
+  </div>
+</section>
+
+<!-- 06 · BRAIN DUMP -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· Step 2</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker gold">PAIN-POINT BRAIN DUMP <span class="time-badge">10 MIN</span></span>
+    <h2 class="head">Start with problems—not app ideas</h2>
+    <div class="twocol">
+      <div class="callout">
+        <h3>Write 3–5 pain points each</h3>
+        <p>Work silently first. Use situations you have experienced or directly observed.</p>
+      </div>
+      <div class="panel">
+        <div class="row"><span class="sq b-blue"></span><span class="txt">Learning and time management</span></div>
+        <div class="row"><span class="sq b-green"></span><span class="txt">Campus services and administration</span></div>
+        <div class="row"><span class="sq b-yellow"></span><span class="txt">Teamwork, health, travel, or community</span></div>
+        <div class="row"><span class="sq b-red"></span><span class="txt">Local organizations, shops, or public services</span></div>
+      </div>
+    </div>
+    <p class="foot-note"><strong>Do not write:</strong> “Build an AI scheduling app.” &nbsp; <strong>Write:</strong> who struggles, when, and with what consequence.</p>
+  </div>
+</section>
+
+<!-- 07 · PAIN FORMAT -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· Pain-point format</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker red">MAKE THE OBSERVATION SPECIFIC</span>
+    <h2 class="head">Use a four-part pain-point statement</h2>
+    <div class="flow">
+      <div class="node on-blue"><div class="t">User</div><div class="s" style="color:#cfe0ff">who?</div></div><div class="arw">+</div>
+      <div class="node"><div class="t">Difficulty</div><div class="s">what is hard?</div></div><div class="arw">+</div>
+      <div class="node" style="background:#7C4DFF"><div class="t" style="color:#fff">Context</div><div class="s" style="color:#e5dcff">when and where?</div></div><div class="arw">+</div>
+      <div class="node on-green"><div class="t">Impact</div><div class="s" style="color:#d6f5e6">what happens?</div></div>
+    </div>
+    <div class="quote" style="margin-top:2.4vh;border-left-color:var(--red)">
+      <p style="font-size:1.6vw">Students and staff struggle to obtain reliable university-policy answers because rules are scattered across long, changing documents, causing delays and decisions based on incomplete information.</p>
+    </div>
+    <p class="foot-note"><strong>Possible future challenge:</strong> a citation-grounded RAG system—but only if the evidence supports this problem.</p>
+  </div>
+</section>
+
+<!-- 08 · EVIDENCE HUNT -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· Step 3</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">EVIDENCE HUNT <span class="time-badge">20 MIN</span></span>
+    <h2 class="head">Investigate before you believe</h2>
+    <div class="grid g3">
+      <div class="scard"><div class="lbl">Select</div><h3>2–3 candidate problems</h3><p>Choose the most promising pain points for rapid investigation.</p></div>
+      <div class="scard"><div class="lbl">Interview</div><h3>At least two people</h3><p>Speak with users outside your team about recent real events.</p></div>
+      <div class="scard c-green"><div class="lbl">Capture</div><h3>Evidence, not opinions</h3><p>Quotes, frequency, impact, and current workaround.</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+    </div>
+    <p class="foot-note">Ask for the most recent example. Avoid “Would you use our app?”</p>
+  </div>
+</section>
+
+<!-- 09 · INTERVIEW QUESTIONS -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· Interview guide</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">ASK ABOUT BEHAVIOR, NOT FUTURE PROMISES</span>
+    <h2 class="head">Five interview questions</h2>
+    <div style="display:grid;gap:1.1vh">
+      <div class="prompt"><span class="n">01</span>Tell me about the last time this problem happened.</div>
+      <div class="prompt"><span class="n">02</span>What were you trying to accomplish?</div>
+      <div class="prompt"><span class="n">03</span>Which part was most difficult, slow, or frustrating?</div>
+      <div class="prompt"><span class="n">04</span>How do you handle the problem today?</div>
+      <div class="prompt"><span class="n">05</span>What happens if the problem is not solved?</div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 · AI RULE -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· AI boundary</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker red">AI-FIRST DOES NOT MEAN EVIDENCE-FREE</span>
+    <h2 class="head">Use AI after collecting real evidence</h2>
+    <div class="grid g2">
+      <div class="dcard do"><span class="pill">AI MAY HELP</span>
+        <div class="item"><h4>Organize and summarize</h4><p>Cluster notes, identify contradictions, and draft clearer wording.</p></div>
+        <div class="item"><h4>Challenge assumptions</h4><p>Suggest missing stakeholders, risks, and interview questions.</p></div>
+      </div>
+      <div class="dcard dont"><span class="pill">AI MAY NOT REPLACE</span>
+        <div class="item"><h4>Real users</h4><p>Do not generate fake interviews or invented evidence.</p></div>
+        <div class="item"><h4>Team accountability</h4><p>Verify every summary against the original notes.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 · CLUSTER -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· Step 4</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker" style="color:#7C4DFF">CLUSTER AND SELECT <span class="time-badge">20 MIN</span></span>
+    <h2 class="head">Find patterns across the evidence</h2>
+    <div class="flow">
+      <div class="node"><div class="t">Raw notes</div><div class="s">quotes + events</div></div><div class="arw">→</div>
+      <div class="node" style="background:#7C4DFF"><div class="t" style="color:#fff">Affinity clusters</div><div class="s" style="color:#e5dcff">similar pains</div></div><div class="arw">→</div>
+      <div class="node on-blue"><div class="t">Candidate problems</div><div class="s" style="color:#cfe0ff">clear patterns</div></div><div class="arw">→</div>
+      <div class="node on-green"><div class="t">One focus</div><div class="s" style="color:#d6f5e6">evidence + scope</div></div>
+    </div>
+    <p class="foot-note">Merge similar observations. Keep conflicting evidence visible instead of hiding it.</p>
+  </div>
+</section>
+
+<!-- 12 · PRIORITIZE -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· Prioritization</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker gold">CHOOSE THE PROBLEM, NOT THE COOLEST TECHNOLOGY</span>
+    <h2 class="head">Six selection criteria</h2>
+    <div class="checklist">
+      <div class="check">A specific user group experiences it</div>
+      <div class="check">Evidence comes from real events</div>
+      <div class="check">The problem occurs frequently enough</div>
+      <div class="check">The impact is meaningful</div>
+      <div class="check">Current workarounds are inadequate</div>
+      <div class="check">The team can investigate it this semester</div>
+    </div>
+    <p class="foot-note"><strong>Decision rule:</strong> select one focus and record why the other candidates were not selected.</p>
+  </div>
+</section>
+
+<!-- 13 · PROBLEM STATEMENT -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· Step 5</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">FRAME THE PROBLEM <span class="time-badge">20 MIN</span></span>
+    <h2 class="head">Write the problem before the product</h2>
+    <div class="callout">
+      <h3>Problem statement template</h3>
+      <p><strong style="color:#fff">[User group]</strong> needs a way to <strong style="color:#fff">[achieve a need]</strong> because <strong style="color:#fff">[current difficulty]</strong>, resulting in <strong style="color:#fff">[impact]</strong>.</p>
+    </div>
+    <div class="quote" style="margin-top:2.3vh;border-left-color:var(--blue)">
+      <p style="font-size:1.5vw">Students and staff need a way to locate current, verifiable university-policy information because relevant rules are distributed across long documents and websites, resulting in slow answers and decisions based on outdated or unsupported information.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 14 · CONCEPT ALTERNATIVES -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· Step 6</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">EXPLORE CONCEPTS <span class="time-badge">15 MIN</span></span>
+    <h2 class="head">Generate alternatives before choosing</h2>
+    <div class="grid g3">
+      <div class="bcard" style="border-top:.6vh solid var(--blue)"><div class="lbl">Concept A</div><h3>Curated FAQ process</h3><p>Policy owners maintain verified answers and update dates manually.</p></div>
+      <div class="bcard" style="border-top:.6vh solid var(--green)"><div class="lbl">Concept B</div><h3>Structured policy search</h3><p>Search, filters, version labels, and direct links to official sections.</p></div>
+      <div class="bcard" style="border-top:.6vh solid #7C4DFF"><div class="lbl">Concept C</div><h3>Secure citation RAG</h3><p>Grounded answers, abstention, source citations, and prompt-injection tests.</p></div>
+    </div>
+    <p class="foot-note">RAG, embeddings, and model selection belong to later design decisions—not the initial problem statement.</p>
+  </div>
+</section>
+
+<!-- 15 · PITCH -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· Step 7</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker red">60-SECOND PITCH <span class="time-badge">15 MIN</span></span>
+    <h2 class="head">Present evidence before solution</h2>
+    <div class="grid g3">
+      <div class="scard"><div class="lbl">Problem</div><h3>Who + what + impact</h3><p>State the focused problem in one sentence.</p></div>
+      <div class="scard"><div class="lbl">Evidence</div><h3>Why believe it?</h3><p>Use events, quotes, frequency, and workarounds.</p></div>
+      <div class="scard"><div class="lbl">Concept</div><h3>What might help?</h3><p>Show alternatives and the current preferred direction.</p></div>
+    </div>
+    <div class="chips" style="margin-top:2vh"><span class="chip hot">Peer feedback</span><span class="chip">evidence?</span><span class="chip">scope?</span><span class="chip">assumption?</span><span class="chip">next test?</span></div>
+  </div>
+</section>
+
+<!-- 16 · DECISION GATE -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· Decision gate</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker gold">END OF CONCEPT STAGE</span>
+    <h2 class="head">Are we ready for detailed requirements?</h2>
+    <div class="checklist">
+      <div class="check">A real and reachable user group exists</div>
+      <div class="check">Evidence demonstrates the pain point</div>
+      <div class="check">The impact is significant enough</div>
+      <div class="check">The scope fits one semester</div>
+      <div class="check">Data, ethical, security, and technical risks are visible</div>
+      <div class="check">The team can state what evidence is still missing</div>
+    </div>
+    <div class="chips" style="margin-top:2vh"><span class="chip hot">Decision</span><span class="chip">proceed</span><span class="chip">investigate</span><span class="chip">revise</span><span class="chip">stop</span></div>
+  </div>
+</section>
+
+<!-- 19 · AFTER THE GATE -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· Concept handoff</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">PROBLEM–OPPORTUNITY BRIEF</span>
+    <h2 class="head">The Concept-stage deliverable</h2>
+    <div class="worksheet">
+      <div class="scard"><div class="lbl">People</div><h3>Team + users</h3><p>Roles and the specific stakeholder group.</p></div>
+      <div class="scard"><div class="lbl">Problem</div><h3>Need + impact</h3><p>Context, frequency, and current workaround.</p></div>
+      <div class="scard"><div class="lbl">Evidence</div><h3>Real events</h3><p>At least two users and direct quotations.</p></div>
+      <div class="scard c-green"><div class="lbl">Opportunity</div><h3>Alternatives + risks</h3><p>Preferred direction and missing evidence.</p><div class="bar n4"><i></i><i></i><i></i><i></i></div></div>
+    </div>
+    <p class="foot-note">This output becomes an input to detailed Requirements Engineering.</p>
+  </div>
+</section>
+
+<!-- 17 · DELIVERABLE -->
+<section class="slide dark">
+  <div class="chrome" style="color:#fff"><span class="l"><span class="play">▶</span> intro2se-concept-discovery.fig <span class="crumb">· Next SDLC stage</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">ONLY AFTER THE CONCEPT GATE</span>
+    <h2 class="head">The project enters Development</h2>
+    <div class="quad">
+      <div class="q"><div class="tag">01 · Requirements</div><h4>Define behavior and quality</h4><p>Citations, abstention, privacy, latency, and security criteria.</p></div>
+      <div class="q"><div class="tag">02 · Architecture</div><h4>Design components and trust</h4><p>Documents, retrieval, model, guardrails, and access boundaries.</p></div>
+      <div class="q"><div class="tag">03 · Implementation</div><h4>Build the selected concept</h4><p>Search or RAG pipeline, model integration, and controls.</p></div>
+      <div class="q"><div class="tag">04 · V&amp;V + Deployment</div><h4>Produce evidence and release</h4><p>Retrieval quality, hallucination, injection resistance, and rollout.</p></div>
+    </div>
+    <p style="margin-top:2vh;color:#fff;font-size:1.3vw"><strong style="color:#fff">Key idea:</strong> the SDLC starts by confirming the right problem for the right stakeholders—not when coding begins.</p>
+  </div>
+</section>
+
+</div>
+<div class="bar" id="bar"></div><span class="hint">← / → · click edges · Home / End · Ctrl/⌘-P to print</span>
+<script>
+/* Intro2SE slide-deck engine — keyboard + click nav, progress bar, counter. */
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0, bar=document.getElementById('bar'), cur=document.getElementById('cur');
+  function fill(n){ slides.forEach(function(s,k){
+      var count=s.querySelector('.count');
+      if(count) count.textContent=String(k+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+  });}
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){ s.classList.toggle('active',k===i); });
+    if(bar) bar.style.width=((i+1)/slides.length*100)+'%';
+    if(cur) cur.textContent=(i+1)+' / '+slides.length;
+  }
+  fill();
+  document.addEventListener('keydown',function(e){
+    if(['ArrowRight','ArrowDown',' ','PageDown'].indexOf(e.key)>-1){e.preventDefault();show(i+1);}
+    else if(['ArrowLeft','ArrowUp','PageUp'].indexOf(e.key)>-1){e.preventDefault();show(i-1);}
+    else if(e.key==='Home'){show(0);} else if(e.key==='End'){show(slides.length-1);}
+  });
+  document.getElementById('deck').addEventListener('click',function(e){
+    if(e.target.closest('a')) return;
+    if(e.clientX<innerWidth*0.25) show(i-1); else show(i+1);
+  });
+  show(0);
+})();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intro2SE Week 5 — UI Design: from AI-generic to professional</title>
+<style>
+/* Intro2SE HTML slide-deck theme + engine
+   Matches the Intro2SE pptx (intro2se-weekNN.fig) look:
+   Space Grotesk + JetBrains Mono, #EEF0F3 bg, colored-circle motif,
+   white cards, red/yellow/blue/green accents.
+   Keyboard-navigable single-slide-at-a-time deck. Print = all slides. */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root{
+  --bg:#EEF0F3; --ink:#0B0F19; --text:#3A4250; --muted:#7A8290;
+  --border:#E4E7EC; --border-2:#C8CCD3; --white:#FFFFFF; --panel:#F7F8FA;
+  --yellow:#FFC233; --red:#FF5A47; --blue:#2D5BFF; --green:#16B670;
+  --disp:"Space Grotesk",-apple-system,"Segoe UI","Noto Sans Thai",sans-serif;
+  --mono:"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+  --shadow:0 1.2vh 3vh rgba(11,15,25,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--disp);color:var(--text);background:#0b1b2e}
+
+#deck{position:relative;height:100vh;width:100vw;overflow:hidden}
+.slide{
+  position:absolute;inset:0;display:none;flex-direction:column;
+  padding:4.5vh 6vw 6vh;
+  background:linear-gradient(150deg,#f2f4f7 0%,#e9ecf1 100%);
+  overflow:hidden;
+}
+.slide.active{display:flex;animation:f .3s ease}
+@keyframes f{from{opacity:0;transform:translateY(1vh)}to{opacity:1;transform:none}}
+
+/* ---- top chrome bar ---- */
+.chrome{
+  display:flex;align-items:center;justify-content:space-between;gap:1vw;
+  font-family:var(--mono);font-weight:700;font-size:1.05vw;color:var(--ink);
+  padding-bottom:2.2vh;flex:0 0 auto;
+}
+.chrome .l{display:flex;align-items:center;gap:.7vw;min-width:0}
+.chrome .play{color:var(--blue)}
+.chrome .crumb{color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chrome .count{color:var(--muted);font-weight:500;white-space:nowrap}
+
+/* body region */
+.body{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.body.top{justify-content:flex-start}
+
+/* ---- typography ---- */
+.kicker{font-family:var(--mono);font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  font-size:1.05vw;color:var(--muted);margin-bottom:1.4vh;display:block}
+.kicker.blue{color:var(--blue)} .kicker.red{color:var(--red)}
+.kicker.green{color:var(--green)} .kicker.gold{color:#a67a00}
+h1.head{font-family:var(--disp);font-weight:700;color:var(--ink);
+  font-size:4.6vw;line-height:1.05;letter-spacing:-.01em;margin-bottom:1.4vh}
+h2.head{font-family:var(--disp);font-weight:700;color:var(--ink);
+  font-size:3.2vw;line-height:1.1;letter-spacing:-.01em;margin-bottom:2vh}
+.dek{font-size:1.7vw;line-height:1.5;color:var(--text);max-width:80%;margin-bottom:2.4vh}
+.dek.narrow{max-width:64%}
+p{margin:0 0 1vh} strong{color:var(--ink);font-weight:700}
+.sub{font-size:1.35vw;color:var(--muted);margin-top:1vh}
+
+/* ---- title slide ---- */
+.title-slide .kicker{font-size:1.2vw}
+.title-slide h1.head{font-size:6vw;max-width:62%}
+.title-slide .lead{font-size:1.7vw;color:var(--text);max-width:52%;margin-top:3vh;line-height:1.5}
+.circles{position:absolute;right:6vw;top:50%;transform:translateY(-50%);width:34vw;height:70vh}
+.circles i{position:absolute;border-radius:50%;display:block}
+.circles .c1{width:13vw;height:13vw;background:var(--blue);right:6vw;top:6vh}
+.circles .c2{width:9vw;height:9vw;background:var(--green);left:0;top:34vh}
+.circles .c3{width:7vw;height:7vw;background:var(--yellow);right:0;top:40vh}
+.circles .c4{width:15vw;height:15vw;background:var(--red);right:9vw;bottom:2vh}
+
+/* ---- generic grids ---- */
+.grid{display:grid;gap:1.4vw}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+
+/* ---- browser cards (mac dots) ---- */
+.bcard{background:var(--white);border-radius:1.2vw;box-shadow:var(--shadow);
+  padding:2.4vh 1.7vw;display:flex;flex-direction:column;min-width:0}
+.bcard .dots{display:flex;gap:.5vw;margin-bottom:2vh}
+.bcard .dots i{width:.85vw;height:.85vw;border-radius:50%;display:block}
+.bcard .dots i:nth-child(1){background:var(--red)}
+.bcard .dots i:nth-child(2){background:var(--yellow)}
+.bcard .dots i:nth-child(3){background:var(--green)}
+.bcard .lbl{font-family:var(--mono);font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  font-size:1vw;color:var(--muted);margin-bottom:1.2vh}
+.bcard h3{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.9vw;line-height:1.1;margin-bottom:1.4vh}
+.bcard p{font-size:1.35vw;line-height:1.45;color:var(--text)}
+.bcard .foot{margin-top:auto;padding-top:1.6vh}
+
+/* chip row */
+.chips{display:flex;align-items:center;gap:.7vw;flex-wrap:wrap}
+.chips .chip{font-family:var(--mono);font-weight:500;font-size:1.1vw;color:var(--text);
+  background:var(--panel);border-radius:999px;padding:.7vh 1vw}
+.chips .chip.hot{background:#ffe9e6;color:var(--red)}
+.chips .arw{color:var(--muted);font-size:1.1vw}
+.squares{display:flex;gap:.6vw}
+.squares i{width:2.4vw;height:2.4vw;border-radius:.5vw;display:block}
+.squares .y{background:var(--yellow)} .squares .r{background:var(--red)} .squares .g{background:var(--green)}
+
+/* ---- big color cards (red/yellow/green) ---- */
+.ccard{border-radius:1.2vw;padding:3vh 1.8vw;display:flex;flex-direction:column;color:#fff;min-height:52vh}
+.ccard.red{background:var(--red)} .ccard.yellow{background:var(--yellow);color:var(--ink)}
+.ccard.green{background:var(--green)} .ccard.blue{background:var(--blue)}
+.ccard .lbl{font-family:var(--mono);font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  font-size:1vw;opacity:.8;margin-bottom:2vh}
+.ccard h3{font-family:var(--disp);font-weight:700;font-size:2.3vw;line-height:1.05;margin-bottom:2.2vh}
+.ccard p{font-size:1.35vw;line-height:1.45}
+.ccard .ico{margin-top:auto;align-self:flex-end;font-size:3vw;opacity:.9}
+
+/* ---- stage/step light cards (with progress bar or chip) ---- */
+.scard{background:var(--white);border-radius:1.1vw;box-shadow:var(--shadow);
+  padding:2.4vh 1.4vw;display:flex;flex-direction:column;min-width:0}
+.scard .lbl{font-family:var(--mono);font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  font-size:.92vw;color:var(--muted);margin-bottom:1vh}
+.scard h3{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.5vw;line-height:1.1;margin-bottom:1.2vh}
+.scard p{font-size:1.15vw;line-height:1.4;color:var(--text);flex:1}
+.scard .bar{display:flex;gap:.3vw;margin-top:1.6vh}
+.scard .bar i{height:.7vh;flex:1;border-radius:999px;background:var(--border-2)}
+.scard .bar.n1 i:nth-child(-n+1),.scard .bar.n2 i:nth-child(-n+2),
+.scard .bar.n3 i:nth-child(-n+3),.scard .bar.n4 i:nth-child(-n+4),
+.scard .bar.n5 i:nth-child(-n+5){background:var(--col,var(--blue))}
+.scard.c-red{--col:var(--red)} .scard.c-yellow{--col:var(--yellow)}
+.scard.c-blue{--col:var(--blue)} .scard.c-green{--col:var(--green)}
+.scard .chip{align-self:flex-start;margin-top:1.4vh;font-family:var(--mono);font-weight:500;
+  font-size:1vw;color:var(--text);background:var(--panel);border-radius:.5vw;padding:.5vh .9vw}
+
+/* ---- do / don't two cards ---- */
+.dcard{background:var(--white);border-radius:1.2vw;box-shadow:var(--shadow);padding:2.6vh 1.8vw}
+.dcard .pill{display:inline-block;font-family:var(--mono);font-weight:700;font-size:1vw;
+  color:#fff;border-radius:999px;padding:.5vh 1.1vw;margin-bottom:1.8vh}
+.dcard.do .pill{background:var(--green)} .dcard.dont .pill{background:var(--red)}
+.dcard .item{padding:1.2vh 0;border-top:1px solid var(--border)}
+.dcard .item:first-of-type{border-top:none}
+.dcard .item h4{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.4vw;margin-bottom:.5vh}
+.dcard .item p{font-size:1.15vw;line-height:1.4;color:var(--text)}
+
+/* ---- list + panel ---- */
+.listpanel{display:grid;grid-template-columns:1fr 1.05fr;gap:3vw;align-items:center}
+.expl h4{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.6vw;margin:1.8vh 0 .6vh}
+.expl h4:first-child{margin-top:0}
+.expl p{font-size:1.3vw;line-height:1.45;color:var(--text)}
+.panel{background:var(--white);border-radius:1.2vw;box-shadow:var(--shadow);padding:1vh 1.6vw}
+.panel .row{display:flex;align-items:center;gap:1vw;padding:1.6vh .4vw;border-top:1px solid var(--border)}
+.panel .row:first-child{border-top:none}
+.panel .row .sq{width:1.6vw;height:1.6vw;border-radius:.4vw;flex:0 0 auto}
+.panel .row .n{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.5vw;flex:0 0 auto;width:1.6vw}
+.panel .row .txt{font-size:1.3vw;color:var(--ink);flex:1}
+.panel .row .tag{font-family:var(--mono);font-size:1vw;color:var(--muted)}
+.b-blue{background:var(--blue)} .b-red{background:var(--red)}
+.b-yellow{background:var(--yellow)} .b-green{background:var(--green)} .b-purple{background:#7C4DFF}
+
+/* ---- pills (before you leave) ---- */
+.pillrows{display:flex;flex-direction:column;gap:1.4vh}
+.pillrow{display:flex;align-items:center;gap:1.4vw}
+.pillrow .k{font-size:1.4vw;color:var(--ink);width:12vw;flex:0 0 auto}
+.pillrow .v{font-family:var(--mono);font-weight:500;font-size:1.35vw;color:#fff;
+  border-radius:999px;padding:1.1vh 1.6vw;flex:1}
+
+/* ---- quote ---- */
+.quote{background:var(--panel);border-left:.5vw solid var(--yellow);border-radius:0 1vw 1vw 0;
+  padding:2.6vh 2vw}
+.quote p{font-size:2.2vw;line-height:1.35;color:var(--ink);font-weight:500}
+.quote .by{font-size:1.4vw;color:var(--muted);font-style:italic;margin-top:1.6vh}
+
+/* ---- horizontal flow ---- */
+.flow{display:flex;align-items:stretch;gap:1vw;flex-wrap:nowrap}
+.flow .node{background:var(--white);border-radius:1vw;box-shadow:var(--shadow);
+  padding:2vh 1.2vw;flex:1;display:flex;flex-direction:column;justify-content:center;min-width:0;text-align:center}
+.flow .node .t{font-family:var(--disp);font-weight:700;color:var(--ink);font-size:1.4vw;line-height:1.1}
+.flow .node .s{font-size:1vw;color:var(--muted);margin-top:.6vh}
+.flow .arw{align-self:center;color:var(--muted);font-size:1.8vw;flex:0 0 auto}
+.flow .node.on-blue{background:var(--blue);color:#fff} .flow .node.on-blue .t{color:#fff}
+.flow .node.on-green{background:var(--green);color:#fff} .flow .node.on-green .t{color:#fff}
+
+/* ---- table ---- */
+.table-wrap{overflow:auto;border-radius:1vw;box-shadow:var(--shadow);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;background:var(--white);font-size:1.25vw}
+thead th{font-family:var(--mono);font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+  font-size:1vw;color:#fff;background:var(--ink);text-align:left;padding:1.4vh 1.1vw}
+tbody td{padding:1.4vh 1.1vw;border-top:1px solid var(--border);vertical-align:top;line-height:1.35}
+tbody tr:nth-child(even){background:var(--panel)}
+td.b,th.b{font-weight:700;color:var(--ink)}
+
+/* summary 2x2 (dark) */
+.slide.dark{background:linear-gradient(150deg,#141a4a 0%,#0f1440 100%)}
+.slide.dark h2.head,.slide.dark .kicker{color:#fff}
+.quad{display:grid;grid-template-columns:1fr 1fr;gap:2.6vh 3vw;margin-top:1vh}
+.quad .q h4{font-family:var(--disp);font-weight:700;color:#fff;font-size:1.9vw;margin-bottom:.8vh}
+.quad .q p{font-size:1.3vw;line-height:1.45;color:#cfd4ea}
+.quad .q .tag{font-family:var(--mono);font-size:1vw;color:#8b93c7;text-transform:uppercase;letter-spacing:.06em}
+
+/* footer line */
+.foot-note{margin-top:2.4vh;font-size:1.2vw;color:var(--muted)}
+.rule{height:1px;background:var(--border);margin:2vh 0}
+
+/* ---- deck controls ---- */
+.bar{position:fixed;bottom:0;left:0;height:.6vh;background:var(--blue);transition:width .3s;z-index:6}
+.hint{position:fixed;bottom:1.6vh;left:50%;transform:translateX(-50%);font-family:var(--mono);
+  font-size:.85vw;color:var(--muted);z-index:6}
+
+/* ---- print: every slide on its own page ---- */
+@media print{
+  #deck{height:auto;overflow:visible}
+  .slide{display:flex!important;position:relative;height:100vh;page-break-after:always;
+    inset:auto;break-inside:avoid}
+  .bar,.hint{display:none}
+}
+
+/* ---- embedded figure images (from Week2.pptx) ---- */
+.fig{display:block;margin:0 auto;max-width:100%;max-height:44vh;height:auto;width:auto;
+  background:#fff;border-radius:1vw;box-shadow:var(--shadow);padding:1.6vh 1.6vw}
+.fig.sm{max-height:28vh}
+.figcap{text-align:center;font-family:var(--mono);font-size:1vw;color:var(--muted);margin-top:.9vh}
+
+</style>
+<style>
+  /* hierarchy demo */
+  .hier{background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:2vh 1.6vw}
+  .hier .k{font-family:var(--mono);font-size:.85vw;letter-spacing:.1em;text-transform:uppercase;color:#9aa1ad}
+  .hier .h{font-family:var(--disp);font-weight:700;color:#111827;font-size:2vw;line-height:1.05;margin:.4vh 0}
+  .hier .b{font-size:1vw;color:#6B7280;line-height:1.4}
+  .hier .btn{display:inline-block;margin-top:1vh;background:#2D5BFF;color:#fff;border-radius:9px;padding:.8vh 1.2vw;font-size:.95vw;font-weight:600}
+  /* CRAP + generic 2-col */
+  .flat{background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:1.6vh 1.2vw}
+  .flat h4{font-family:var(--disp);font-weight:700;color:#111827;font-size:1.4vw;margin-bottom:.4vh}
+  .flat p{font-size:1.05vw;color:#6B7280;line-height:1.4}
+  .flat .lt{font-family:var(--mono);font-weight:700;color:var(--blue);font-size:1.1vw}
+  /* before/after comparison */
+  .ba{display:grid;grid-template-columns:1fr 1fr;gap:1.6vw;align-items:stretch}
+  .lab{font-family:var(--mono);font-weight:700;font-size:.95vw;letter-spacing:.05em;padding:.5vh 1vw;border-radius:999px;display:inline-block;margin-bottom:1vh}
+  .lab.bad{background:#ffe4e0;color:#c33}
+  .lab.good{background:#dcfce7;color:#137a43}
+  /* AI-generic sample */
+  .ai{background:linear-gradient(135deg,#7C3AED 0%,#4F46E5 60%,#2563EB 100%);border-radius:22px;
+    padding:3vh 1.6vw;text-align:center;color:#fff;box-shadow:0 12px 34px rgba(79,70,229,.35);display:flex;flex-direction:column;align-items:center;gap:1vh}
+  .ai .emoji{font-size:2.6vw}
+  .ai h4{font-family:var(--disp);font-weight:800;font-size:1.9vw;line-height:1.05}
+  .ai p{font-size:1.05vw;opacity:.9;line-height:1.4;max-width:90%}
+  .ai .cta{background:#fff;color:#4F46E5;border-radius:999px;padding:1vh 1.6vw;font-weight:700;font-size:1vw;margin-top:.4vh}
+  /* professional sample (same content, directed) */
+  .pro{background:#fff;border:1px solid #E5E7EB;border-radius:14px;padding:2.4vh 1.6vw;box-shadow:0 6px 20px rgba(17,24,39,.06);
+    display:flex;flex-direction:column;gap:1vh;border-left:4px solid #16B670}
+  .pro .kick{font-family:var(--mono);font-weight:700;font-size:.85vw;letter-spacing:.09em;text-transform:uppercase;color:#16B670}
+  .pro h4{font-family:var(--disp);font-weight:700;color:#111827;font-size:1.8vw;line-height:1.08}
+  .pro p{font-size:1.05vw;color:#4B5563;line-height:1.45}
+  .pro .row{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #F1F2F4;padding-top:1vh;margin-top:.4vh}
+  .pro .row .t{font-family:var(--disp);font-weight:600;color:#111827;font-size:1.05vw}
+  .pro .row .d{font-family:var(--mono);font-size:.85vw;color:#9aa1ad}
+  .pro .cta{align-self:flex-start;background:#111827;color:#fff;border-radius:9px;padding:.9vh 1.3vw;font-weight:600;font-size:.95vw}
+  .tellrow{font-size:1.15vw;color:var(--text);line-height:1.5}
+  /* ---- principle example demos (bad vs good) ---- */
+  .demo{display:grid;grid-template-columns:1fr 1fr;gap:1.4vw;align-items:stretch}
+  .demo .col{background:#fff;border-radius:12px;padding:1.6vh 1.2vw;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:.4vh}
+  .demo .col.bad{border:1.6px solid #f2b8ae}
+  .demo .col.good{border:1.6px solid #a9e0bf}
+  .demo .cap{font-family:var(--mono);font-weight:700;font-size:.9vw;letter-spacing:.03em;margin-bottom:.8vh}
+  .demo .cap.bad{color:#c9372c} .demo .cap.good{color:#137a43}
+  .bar-r{background:#e7e9ee;border-radius:4px;height:1.5vh}
+  .sw-row{display:flex;gap:.5vw}
+  .sw-row i{flex:1;height:3vh;border-radius:6px;display:block}
+  .crapmini{width:100%;height:4.4vh;margin:.6vh 0}
+  .type-good .t1{font-family:var(--disp);font-weight:700;font-size:1.9vw;color:#111827;line-height:1.05}
+  .type-good .t2{font-family:var(--disp);font-weight:600;font-size:1.2vw;color:#374151;margin:.3vh 0}
+  .type-good .t3{font-family:var(--disp);font-size:1vw;color:#6B7280;line-height:1.5}
+  .chip-ct{display:inline-flex;align-items:center;gap:.5vw;font-family:var(--mono);font-size:.9vw;border-radius:999px;padding:.5vh 1vw;margin-top:.6vh}
+  /* ---- "in action" example cells (bad over good) ---- */
+  .acts{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4vw}
+  .act{background:var(--white);border-radius:12px;box-shadow:var(--shadow);padding:1.6vh 1.1vw;display:flex;flex-direction:column;gap:1vh}
+  .act .hh{font-family:var(--mono);font-weight:700;font-size:.9vw;color:var(--muted);letter-spacing:.03em}
+  .act .bad2,.act .good2{border-radius:9px;padding:1.1vh 1vw;font-size:1.05vw;line-height:1.35}
+  .act .bad2{background:#fdecea;border:1px solid #f2b8ae;color:#7f1d1d}
+  .act .good2{background:#eafaf0;border:1px solid #a9e0bf;color:#14532d}
+  .act .mk{font-weight:700;font-family:var(--mono);font-size:.85vw}
+  .btn-demo{align-self:flex-start;background:#111827;color:#fff;border-radius:8px;padding:.7vh 1.1vw;font-family:var(--disp);font-weight:600;font-size:.95vw}
+  .eg{font-family:var(--mono);font-size:.82vw;color:#2D5BFF;background:#eef2ff;border-radius:5px;padding:.1vh .5vw;margin-left:.3vw;white-space:nowrap}
+</style>
+</head>
+<body>
+<div id="deck">
+
+<!-- 0 · TITLE -->
+<section class="slide title-slide active">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· UI Design</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">WEEK 5 · UI DESIGN · AI-FIRST</span>
+    <h1 class="head">From AI-generic to professional UI</h1>
+    <p class="lead">Anyone can generate a UI in 10 seconds now — and they all look <em>the same</em>. The skill that's left is judgment: knowing the principles, spotting the "AI look," and pushing a design until it looks <strong>professional</strong>.</p>
+  </div>
+  <div class="circles"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></div>
+</section>
+
+<!-- 1 · WHERE THIS FITS -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· Why this lesson</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">GENERATING IS EASY NOW · JUDGING IS THE JOB</span>
+    <h2 class="head">The tool got fast. Taste is the differentiator.</h2>
+    <div class="grid g3">
+      <div class="scard c-blue"><div class="lbl">PRINCIPLES</div><h3>Know the rules</h3><p>Hierarchy, contrast, alignment, spacing, type, color — the vocabulary of good UI.</p></div>
+      <div class="scard c-red"><div class="lbl">THE PROBLEM</div><h3>AI looks samey</h3><p>Why every AI-generated screen looks like the same purple landing page — and how to spot it.</p></div>
+      <div class="scard c-green"><div class="lbl">THE FIX</div><h3>Make it professional</h3><p>Give it a point of view, sweat the details, and direct the AI away from its defaults.</p></div>
+    </div>
+    <p class="foot-note">Pairs with the <em>Designing with Claude</em> deck: that one is <strong>how to generate</strong> a design system; this one is <strong>how to make it good</strong>. (Deep UX theory is course 15031003.)</p>
+  </div>
+</section>
+
+<!-- 2 · UX vs UI -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· UX vs UI</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">TWO WORDS, OFTEN CONFUSED</span>
+    <h2 class="head">UX = does it work. UI = does it look and feel right.</h2>
+    <div class="grid g2">
+      <div class="bcard"><div class="lbl">UX · User Experience</div><h3>The flow &amp; the logic</h3>
+        <p style="line-height:1.7">Can the user reach their goal quickly, without confusion? Steps, structure, error states, "where am I / what next." Mostly invisible when it's good.</p></div>
+      <div class="bcard" style="border-top:.6vh solid var(--blue)"><div class="lbl" style="color:var(--blue)">UI · User Interface</div><h3>The look &amp; the surface</h3>
+        <p style="line-height:1.7">Type, color, spacing, layout, the exact button. The part people <em>see</em> — and judge in the first half-second.</p></div>
+    </div>
+    <p class="foot-note">Today leans <strong>UI</strong>: the visible craft. But good UI serves the UX — pretty that hides the next step is bad design, not good design.</p>
+  </div>
+</section>
+
+<!-- 3 · PRINCIPLE · HIERARCHY -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· Principle · Hierarchy</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">PRINCIPLE 1 · THE MOST IMPORTANT ONE</span>
+    <h2 class="head">Visual hierarchy: tell the eye where to look first</h2>
+    <p class="dek narrow">Same card, same words. Rank it with <strong>size, weight, color</strong> and the eye knows where to go — flatten it and the reader has to work.</p>
+    <div class="demo">
+      <div class="col bad"><div class="cap bad">✗ FLAT — everything equal weight</div>
+        <div style="color:#4B5563;font-size:1.15vw;line-height:1.9">Due today<br>CS101 essay<br>Submit before 23:59 · counts 15%<br>Mark as done</div>
+      </div>
+      <div class="col good"><div class="cap good">✓ RANKED — one clear focus + action</div>
+        <div style="font-family:var(--mono);font-size:.85vw;letter-spacing:.1em;text-transform:uppercase;color:#9aa1ad">Due today</div>
+        <div style="font-family:var(--disp);font-weight:700;color:#111827;font-size:2vw;line-height:1.05;margin:.3vh 0">CS101 essay</div>
+        <div style="font-size:1vw;color:#6B7280;line-height:1.4">Submit before 23:59 · counts 15%</div>
+        <span style="align-self:flex-start;margin-top:1vh;background:#2D5BFF;color:#fff;border-radius:9px;padding:.8vh 1.2vw;font-size:.95vw;font-weight:600;font-family:var(--disp)">Mark as done</span>
+      </div>
+    </div>
+    <p class="foot-note">Tools for rank: <strong>size, weight, color, contrast, spacing, position.</strong> If everything shouts, nothing is heard.</p>
+  </div>
+</section>
+
+<!-- 4 · PRINCIPLE · C.R.A.P -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· Principle · C.R.A.P</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">PRINCIPLE 2 · FOUR LETTERS THAT FIX MOST LAYOUTS</span>
+    <h2 class="head">C.R.A.P — the checklist designers actually use</h2>
+    <div class="grid g4">
+      <div class="flat"><div class="lt">C</div><h4>Contrast</h4>
+        <svg class="crapmini" viewBox="0 0 120 34" preserveAspectRatio="xMidYMid meet"><rect x="4" y="6" width="70" height="22" rx="3" fill="#111827"/><rect x="82" y="13" width="34" height="9" rx="2" fill="#d7dbe2"/></svg>
+        <p>Make different things look <em>clearly</em> different — big vs small, dark vs light.</p></div>
+      <div class="flat"><div class="lt">R</div><h4>Repetition</h4>
+        <svg class="crapmini" viewBox="0 0 120 34" preserveAspectRatio="xMidYMid meet"><rect x="6" y="9" width="32" height="16" rx="4" fill="#2D5BFF"/><rect x="44" y="9" width="32" height="16" rx="4" fill="#2D5BFF"/><rect x="82" y="9" width="32" height="16" rx="4" fill="#2D5BFF"/></svg>
+        <p>Reuse the same styles (your tokens) so it feels like one product.</p></div>
+      <div class="flat"><div class="lt">A</div><h4>Alignment</h4>
+        <svg class="crapmini" viewBox="0 0 120 34" preserveAspectRatio="xMidYMid meet"><line x1="12" y1="3" x2="12" y2="31" stroke="#16B670" stroke-width="1.5" stroke-dasharray="3,2"/><rect x="14" y="5" width="60" height="6" rx="2" fill="#c7ccd4"/><rect x="14" y="14" width="90" height="6" rx="2" fill="#c7ccd4"/><rect x="14" y="23" width="44" height="6" rx="2" fill="#c7ccd4"/></svg>
+        <p>Put things on a grid — every edge lines up, nothing floats.</p></div>
+      <div class="flat"><div class="lt">P</div><h4>Proximity</h4>
+        <svg class="crapmini" viewBox="0 0 120 34" preserveAspectRatio="xMidYMid meet"><circle cx="16" cy="13" r="5" fill="#FF5A47"/><circle cx="30" cy="13" r="5" fill="#FF5A47"/><circle cx="90" cy="13" r="5" fill="#FFC233"/><circle cx="104" cy="13" r="5" fill="#FFC233"/><text x="60" y="30" text-anchor="middle" font-family="monospace" font-size="7" fill="#9aa1ad">gap = meaning</text></svg>
+        <p>Group related things close; push unrelated things apart.</p></div>
+    </div>
+    <p class="foot-note">Robin Williams' classic framework. When a layout feels "off" but you can't say why, it's almost always one of these four.</p>
+  </div>
+</section>
+
+<!-- 5 · PRINCIPLE · SPACING -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· Principle · Spacing</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">PRINCIPLE 3 · THE FASTEST WAY TO LOOK PRO</span>
+    <h2 class="head">Whitespace &amp; a spacing scale (4 · 8 · 16 · 24 · 32)</h2>
+    <p class="dek narrow">Pick gaps from <strong>one scale</strong> and let it <strong>breathe</strong>. Beginners cram; pros add room — same content, very different feel.</p>
+    <div class="demo">
+      <div class="col bad"><div class="cap bad">✗ CRAMPED · random gaps</div>
+        <div class="bar-r" style="width:70%;margin-bottom:2px"></div>
+        <div class="bar-r" style="width:90%;margin-bottom:5px"></div>
+        <div class="bar-r" style="width:60%;margin-bottom:1px"></div>
+        <div class="bar-r" style="width:85%;margin-bottom:6px"></div>
+        <div class="bar-r" style="width:75%;margin-bottom:2px"></div>
+        <div class="bar-r" style="width:95%"></div>
+      </div>
+      <div class="col good" style="gap:0"><div class="cap good">✓ 8px SCALE · grouped &amp; airy</div>
+        <div class="bar-r" style="width:80%;margin-bottom:1.4vh"></div>
+        <div class="bar-r" style="width:80%;margin-bottom:.6vh"></div>
+        <div class="bar-r" style="width:64%;margin-bottom:2.4vh"></div>
+        <div class="bar-r" style="width:80%;margin-bottom:1.4vh"></div>
+        <div class="bar-r" style="width:70%"></div>
+      </div>
+    </div>
+    <p class="foot-note">More gap <em>between</em> groups, less <em>within</em> a group (that's Proximity again). Spacing is the cheapest upgrade in all of UI.</p>
+  </div>
+</section>
+
+<!-- 6 · PRINCIPLE · TYPOGRAPHY -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· Principle · Type</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">PRINCIPLE 4 · 90% OF A UI IS TEXT</span>
+    <h2 class="head">Typography: get this right and it's half-done</h2>
+    <p class="dek narrow"><strong>1–2 typefaces</strong>, a clear <strong>type scale</strong> (H1 › H2 › body), line-height ~1.5, lines ~60–75 characters.</p>
+    <div class="demo">
+      <div class="col bad"><div class="cap bad">✗ ONE SIZE · mixed fonts · cramped</div>
+        <div style="font-family:'Times New Roman',serif;font-size:1.15vw;color:#111827;line-height:1.15">StudyMate<br><span style="font-family:'Courier New',monospace">Your tasks for today</span><br>CS101 essay due tonight, counts 15% of the grade and you really should not miss it</div>
+      </div>
+      <div class="col good type-good"><div class="cap good">✓ TYPE SCALE · one family · airy</div>
+        <div class="t1">StudyMate</div>
+        <div class="t2">Your tasks for today</div>
+        <div class="t3">CS101 essay due tonight — counts 15% of the grade.</div>
+      </div>
+    </div>
+    <p class="foot-note">Swapping the default system font for one deliberate typeface is often the biggest "why does this suddenly look designed?" moment.</p>
+  </div>
+</section>
+
+<!-- 7 · PRINCIPLE · COLOR -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· Principle · Color</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">PRINCIPLE 5 · LESS COLOR, USED ON PURPOSE</span>
+    <h2 class="head">Color: a small palette, one accent, enough contrast</h2>
+    <p class="dek narrow"><strong>60 / 30 / 10</strong> — mostly neutral, one bold accent for actions only. Semantic (green=ok, red=danger). Text contrast ≥ <strong>4.5:1</strong> (WCAG AA).</p>
+    <div class="demo">
+      <div class="col bad"><div class="cap bad">✗ RAINBOW · low contrast</div>
+        <div class="sw-row" style="margin-bottom:1vh"><i style="background:#FF5A47"></i><i style="background:#FFC233"></i><i style="background:#16B670"></i><i style="background:#2D5BFF"></i><i style="background:#7C3AED"></i><i style="background:#EC4899"></i></div>
+        <div style="background:#ECEEF1;border-radius:8px;padding:1vh 1vw;color:#b6bcc6;font-size:1.05vw">Grey text on grey — hard to read <span style="font-family:var(--mono);font-size:.8vw">(2.0:1 ✗)</span></div>
+      </div>
+      <div class="col good"><div class="cap good">✓ NEUTRAL + 1 ACCENT · 60/30/10</div>
+        <div class="sw-row" style="margin-bottom:1vh"><i style="background:#F3F4F6;flex:6"></i><i style="background:#9aa1ad;flex:3"></i><i style="background:#2D5BFF;flex:1"></i></div>
+        <div style="background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:1vh 1vw;color:#111827;font-size:1.05vw">Dark text on white — easy <span class="chip-ct" style="background:#dcfce7;color:#137a43">AA ✓ 12:1</span></div>
+      </div>
+    </div>
+    <p class="foot-note">Rainbow UIs look amateur. A restrained palette with <em>one</em> confident accent looks like a product someone designed.</p>
+  </div>
+</section>
+
+<!-- 7b · NIELSEN 10 HEURISTICS -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· Principle · Nielsen's 10</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">PRINCIPLE 6 · THE UX CHECKLIST · JAKOB NIELSEN (1994)</span>
+    <h2 class="head">10 usability heuristics — review any screen against these</h2>
+    <div class="grid g2">
+      <div>
+        <p class="tellrow"><strong>1 · Visibility of status</strong> — show what's happening <span class="eg">progress bar</span></p>
+        <p class="tellrow"><strong>2 · Match real world</strong> — familiar words &amp; icons <span class="eg">calendar app</span></p>
+        <p class="tellrow"><strong>3 · User control &amp; freedom</strong> — undo, cancel, exit <span class="eg">Dropbox</span></p>
+        <p class="tellrow"><strong>4 · Consistency &amp; standards</strong> — platform conventions <span class="eg">Spotify</span></p>
+        <p class="tellrow"><strong>5 · Error prevention</strong> — block mistakes early <span class="eg">Airbnb dates</span></p>
+      </div>
+      <div>
+        <p class="tellrow"><strong>6 · Recognition over recall</strong> — show, don't force recall <span class="eg">Nike menu</span></p>
+        <p class="tellrow"><strong>7 · Flexibility &amp; efficiency</strong> — shortcuts for pros <span class="eg">Figma</span></p>
+        <p class="tellrow"><strong>8 · Aesthetic &amp; minimalist</strong> — cut what doesn't help <span class="eg">Apple</span></p>
+        <p class="tellrow"><strong>9 · Recover from errors</strong> — plain errors + a fix <span class="eg">Lemonade</span></p>
+        <p class="tellrow"><strong>10 · Help &amp; documentation</strong> — help when needed <span class="eg">ChatGPT</span></p>
+      </div>
+    </div>
+    <p class="foot-note">A <strong>heuristic evaluation</strong>: walk any prototype against these 10 and note each violation. A great lens for reviewing another team's build.</p>
+  </div>
+</section>
+
+<!-- 7b2 · NIELSEN IN ACTION -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· Nielsen · in action</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">THE 10, MADE CONCRETE · SPOT THE VIOLATION → FIX IT</span>
+    <h2 class="head">Nielsen in action</h2>
+    <div class="acts">
+      <div class="act"><div class="hh">#1 · Visibility of status</div>
+        <div class="bad2"><span class="mk">✗</span> Tap “Save” → nothing. Did it work?</div>
+        <div class="good2"><span class="mk">✓</span> “Saving…” → “Saved ✓” right there</div>
+      </div>
+      <div class="act"><div class="hh">#9 · Recover from errors</div>
+        <div class="bad2"><span class="mk">✗</span> “Error 0x0007F”</div>
+        <div class="good2"><span class="mk">✓</span> “Couldn’t save — check your connection.” [Retry]</div>
+      </div>
+      <div class="act"><div class="hh">#5 · Error prevention</div>
+        <div class="bad2"><span class="mk">✗</span> [Delete] → 3 tasks gone instantly</div>
+        <div class="good2"><span class="mk">✓</span> “Delete 3 tasks?” [Cancel] [Delete]</div>
+      </div>
+    </div>
+    <p class="foot-note">Same content, one heuristic applied. Do this for a violation on <em>your</em> screen: name the number, then write the fix.</p>
+  </div>
+</section>
+
+<!-- 7c · ACCESSIBILITY -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· Principle · Accessibility</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">PRINCIPLE 7 · DESIGN FOR EVERYONE · a11y / WCAG</span>
+    <h2 class="head">Accessibility: POUR — and it's just good UX too</h2>
+    <div class="grid g4">
+      <div class="scard c-blue"><div class="lbl">P</div><h3>Perceivable</h3><p>Text contrast ≥ <strong>4.5:1</strong>, alt text on images, never rely on color alone.</p></div>
+      <div class="scard c-green"><div class="lbl">O</div><h3>Operable</h3><p>Everything works by <strong>keyboard</strong>, a visible <strong>focus</strong> state, targets ~44px.</p></div>
+      <div class="scard c-yellow"><div class="lbl">U</div><h3>Understandable</h3><p>Clear language, <strong>labelled forms</strong>, errors that say how to fix.</p></div>
+      <div class="scard c-red"><div class="lbl">R</div><h3>Robust</h3><p>Semantic HTML (<span style="font-family:var(--mono)">&lt;button&gt; &lt;nav&gt; &lt;label&gt;</span>) so screen readers work.</p></div>
+    </div>
+    <p class="foot-note">Aim for WCAG <strong>AA</strong> (A = minimum · AA = the standard · AAA = highest). Accessible design helps <em>everyone</em> — and in many places it's the law.</p>
+  </div>
+</section>
+
+<!-- 7c2 · ACCESSIBILITY IN ACTION -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· Accessibility · in action</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">THREE CHECKS YOU CAN SEE IN 10 SECONDS</span>
+    <h2 class="head">Accessibility in action</h2>
+    <div class="acts">
+      <div class="act"><div class="hh">Contrast · Perceivable</div>
+        <div style="background:#ECEEF1;border-radius:9px;padding:1.1vh 1vw;color:#b6bcc6;font-size:1.05vw">Low-contrast text <span class="mk" style="color:#c9372c">✗ 2.0:1</span></div>
+        <div style="background:#fff;border:1px solid #E5E7EB;border-radius:9px;padding:1.1vh 1vw;color:#111827;font-size:1.05vw">High-contrast text <span class="mk" style="color:#137a43">✓ 12:1 AA</span></div>
+      </div>
+      <div class="act"><div class="hh">Keyboard focus · Operable</div>
+        <div class="bad2"><span class="mk">✗</span> no focus ring <span style="background:#fff;border:1px solid #ddd;border-radius:7px;padding:.3vh .8vw;color:#111;font-size:.9vw;margin-left:.4vw">Save</span></div>
+        <div class="good2"><span class="mk">✓</span> visible focus <span style="background:#fff;border:1px solid #ddd;border-radius:7px;padding:.3vh .8vw;color:#111;font-size:.9vw;margin-left:.4vw;box-shadow:0 0 0 3px rgba(45,91,255,.55)">Save</span></div>
+      </div>
+      <div class="act"><div class="hh">Not color alone · Perceivable</div>
+        <div class="bad2"><span class="mk">✗</span> <span style="color:#FF5A47;font-size:1.3vw">●</span> Overdue — color only</div>
+        <div class="good2"><span class="mk">✓</span> ⚠ Overdue — icon + label</div>
+      </div>
+    </div>
+    <p class="foot-note">Fourth check (Robust): use semantic HTML — <span style="font-family:var(--mono)">&lt;button&gt; &lt;label&gt; &lt;nav&gt;</span> — so a screen reader announces each control correctly.</p>
+  </div>
+</section>
+
+<!-- 7d · THE UI DESIGN PROCESS -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· The design process</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">UX FIRST, THEN UI · WHERE A DESIGN SYSTEM COMES FROM</span>
+    <h2 class="head">The UI design process</h2>
+    <div class="flow" style="margin-bottom:1.8vh">
+      <div class="node"><div class="t">Design brief</div><div class="s">the problem</div></div>
+      <div class="arw">→</div>
+      <div class="node on-blue"><div class="t">Benchmark</div><div class="s" style="color:#cfe0ff">interface inventory</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">User flow</div><div class="s">screens + steps</div></div>
+      <div class="arw">→</div>
+      <div class="node"><div class="t">Wireframe</div><div class="s">low-fi layout</div></div>
+      <div class="arw">→</div>
+      <div class="node on-green"><div class="t">Design system</div><div class="s" style="color:#d6f5e6">tokens + components</div></div>
+    </div>
+    <div class="grid g2">
+      <div class="bcard"><div class="lbl">Start with a design brief</div>
+        <p style="line-height:1.6">Background &amp; goals · success criteria (metrics) · target audience · scope · deadline. It defines the problem <em>before</em> anyone picks a color.</p></div>
+      <div class="bcard" style="border-top:.6vh solid var(--blue)"><div class="lbl" style="color:var(--blue)">Competitor benchmarking → interface inventory</div>
+        <p style="line-height:1.6">Collect UI patterns from real products &amp; Dribbble/Behance — color, typography, inputs, tooltips, IA. This inventory <strong>becomes your design system</strong>.</p></div>
+    </div>
+    <p class="foot-note">Benchmarking is how you get a <em>point of view</em> (earlier slide) — and it's the honest, non-AI-average source for your tokens and components.</p>
+  </div>
+</section>
+
+<!-- 8 · WHY AI LOOKS THE SAME -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· The AI look</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker red">THE PROBLEM YOU'VE ALL NOTICED</span>
+    <h2 class="head">Why does every AI-generated UI look the same?</h2>
+    <div class="grid g2">
+      <div class="bcard"><div class="lbl">The reason</div><h3>AI outputs the average</h3>
+        <p style="line-height:1.7">A model predicts the <em>most likely</em> next pixel or line of markup. With a vague prompt, "most likely" = the average of millions of look-alike SaaS landing pages in its training data. You get the <strong>statistical median</strong> of the internet.</p></div>
+      <div class="bcard" style="border-top:.6vh solid var(--red)"><div class="lbl" style="color:var(--red)">The consequence</div><h3>Regression to the mean</h3>
+        <p style="line-height:1.7">Nothing pulls it off that average unless <em>you</em> do. No point of view in → no point of view out. "Make me a nice landing page" always lands in the same place.</p></div>
+    </div>
+    <p class="foot-note">This isn't a bug. It's what "predict the most probable output" means. The fix is to make your desired output <em>less</em> average — on purpose.</p>
+  </div>
+</section>
+
+<!-- 9 · THE TELL-TALE SIGNS -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· Spot the AI look</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker red">THE "AI SLOP" CHECKLIST · YOU'LL SEE THESE EVERYWHERE NOW</span>
+    <h2 class="head">Tell-tale signs of an un-directed AI UI</h2>
+    <div class="grid g2">
+      <div>
+        <p class="tellrow">🟣 <strong>Purple-to-blue gradient</strong> everywhere (hero, buttons, blobs)</p>
+        <p class="tellrow">🅰️ <strong>Default system / Inter font</strong>, no real type choice</p>
+        <p class="tellrow">🎯 <strong>Everything centered</strong>, one column, huge hero headline</p>
+        <p class="tellrow">🟦 <strong>Rounded-2xl cards</strong> + glassmorphism + soft shadows on all</p>
+      </div>
+      <div>
+        <p class="tellrow">🚀 <strong>Emoji as icons</strong> (🚀✨💡) instead of a real icon set</p>
+        <p class="tellrow">📝 <strong>Lorem-ipsum / generic copy</strong> ("Supercharge your workflow")</p>
+        <p class="tellrow">⚖️ <strong>No clear hierarchy</strong> — everything the same weight</p>
+        <p class="tellrow">🧩 <strong>Feature-card grid of 3</strong>, identical, with tiny icons</p>
+      </div>
+    </div>
+    <p class="foot-note">None of these are <em>wrong</em> on their own — they're just the <strong>default</strong>. A whole screen made only of defaults is the tell.</p>
+  </div>
+</section>
+
+<!-- 10 · LIVE COMPARISON -->
+<section class="slide" style="justify-content:flex-start">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· Same content, two executions</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">SAME PRODUCT · SAME WORDS · DIFFERENT JUDGMENT</span>
+    <h2 class="head">The AI default vs. a directed version</h2>
+    <div class="ba">
+      <div>
+        <span class="lab bad">✗ UN-DIRECTED "AI LOOK"</span>
+        <div class="ai">
+          <div class="emoji">🚀</div>
+          <h4>Supercharge your studying</h4>
+          <p>The all-in-one AI-powered platform to boost your productivity today!</p>
+          <span class="cta">Get Started →</span>
+        </div>
+      </div>
+      <div>
+        <span class="lab good">✓ DIRECTED · PROFESSIONAL</span>
+        <div class="pro">
+          <div class="kick">StudyMate · Today</div>
+          <h4>3 tasks due before Friday</h4>
+          <p>Your CS101 essay is due tonight and counts for 15%.</p>
+          <div class="row"><span class="t">CS101 essay</span><span class="d">due 23:59</span></div>
+          <div class="row"><span class="t">Math pset</span><span class="d">due Fri</span></div>
+          <span class="cta">Open today's list</span>
+        </div>
+      </div>
+    </div>
+    <p class="foot-note">Right side: real content, clear hierarchy, one restrained accent, left-aligned, honest copy, actual data. Same idea — but it reads like a product, not a template.</p>
+  </div>
+</section>
+
+<!-- 11 · PRO #1 · POINT OF VIEW -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· Pro move 1</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">HOW TO LOOK PROFESSIONAL · 1 OF 3</span>
+    <h2 class="head">Have a point of view — steal from real products, not the default</h2>
+    <div class="grid g2">
+      <div class="dcard dont"><span class="pill">AVERAGE IN → AVERAGE OUT</span>
+        <div class="item"><h4>"Make it modern and clean"</h4><p>Vague words let the AI fall back to its median aesthetic. You've described nothing.</p></div>
+      </div>
+      <div class="dcard do"><span class="pill">GIVE IT A REFERENCE</span>
+        <div class="item"><h4>Pick 1–2 real apps you admire</h4><p>Notion's calm typography, Linear's tight spacing, your bank's data density. Screenshot them → that's your reference image + spec.</p></div>
+      </div>
+    </div>
+    <p class="foot-note">A specific spec + a real reference image (from the <em>Designing with Claude</em> deck) is exactly what pulls the output <strong>off the mean</strong>. Taste = choosing what to copy.</p>
+  </div>
+</section>
+
+<!-- 12 · PRO #2 · DETAILS THAT SIGNAL CRAFT -->
+<section class="slide">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· Pro move 2</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">HOW TO LOOK PROFESSIONAL · 2 OF 3</span>
+    <h2 class="head">Sweat the details that quietly signal craft</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Do this</th><th>Instead of</th><th>Why it reads as pro</th></tr></thead>
+        <tbody>
+          <tr><td class="b">Real content &amp; copy</td><td>Lorem ipsum / emoji icons</td><td>Shows the design fits actual data, not a demo</td></tr>
+          <tr><td class="b">One clear focal point</td><td>Everything the same size</td><td>The eye knows where to go</td></tr>
+          <tr><td class="b">Consistent radius + spacing</td><td>Mixed corners, random gaps</td><td>Feels like one system, not a collage</td></tr>
+          <tr><td class="b">Left-aligned text blocks</td><td>Everything centered</td><td>Easier to scan; centered long text is a tell</td></tr>
+          <tr><td class="b">Proper states</td><td>Only the "happy path"</td><td>Hover / focus / empty / error = a real product</td></tr>
+          <tr><td class="b">One accent color</td><td>Rainbow / gradient on all</td><td>Restraint looks confident</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="foot-note">"Professional" is rarely one big move — it's twenty small, consistent decisions. That consistency is the whole point of your design system.</p>
+  </div>
+</section>
+
+<!-- 13 · PRO #3 · DIRECT THE AI -->
+<section class="slide" style="justify-content:flex-start">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· Pro move 3</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker blue">HOW TO LOOK PROFESSIONAL · 3 OF 3</span>
+    <h2 class="head">Prompt the AI <em>away</em> from its defaults</h2>
+    <div class="code" style="background:#0f1440;border-radius:1vw;box-shadow:var(--shadow);padding:2vh 1.6vw;font-family:var(--mono);font-size:1.15vw;line-height:1.7;color:#d7dcff;white-space:pre-wrap">Refine this UI to look professional, not AI-generated:
+- <span style="color:#7CF0B0">No purple/blue gradient</span>, no glassmorphism, no emoji icons.
+- Typeface: <span style="color:#ffd479">"Source Serif" headings + "Inter" body</span> (one clear pairing).
+- Palette: my <span style="color:#ffd479">brand neutrals + one accent</span> (hex below), 60/30/10.
+- <span style="color:#7CF0B0">Strong hierarchy</span>: one focal element per screen.
+- <span style="color:#7CF0B0">Left-align</span> text; use real copy, not lorem.
+- Match the <span style="color:#ffd479">reference image</span> for density and tone.
+- Add hover / focus / empty states.
+Then list what still looks generic so I can push further.</div>
+    <p class="foot-note">Every "no ___" removes one default. Every "use ___" adds a decision. That's the whole trick: replace the AI's averages with your choices.</p>
+  </div>
+</section>
+
+<!-- 14 · ACTIVITY -->
+<section class="slide" style="justify-content:flex-start">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· Your turn</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker green">ACTIVITY · ~15 MIN · IN YOUR TEAM</span>
+    <h2 class="head">Do a "professional pass" on your design system</h2>
+    <div class="grid g3">
+      <div class="scard c-red"><div class="lbl">STEP 1 · 5 MIN</div><h3>Audit for the AI look</h3><p>Open the design system you generated. Score it against the tell-tale checklist — how many defaults did you keep?</p><div class="bar n1"><i></i><i></i><i></i></div></div>
+      <div class="scard c-blue"><div class="lbl">STEP 2 · 5 MIN</div><h3>Pick a reference</h3><p>Choose one real app you admire. Name the 3 things it does that yours doesn't.</p><div class="bar n2"><i></i><i></i><i></i></div></div>
+      <div class="scard c-green"><div class="lbl">STEP 3 · 5 MIN</div><h3>Direct + regenerate</h3><p>Write the "away from defaults" prompt. Regenerate. Compare before/after — what changed?</p><div class="bar n3"><i></i><i></i><i></i></div></div>
+    </div>
+    <p class="foot-note">Keep both versions. Being able to explain <em>why</em> the second is better — in the vocabulary from this deck — is exactly what the oral exam rewards.</p>
+  </div>
+</section>
+
+<!-- 15 · SUMMARY (dark) -->
+<section class="slide dark">
+  <div class="chrome"><span class="l"><span class="play">▶</span> intro2se-w5-ui.fig <span class="crumb">· Summary</span></span><span class="count"></span></div>
+  <div class="body">
+    <span class="kicker">PRINCIPLES · THE PROBLEM · THE FIX</span>
+    <h2 class="head">The AI types it. Your taste makes it professional.</h2>
+    <div class="quad">
+      <div class="q"><div class="tag">Principles</div><h4>Hierarchy first</h4><p>Then C.R.A.P, spacing, typography, one-accent color. The vocabulary of good UI.</p></div>
+      <div class="q"><div class="tag">The problem</div><h4>AI = the average</h4><p>Vague prompts return the median internet: purple gradient, centered, emoji, no hierarchy.</p></div>
+      <div class="q"><div class="tag">The fix</div><h4>Point of view</h4><p>A specific spec + a real reference pulls the output off the mean.</p></div>
+      <div class="q"><div class="tag">The craft</div><h4>Twenty small decisions</h4><p>Real content, one focal point, consistent spacing, restraint — and prompt away from defaults.</p></div>
+    </div>
+    <p class="foot-note" style="color:#8b93c7">Anyone can generate a UI. Being able to tell good from generic — and say why — is the skill that's yours.</p>
+  </div>
+</section>
+
+</div>
+<div class="bar" id="bar"></div><span class="hint">← / → · click edges · Home / End · Ctrl/⌘-P to print</span>
+<script>
+/* Intro2SE slide-deck engine — keyboard + click nav, progress bar, counter. */
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0, bar=document.getElementById('bar'), cur=document.getElementById('cur');
+  function fill(n){ slides.forEach(function(s,k){
+      var count=s.querySelector('.count');
+      if(count) count.textContent=String(k+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+  });}
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){ s.classList.toggle('active',k===i); });
+    if(bar) bar.style.width=((i+1)/slides.length*100)+'%';
+    if(cur) cur.textContent=(i+1)+' / '+slides.length;
+  }
+  fill();
+  document.addEventListener('keydown',function(e){
+    if(['ArrowRight','ArrowDown',' ','PageDown'].indexOf(e.key)>-1){e.preventDefault();show(i+1);}
+    else if(['ArrowLeft','ArrowUp','PageUp'].indexOf(e.key)>-1){e.preventDefault();show(i-1);}
+    else if(e.key==='Home'){show(0);} else if(e.key==='End'){show(slides.length-1);}
+  });
+  document.getElementById('deck').addEventListener('click',function(e){
+    if(e.target.closest('a')) return;
+    if(e.clientX<innerWidth*0.25) show(i-1); else show(i+1);
+  });
+  show(0);
+})();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ออกแบบระบบให้สร้างได้จริง — คู่มือ Software Design &amp; Modeling — Design a Buildable System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f7fb; --surface:#ffffff; --surface-2:#eef1f7;
+    --ink:#161a22; --ink-soft:#3c4657; --muted:#6b7686; --faint:#9aa4b2;
+    --line:#e2e6ee; --line-soft:#eef1f6;
+    --accent:#0e7c86; --accent-2:#0b5e66; --accent-soft:#d7eef0;
+    --warn:#b45309; --warn-soft:#fdf1de;
+    --bad:#b91c1c; --bad-soft:#fbe6e6;
+    --good:#15803d; --good-soft:#e2f3e7;
+    --brand:#3d2f8f; --brand-soft:#e9e5fb;
+    --shadow:0 1px 2px rgba(16,24,40,.06),0 8px 24px rgba(16,24,40,.06);
+    --radius:16px;
+    --sans:'Sarabun','Segoe UI',system-ui,-apple-system,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#0d1017; --surface:#151a23; --surface-2:#1b222d;
+      --ink:#e8ecf3; --ink-soft:#c2cad6; --muted:#8b95a4; --faint:#5f6a79;
+      --line:#262e3a; --line-soft:#1e2530;
+      --accent:#39c2cf; --accent-2:#7fdfe8; --accent-soft:#123236;
+      --warn:#e0a23f; --warn-soft:#2e2413;
+      --bad:#f0787a; --bad-soft:#2e1616;
+      --good:#66c98a; --good-soft:#16281c;
+      --brand:#b3a6f5; --brand-soft:#1e1a34;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:var(--sans);font-size:17px;line-height:1.72;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+
+  /* ---- language toggle ---- */
+  [data-lang="th"] .l-en{display:none}
+  [data-lang="en"] .l-th{display:none}
+  .langbar{
+    position:fixed;top:16px;right:16px;z-index:50;display:flex;gap:4px;
+    background:var(--surface);border:1px solid var(--line);border-radius:999px;
+    padding:4px;box-shadow:var(--shadow);
+  }
+  .langbar button{
+    border:0;background:transparent;color:var(--muted);font-family:var(--sans);
+    font-weight:700;font-size:13px;letter-spacing:.04em;padding:6px 14px;border-radius:999px;
+    cursor:pointer;transition:.14s;
+  }
+  .langbar button.on{background:var(--accent);color:#fff}
+  @media print{.langbar{display:none}}
+
+  /* Hero */
+  header.hero{
+    background:
+      radial-gradient(1200px 400px at 12% -10%,var(--accent-soft),transparent 60%),
+      radial-gradient(900px 380px at 100% 0%,var(--brand-soft),transparent 55%);
+    border-bottom:1px solid var(--line);
+    padding:64px 0 48px;
+  }
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--accent-2);background:var(--surface);border:1px solid var(--line);
+    padding:6px 13px;border-radius:999px;box-shadow:var(--shadow);
+  }
+  h1{font-size:clamp(30px,5vw,46px);line-height:1.18;margin:20px 0 12px;letter-spacing:-.01em;font-weight:700}
+  .lede{font-size:clamp(18px,2.4vw,21px);color:var(--ink-soft);max-width:52ch;margin:0}
+  .thesis{
+    margin-top:26px;padding:18px 22px;background:var(--surface);border:1px solid var(--line);
+    border-left:5px solid var(--accent);border-radius:12px;box-shadow:var(--shadow);
+    font-size:18px;max-width:62ch;
+  }
+  .thesis b{color:var(--accent-2)}
+
+  /* TOC */
+  nav.toc{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:20px 24px;margin:-28px auto 0;position:relative;z-index:2;
+  }
+  nav.toc h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  nav.toc ol{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:6px 22px;counter-reset:t}
+  nav.toc a{counter-increment:t;display:flex;gap:11px;align-items:baseline;text-decoration:none;color:var(--ink-soft);padding:7px 8px;border-radius:9px;font-size:15.5px}
+  nav.toc a::before{content:counter(t,decimal-leading-zero);font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600;min-width:20px}
+  nav.toc a:hover{background:var(--surface-2);color:var(--ink)}
+
+  section{padding:46px 0;border-bottom:1px solid var(--line-soft)}
+  .kicker{font-family:var(--mono);font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 8px;display:flex;align-items:center;gap:10px}
+  .kicker .en{color:var(--muted);font-weight:500;text-transform:none;letter-spacing:0}
+  h2.sec{font-size:clamp(24px,3.4vw,32px);margin:0 0 6px;letter-spacing:-.01em;line-height:1.25}
+  h3{font-size:20px;margin:34px 0 10px;letter-spacing:-.005em}
+  h4{font-size:16.5px;margin:22px 0 6px;color:var(--ink)}
+  p{margin:0 0 15px}
+  .sub{color:var(--muted);font-size:16px;margin-bottom:22px;max-width:66ch}
+  strong{font-weight:600}
+  em{color:var(--accent-2);font-style:normal;font-weight:600}
+  a.inline{color:var(--accent-2);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+  code{font-family:var(--mono);font-size:.9em;background:var(--surface-2);padding:2px 7px;border-radius:6px;color:var(--accent-2)}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:26px 28px;margin:22px 0}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:760px){.grid2,.grid3{grid-template-columns:1fr}}
+
+  .tag{display:inline-block;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;letter-spacing:.02em}
+  .tag.bad{background:var(--bad-soft);color:var(--bad)}
+  .tag.good{background:var(--good-soft);color:var(--good)}
+  .tag.warn{background:var(--warn-soft);color:var(--warn)}
+  .tag.brand{background:var(--brand-soft);color:var(--brand)}
+  .tag.accent{background:var(--accent-soft);color:var(--accent-2)}
+
+  .callout{border-radius:12px;padding:16px 20px;margin:20px 0;border:1px solid var(--line);font-size:16px}
+  .callout .lab{font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:5px}
+  .callout.info{background:var(--accent-soft);border-color:transparent}
+  .callout.info .lab{color:var(--accent-2)}
+  .callout.warn{background:var(--warn-soft);border-color:transparent}
+  .callout.warn .lab{color:var(--warn)}
+  .callout.brand{background:var(--brand-soft);border-color:transparent}
+  .callout.brand .lab{color:var(--brand)}
+
+  ul.clean{list-style:none;padding:0;margin:14px 0}
+  ul.clean li{position:relative;padding:6px 0 6px 30px;border-bottom:1px dashed var(--line-soft)}
+  ul.clean li:last-child{border-bottom:0}
+  ul.clean li::before{content:"—";position:absolute;left:4px;color:var(--accent);font-weight:700}
+
+  /* comparison flip cards */
+  .flip{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:18px 0}
+  @media(max-width:680px){.flip{grid-template-columns:1fr}}
+  .flip .side{padding:20px 22px}
+  .flip .before{background:var(--bad-soft)}
+  .flip .after{background:var(--good-soft);border-left:1px solid var(--line)}
+  @media(max-width:680px){.flip .after{border-left:0;border-top:1px solid var(--line)}}
+  .flip h5{margin:0 0 10px;font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+  .flip .before h5{color:var(--bad)} .flip .after h5{color:var(--good)}
+  .flip p{font-size:15.5px;margin:0 0 8px}
+
+  /* layered box (architecture) */
+  .layers{margin:20px 0;display:flex;flex-direction:column;gap:10px}
+  .layer{border:1px solid var(--line);border-radius:12px;padding:16px 20px;background:var(--surface);box-shadow:var(--shadow)}
+  .layer .lh{font-weight:700;display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+  .layer .lh .role{font-family:var(--mono);font-size:12px;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+  .layer .ld{font-size:15px;color:var(--ink-soft);margin-top:4px}
+  .layer.ui{border-left:5px solid var(--brand)}
+  .layer.logic{border-left:5px solid var(--accent)}
+  .layer.data{border-left:5px solid var(--good)}
+  .conn{text-align:center;color:var(--accent);font-weight:700;font-family:var(--mono);font-size:14px;line-height:1}
+
+  /* whys / numbered rail (reused as "beats") */
+  .whys{counter-reset:w;margin:18px 0}
+  .whys .step{position:relative;padding:12px 0 12px 46px;border-left:2px solid var(--accent-soft);margin-left:16px}
+  .whys .step::before{counter-increment:w;content:counter(w);position:absolute;left:-17px;top:12px;width:32px;height:32px;background:var(--accent);color:#fff;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;font-family:var(--mono)}
+  .whys .q{font-weight:600}
+  .whys .a{color:var(--ink-soft);font-size:15.5px}
+  .whys .root{background:var(--brand-soft);border-radius:10px;padding:12px 16px;margin:8px 0 0 16px;font-weight:600;color:var(--brand)}
+
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:15px}
+  th,td{text-align:left;padding:11px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--surface-2)}
+  td.num{font-family:var(--mono);text-align:right;white-space:nowrap}
+  td.mono{font-family:var(--mono);font-size:13.5px;color:var(--accent-2)}
+  tr:last-child td{border-bottom:0}
+  .scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+  .scroll table{margin:0}
+
+  /* scorecard */
+  .score-item{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line-soft)}
+  .score-item:last-child{border-bottom:0}
+  .score-item .q b{display:block}
+  .score-item .q span{font-size:14px;color:var(--muted)}
+  .dots{display:flex;gap:6px}
+  .dots button{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);background:var(--bg);cursor:pointer;color:var(--muted);font-weight:600;font-size:13px;transition:.12s}
+  .dots button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .score-total{margin-top:16px;padding:16px 20px;background:var(--surface-2);border-radius:12px;display:flex;justify-content:space-between;align-items:center;font-weight:600}
+  .score-total .n{font-family:var(--mono);font-size:26px;color:var(--accent-2)}
+  .verdict{margin-top:18px;padding:14px 18px;border-radius:10px;font-size:15.5px;font-weight:500}
+
+  .pill-row{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+  .pill{font-size:14px;padding:7px 14px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink-soft)}
+
+  .biglist{counter-reset:b;list-style:none;padding:0;margin:20px 0}
+  .biglist li{counter-increment:b;position:relative;padding:16px 18px 16px 60px;background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:12px;box-shadow:var(--shadow)}
+  .biglist li::before{content:counter(b);position:absolute;left:16px;top:16px;width:30px;height:30px;background:var(--accent-soft);color:var(--accent-2);border-radius:9px;display:grid;place-items:center;font-weight:700;font-family:var(--mono)}
+  .biglist li b{display:block;margin-bottom:2px}
+
+  /* decision tree */
+  .tree{margin:20px 0}
+  .tnode{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:0 0 6px;box-shadow:var(--shadow);font-weight:600}
+  .tbranch{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0 18px}
+  @media(max-width:680px){.tbranch{grid-template-columns:1fr}}
+  .tbranch .leaf{border-radius:12px;padding:14px 18px;font-size:15px;border:1px solid var(--line)}
+  .leaf.stop{background:var(--bad-soft)}
+  .leaf.warn{background:var(--warn-soft)}
+  .leaf.go{background:var(--good-soft)}
+  .leaf .h{font-weight:700;display:block;margin-bottom:4px}
+  .leaf.stop .h{color:var(--bad)} .leaf.warn .h{color:var(--warn)} .leaf.go .h{color:var(--good)}
+
+  /* command chips */
+  .cmd{font-family:var(--mono);font-size:14px;background:var(--brand-soft);color:var(--brand);padding:3px 10px;border-radius:7px;font-weight:600;white-space:nowrap}
+
+  /* flow rail */
+  .rail{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0;font-family:var(--mono);font-size:13.5px}
+  .rail .stepchip{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:8px 12px;box-shadow:var(--shadow)}
+  .rail .stepchip b{color:var(--accent-2)}
+  .rail .arw{color:var(--accent);font-weight:700}
+
+  /* file tree */
+  .filetree{font-family:var(--mono);font-size:13.5px;line-height:1.85;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin:18px 0;overflow-x:auto;box-shadow:var(--shadow)}
+  .filetree .dir{color:var(--accent-2);font-weight:600}
+  .filetree .note{color:var(--muted)}
+
+  /* ascii-ish diagram box (used for code/prompt only) */
+  .diagram{font-family:var(--mono);font-size:13px;line-height:1.7;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin:18px 0;overflow-x:auto;box-shadow:var(--shadow);white-space:pre;color:var(--ink-soft)}
+
+  /* ---- figure shell ---- */
+  .fig{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:24px 22px;margin:18px 0;overflow-x:auto}
+  .fig .cap{font-family:var(--mono);font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 16px;text-align:center}
+  .fr{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent-2);white-space:nowrap}
+  .fr.nfr{background:var(--brand-soft);color:var(--brand)}
+
+  /* ---- use-case diagram ---- */
+  .ucd{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:nowrap;min-width:520px}
+  .ucd .actor{display:flex;flex-direction:column;align-items:center;gap:8px;flex:0 0 auto;padding-right:4px}
+  .ucd .actor .fig-ic{font-size:34px;line-height:1}
+  .ucd .actor .an{font-weight:700;font-size:14px;text-align:center;max-width:96px}
+  .ucd .connl{flex:0 0 40px;height:2px;background:var(--line);position:relative}
+  .ucd .sys{flex:1 1 auto;border:1.5px dashed var(--accent);border-radius:16px;padding:16px 16px 10px;position:relative;background:linear-gradient(0deg,var(--surface),var(--surface))}
+  .ucd .sys .st{position:absolute;top:-11px;left:18px;background:var(--surface);padding:0 10px;font-weight:700;font-size:13px;color:var(--accent-2)}
+  .uc{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1.5px solid var(--accent);background:var(--accent-soft);color:var(--ink);border-radius:999px;padding:9px 16px;margin:9px 0;font-size:14.5px;font-weight:500}
+  .uc.ext{border-style:dashed;background:var(--brand-soft);border-color:var(--brand)}
+  .ucd .extwrap{margin-top:10px;padding-top:12px;border-top:1px dashed var(--line)}
+  .ucd .extlab{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:center;margin:0 0 6px}
+
+  /* ---- entity-relationship mini ---- */
+  .erd{display:flex;align-items:center;gap:0;flex-wrap:wrap;justify-content:center}
+  .ent{border:1px solid var(--line);border-radius:12px;overflow:hidden;min-width:150px;box-shadow:var(--shadow);background:var(--surface)}
+  .ent .eh{background:var(--surface-2);font-family:var(--mono);font-weight:700;font-size:14px;color:var(--accent-2);padding:9px 14px;border-bottom:1px solid var(--line);text-align:center}
+  .ent .ef{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);padding:5px 14px;border-bottom:1px dashed var(--line-soft)}
+  .ent .ef:last-child{border-bottom:0}
+  .ent .ef .k{color:var(--accent);font-weight:600}
+  .erel{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:2px;padding:0 6px;color:var(--muted)}
+  .erel .card-n{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent-2)}
+  .erel .rl{width:64px;height:2px;background:var(--accent);position:relative}
+  .erel .rn{font-size:11.5px;color:var(--muted);white-space:nowrap}
+
+  /* ---- phone mockup (prototype) ---- */
+  .mock{max-width:300px;margin:0 auto;border:1px solid var(--line);border-radius:20px;background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
+  .mock .mbar{background:var(--accent);color:#fff;padding:12px 16px;font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
+  .mock .mbody{padding:16px 16px 20px}
+  .mock .mfield{margin:0 0 12px}
+  .mock .mfield label{display:block;font-size:12.5px;color:var(--muted);font-weight:600;margin:0 0 4px}
+  .mock .minput{border:1px solid var(--line);border-radius:10px;background:var(--surface-2);padding:10px 12px;font-size:14px;color:var(--ink-soft);display:flex;justify-content:space-between;align-items:center}
+  .mock .mbtn{background:var(--accent);color:#fff;text-align:center;font-weight:700;font-size:14.5px;padding:11px;border-radius:10px;margin-top:4px}
+  .mock .merr{display:flex;align-items:center;gap:7px;color:var(--bad);background:var(--bad-soft);border-radius:9px;padding:8px 12px;font-size:13px;margin-top:12px;font-weight:500}
+  .mock-note{font-size:13px;color:var(--muted);margin-top:12px}
+  .mock-note b{color:var(--ink-soft)}
+
+  /* ---- compact tier stack (worked example) ---- */
+  .tierstack{display:flex;flex-direction:column;gap:0;min-width:480px}
+  .tier{border:1px solid var(--line);border-left-width:5px;border-radius:10px;padding:12px 16px;background:var(--surface);box-shadow:var(--shadow)}
+  .tier .tn{font-weight:700;font-size:13px;letter-spacing:.03em;text-transform:uppercase;font-family:var(--mono)}
+  .tier .tc{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);margin-top:5px;line-height:1.6}
+  .tier .tc .tag2{color:var(--accent-2);font-weight:600}
+  .tier.t-ui{border-left-color:var(--brand)} .tier.t-ui .tn{color:var(--brand)}
+  .tier.t-logic{border-left-color:var(--accent)} .tier.t-logic .tn{color:var(--accent-2)}
+  .tier.t-data{border-left-color:var(--good)} .tier.t-data .tn{color:var(--good)}
+  .tierconn{text-align:center;color:var(--accent);font-size:15px;line-height:1;margin:5px 0;font-family:var(--mono)}
+  @media(max-width:560px){.ucd,.tierstack{min-width:0}.ucd{flex-wrap:wrap}}
+
+  /* ---- UML SVG diagrams (correct notation, themed to page palette) ---- */
+  .umlsvg{display:block;margin:0 auto;max-width:100%;height:auto;font-family:var(--sans)}
+  .uml .stick{stroke:var(--ink-soft);fill:none;stroke-width:1.8;stroke-linecap:round}
+  .uml .assoc{stroke:var(--muted);fill:none;stroke-width:1.4}
+  .uml .ell{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+  .uml .sysfill{fill:var(--surface-2);opacity:.4}
+  .uml .sysln{fill:none;stroke:var(--ink-soft);stroke-width:1.4}
+  .uml .nm{fill:var(--ink);font-size:14px;font-weight:600}
+  .uml .frt{fill:var(--accent-2);font-size:11px;font-family:var(--mono);font-weight:600}
+  .uml .actlab{fill:var(--ink);font-size:13px;font-weight:600}
+  .uml .st{fill:var(--muted);font-size:11px;font-family:var(--mono)}
+  .uml .syslab{fill:var(--accent-2);font-size:13px;font-weight:700;font-family:var(--mono);letter-spacing:.04em}
+  .uml .mult{fill:var(--ink-soft);font-size:12px;font-family:var(--mono);font-weight:600}
+
+  footer{padding:40px 0 70px;color:var(--muted);font-size:14.5px}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
+  .print-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink-soft);padding:8px 16px;border-radius:9px;cursor:pointer;font-family:var(--sans);font-size:14px}
+  .print-btn:hover{background:var(--surface-2)}
+
+  @media print{
+    body{background:#fff;font-size:12px}
+    nav.toc,.print-btn,.dots{box-shadow:none}
+    header.hero{padding:20px 0}
+    section{padding:18px 0;break-inside:avoid}
+    .card,.biglist li,.layer{box-shadow:none;break-inside:avoid}
+  }
+
+  /* ---- system architecture diagram (diagram-design grammar, skinned to M3 palette, theme-aware) ---- */
+  .arch{display:block;margin:0 auto;max-width:100%;height:auto;font-family:var(--sans)}
+  .arch marker path{fill:var(--muted)}
+  .arch .zn{fill:var(--surface-2);opacity:.5;stroke:var(--line);stroke-width:1;stroke-dasharray:4,4}
+  .arch .znlab{fill:var(--muted);font-family:var(--mono);font-size:9px;letter-spacing:.14em;font-weight:600}
+  .arch .mask{fill:var(--surface)}
+  .arch .node{fill:var(--surface);stroke-width:1.4}
+  .arch .n-ui{stroke:var(--brand)}
+  .arch .n-logic{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.6}
+  .arch .n-data{stroke:var(--good)}
+  .arch .n-ext{fill:var(--surface-2);stroke:var(--muted);stroke-dasharray:5,4}
+  .arch .n-svc{fill:var(--surface);stroke:var(--muted)}
+  .arch .nm{fill:var(--ink);font-size:13px;font-weight:700}
+  .arch .sub{fill:var(--muted);font-family:var(--mono);font-size:10px}
+  .arch .tg{fill:none;stroke-width:.8}
+  .arch .tg.ui{stroke:var(--brand)} .arch .tg.lo{stroke:var(--accent)} .arch .tg.da{stroke:var(--good)} .arch .tg.ex{stroke:var(--muted)}
+  .arch .tgt{font-family:var(--mono);font-size:7px;letter-spacing:.08em;font-weight:600}
+  .arch .tgt.ui{fill:var(--brand)} .arch .tgt.lo{fill:var(--accent-2)} .arch .tgt.da{fill:var(--good)} .arch .tgt.ex{fill:var(--muted)}
+  .arch .flow{fill:none;stroke:var(--muted);stroke-width:1.4}
+  .arch .flow.dash{stroke-dasharray:5,4;stroke-width:1.2}
+  .arch .alab{fill:var(--muted);font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.04em}
+  .arch .frchip{fill:var(--accent-soft)} .arch .frtxt{fill:var(--accent-2);font-family:var(--mono);font-size:9px;font-weight:700}
+  .arch .nfrchip{fill:var(--brand-soft)} .arch .nfrtxt{fill:var(--brand);font-family:var(--mono);font-size:9px;font-weight:700}
+  .arch .gchip{fill:var(--good-soft)} .arch .gtxt{fill:var(--good);font-family:var(--mono);font-size:9px;font-weight:700}
+  .arch .nml{fill:var(--ink);font-size:14px;font-weight:700}
+  .arch .lgl{stroke:var(--line);stroke-width:.8}
+  .arch .lgt{fill:var(--muted);font-family:var(--mono);font-size:9px;letter-spacing:.06em}
+  .arch .sw-ui{fill:var(--surface);stroke:var(--brand);stroke-width:1.4}
+  .arch .sw-lo{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.4}
+  .arch .sw-da{fill:var(--surface);stroke:var(--good);stroke-width:1.4}
+  .arch .sw-ex{fill:none;stroke:var(--muted);stroke-width:1.4;stroke-dasharray:4,3}
+
+  /* ---- sequence & state diagrams (diagram-design grammar, M3 palette, theme-aware) ---- */
+  .stm,.seq{display:block;margin:0 auto;max-width:100%;height:auto;font-family:var(--sans)}
+  .stm marker path,.seq marker path{fill:var(--muted)}
+  .seq marker.acc path{fill:var(--accent)}
+  .stm .mask,.seq .mask{fill:var(--surface)}
+  /* state machine */
+  .stm .st{fill:var(--surface);stroke:var(--muted);stroke-width:1.4}
+  .stm .st.foc{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.6}
+  .stm .stn{fill:var(--ink);font-size:13px;font-weight:700}
+  .stm .sts{fill:var(--muted);font-size:11px}
+  .stm .dot{fill:var(--ink)}
+  .stm .ring{fill:none;stroke:var(--ink);stroke-width:1.6}
+  .stm .tr{fill:none;stroke:var(--muted);stroke-width:1.4}
+  .stm .trl{fill:var(--muted);font-family:var(--mono);font-size:9px}
+  /* sequence */
+  .seq .actor{fill:var(--surface);stroke:var(--muted);stroke-width:1.4}
+  .seq .an{fill:var(--ink);font-size:12px;font-weight:700}
+  .seq .life{stroke:var(--muted);stroke-width:1;stroke-dasharray:3,3;opacity:.45}
+  .seq .actbar{fill:var(--surface-2);stroke:var(--muted);stroke-width:.8}
+  .seq .msg{fill:none;stroke:var(--muted);stroke-width:1.4}
+  .seq .ret{fill:none;stroke:var(--muted);stroke-width:1.2;stroke-dasharray:5,4}
+  .seq .msg.hi{stroke:var(--accent);stroke-width:1.6}
+  .seq .ml{fill:var(--ink-soft);font-family:var(--mono);font-size:9px}
+  /* class diagram */
+  .cls{display:block;margin:0 auto;max-width:100%;height:auto;font-family:var(--sans)}
+  .cls marker polyline{fill:none;stroke:var(--muted);stroke-width:1.2}
+  .cls marker .tri{fill:var(--surface);stroke:var(--muted);stroke-width:1.2}
+  .cls marker .dia-f{fill:var(--muted)}
+  .cls marker .dia-o{fill:var(--surface);stroke:var(--muted);stroke-width:1.2}
+  .cls .mask{fill:var(--surface)}
+  .cls .box{fill:var(--surface);stroke:var(--muted);stroke-width:1.4}
+  .cls .box.foc{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.6}
+  .cls .cdiv{stroke:var(--muted);stroke-width:.8;opacity:.55}
+  .cls .cn{fill:var(--ink);font-size:12px;font-weight:700}
+  .cls .mem{fill:var(--ink-soft);font-family:var(--mono);font-size:9px}
+  .cls .rel{fill:none;stroke:var(--muted);stroke-width:1.4}
+  .cls .rel.dash{stroke-dasharray:5,4}
+  .cls .mult{fill:var(--ink-soft);font-family:var(--mono);font-size:8px}
+  .cls .lgt{fill:var(--muted);font-family:var(--mono);font-size:9px}
+  .cls .lgl{stroke:var(--line);stroke-width:.8}
+</style>
+</head>
+<body data-lang="th">
+
+<div class="langbar" role="group" aria-label="Language">
+  <button data-set="th" class="on">ไทย</button>
+  <button data-set="en">EN</button>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Intro to Software Engineering — 2569 — Milestone 3</span>
+    <h1>
+      <span class="l-th">ออกแบบระบบให้สร้างได้จริง<br>เปลี่ยน “อะไร” ให้เป็น “ยังไง”</span>
+      <span class="l-en">Design a System Your Team Can Build<br>Turn the “what” into the “how”</span>
+    </h1>
+    <p class="lede">
+      <span class="l-th">คู่มือแปลง <em>SRS จาก M2</em> ให้กลายเป็น <em>แบบ (design)</em> ที่ทีมและ AI ลงมือสร้างต่อได้ — สถาปัตยกรรม, ไดอะแกรม, โมเดลข้อมูล, design system และ prototype โดยอ้างอิง FR/NFR เดิมทุกการตัดสินใจ</span>
+      <span class="l-en">A guide to turning the <em>SRS from M2</em> into a <em>design</em> your team and AI can build from — architecture, diagrams, a data model, a design system, and a prototype — all guided by the same FR/NFR IDs.</span>
+    </p>
+    <div class="thesis">
+      <span class="l-th"><b>ประโยคเดียวที่ต้องจำ</b> การออกแบบคือการ <b>ตัดสินใจเรื่องโครงสร้างของระบบให้ครบก่อนลงมือเขียนโค้ด</b> เมื่อโครงสร้างชัด ทีมและ AI จะสร้างตามแบบเดียวกันได้ทันที</span>
+      <span class="l-en"><b>One sentence to remember:</b> design is <b>settling the system's structure before any code is written</b>. Once the structure is clear, your team and the AI build from the same plan.</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="toc">
+    <h2><span class="l-th">ในคู่มือนี้ — What's inside</span><span class="l-en">What's inside — ในคู่มือนี้</span></h2>
+    <ol>
+      <li><a href="#s1"><span class="l-th">ออกแบบคืออะไร ทำไมต้องมี</span><span class="l-en">What design is, and why</span></a></li>
+      <li><a href="#s2"><span class="l-th">จาก SRS สู่ design</span><span class="l-en">From SRS to design</span></a></li>
+      <li><a href="#s3"><span class="l-th">แผนที่ของ M3</span><span class="l-en">The M3 map</span></a></li>
+      <li><a href="#s4"><span class="l-th">สถาปัตยกรรม 3 ชั้น</span><span class="l-en">Architecture in 3 layers</span></a></li>
+      <li><a href="#s5"><span class="l-th">ไดอะแกรมที่ต้องรู้จัก</span><span class="l-en">The diagrams to know</span></a></li>
+      <li><a href="#s6"><span class="l-th">โมเดลข้อมูล (tech-agnostic)</span><span class="l-en">The data model (tech-agnostic)</span></a></li>
+      <li><a href="#s7"><span class="l-th">Design system ทำครั้งเดียว</span><span class="l-en">Design system, done once</span></a></li>
+      <li><a href="#s8"><span class="l-th">Prototype ก่อนสร้างจริง</span><span class="l-en">Prototype before you build</span></a></li>
+      <li><a href="#s9"><span class="l-th">10 กลิ่นไม่ดีของ design</span><span class="l-en">10 design smells</span></a></li>
+      <li><a href="#s10"><span class="l-th">ออกแบบด้วย AI</span><span class="l-en">Design with AI</span></a></li>
+      <li><a href="#s11"><span class="l-th">ตัวอย่างของอาจารย์ (StudyMate)</span><span class="l-en">The instructor's example (StudyMate)</span></a></li>
+      <li><a href="#s12"><span class="l-th">Scorecard วัดความพร้อม</span><span class="l-en">Scorecard: is your design ready?</span></a></li>
+      <li><a href="#s13"><span class="l-th">M3 ส่งอะไร + เกณฑ์ให้คะแนน</span><span class="l-en">M3: submit &amp; grading rubric</span></a></li>
+    </ol>
+  </nav>
+</div>
+
+<!-- ============ 1 ============ -->
+<section id="s1"><div class="wrap">
+  <p class="kicker">01 Mindset <span class="en">/ กรอบความคิด</span></p>
+  <h2 class="sec"><span class="l-th">การออกแบบคืออะไร และทำไมต้องทำก่อนเขียนโค้ด</span><span class="l-en">What design is — and why it comes before code</span></h2>
+  <p class="sub l-th">ใน M2 คุณตอบว่า “ระบบต้องทำอะไร” (FR) และ “ดีแค่ไหน” (NFR) แล้ว ตอนนี้คำถามเปลี่ยนเป็น <b>“แล้วจะสร้างมันยังไง”</b> — ชิ้นส่วนของระบบมีอะไรบ้าง เก็บข้อมูลรูปทรงไหน แต่ละหน้าจอหน้าตายังไง และชิ้นส่วนคุยกันอย่างไร นั่นคือ <b>Software Design</b></p>
+  <p class="sub l-en">In M2 you answered what the system must do (FRs) and how well (NFRs). The question now becomes <b>“so how will we build it?”</b> — what parts the system has, what shape the data takes, what each screen looks like, and how the parts talk to each other. That's <b>software design</b>.</p>
+
+  <p><span class="l-th">การออกแบบเกิดก่อนการเขียนโค้ดด้วยเหตุผลทางวิศวกรรม 3 ข้อ:</span><span class="l-en">Design precedes code for three engineering reasons:</span></p>
+  <ul class="clean">
+    <li><span class="l-th"><b>แก้ไขที่ระดับโครงสร้างได้ก่อนลงทุนสร้าง</b> ข้อผิดพลาดเรื่องโมเดลข้อมูลหรือการแบ่งชั้น ปรากฏชัดในไดอะแกรมและตารางตั้งแต่ยังไม่มีโค้ด จึงปรับได้ที่ระดับเอกสาร</span><span class="l-en"><b>Structural mistakes surface before you invest in building.</b> Errors in the data model or the layering show up in a diagram or table while no code exists yet, so they're corrected at the document level.</span></li>
+    <li><span class="l-th"><b>ทีมทำงานขนานกันได้บนแบบเดียว</b> เมื่อชิ้นส่วน โมเดลข้อมูล และหน้าตากลางถูกตกลงไว้ล่วงหน้า สมาชิกแต่ละคนสร้างส่วนของตนโดยไม่ชนกัน</span><span class="l-en"><b>The team can work in parallel on one plan.</b> With the parts, the data model, and a shared look agreed in advance, each member builds their piece without collisions.</span></li>
+    <li><span class="l-th"><b>AI สร้างได้ตรงและเร็ว</b> เมื่อมีแบบระบุชัดว่าต้องมีเอนทิตี ชั้น และหน้าจออะไร AI สร้างตามข้อกำหนดได้ทันที ไม่ต้องเดาเจตนา</span><span class="l-en"><b>The AI builds accurately and fast.</b> Given a plan that names the entities, layers, and screens, the AI implements to spec instead of guessing intent.</span></li>
+  </ul>
+
+  <div class="callout brand">
+    <span class="lab"><span class="l-th">ต้นทุนการแก้ไขเพิ่มตามเฟส (cost-of-change)</span><span class="l-en">Cost of change rises with each phase</span></span>
+    <span class="l-th">หลักการที่ยืนยันด้วยงานวิจัยคลาสสิกของ Boehm: ต้นทุนในการแก้ข้อบกพร่องเพิ่มขึ้นอย่างมีนัยตามเฟสที่ค้นพบ — ข้อบกพร่องที่จับได้ในเฟสออกแบบใช้ต้นทุนแก้ต่ำที่สุด เพราะยังเป็นการปรับเอกสาร ไม่ใช่การรื้อโค้ดหรืองานที่ส่งไปแล้ว การใช้เวลากับ M3 จึงเป็นการลดต้นทุนรวมของโปรเจกต์โดยตรง</span>
+    <span class="l-en">A principle established by Boehm's classic study: the cost of fixing a defect rises significantly with the phase in which it is found. A defect caught during design costs the least to fix, because it is a document change rather than reworked code or shipped work. Time spent on M3 lowers the project's total cost directly.</span>
+  </div>
+
+  <div class="callout info">
+    <span class="lab"><span class="l-th">ออกแบบไม่ใช่การเขียนโค้ดสวย</span><span class="l-en">Design is not “pretty code”</span></span>
+    <span class="l-th">ในระดับวิชานี้ “design” หมายถึงการ <b>ตัดสินใจเรื่องโครงสร้าง</b> ก่อนลงมือ — ไม่ใช่การจัดฟอร์แมตโค้ด สิ่งที่คุณส่งใน M3 คือ <b>เอกสารและภาพ</b> (สถาปัตยกรรม, ไดอะแกรม, โมเดลข้อมูล, design system, prototype) ไม่ใช่แอปที่ทำงานได้ — แอปจริงไปอยู่ M4</span>
+    <span class="l-en">At this level, “design” means <b>structural decisions made before you build</b> — not code formatting. What you submit in M3 is <b>documents and pictures</b> (architecture, diagrams, data model, design system, prototype), not a working app — the real app is M4.</span>
+  </div>
+</div></section>
+
+<!-- ============ 2 ============ -->
+<section id="s2"><div class="wrap">
+  <p class="kicker">02 The bridge <span class="en">/ สะพานต่อจาก M2</span></p>
+  <h2 class="sec"><span class="l-th">จาก SRS สู่ design — ต่อยอดจาก requirement เดิม</span><span class="l-en">From SRS to design — built on the same requirements</span></h2>
+  <p class="sub l-th">M3 ไม่ได้เริ่มจากศูนย์ ทุกการตัดสินใจในการออกแบบต้อง <b>ตอบ requirement ที่มีอยู่แล้ว</b> ไม่ใช่คิดฟีเจอร์ใหม่ ถ้า design ชิ้นไหน “สาวกลับ” ไปหา FR/NFR ไม่ได้ แปลว่าคุณกำลังเพิ่มของที่ไม่มีใครขอ (gold-plating)</p>
+  <p class="sub l-en">M3 doesn't start from zero. Every design decision must <b>answer a requirement you already have</b>, not invent a new feature. If a piece of your design can't “trace back” to an FR/NFR, you're adding something nobody asked for (gold-plating).</p>
+
+  <p><span class="l-th">design ตอบ 3 คำถามที่ SRS ไม่ตอบ — โดยแต่ละคำถามผูกกลับไปที่ requirement เดิม</span><span class="l-en">Design answers three questions the SRS deliberately left open — each tied back to the original requirements:</span></p>
+  <div class="grid3">
+    <div class="card" style="margin:8px 0">
+      <span class="tag brand">STRUCTURE</span>
+      <h4 style="margin:10px 0 4px"><span class="l-th">ระบบมีชิ้นส่วนอะไร</span><span class="l-en">What parts exist?</span></h4>
+      <p style="font-size:14.5px;margin:0;color:var(--ink-soft)"><span class="l-th">แบ่งเป็นชั้น/โมดูลอะไร คุยกันยังไง → <b>สถาปัตยกรรม + ไดอะแกรม</b></span><span class="l-en">Which layers/modules, and how they talk → <b>architecture + diagrams</b></span></p>
+    </div>
+    <div class="card" style="margin:8px 0">
+      <span class="tag accent">DATA</span>
+      <h4 style="margin:10px 0 4px"><span class="l-th">เก็บข้อมูลรูปทรงไหน</span><span class="l-en">What shape is the data?</span></h4>
+      <p style="font-size:14.5px;margin:0;color:var(--ink-soft)"><span class="l-th">เอนทิตี, ฟิลด์, ความสัมพันธ์, การกระทำ → <b>โมเดลข้อมูล</b></span><span class="l-en">Entities, fields, relationships, operations → <b>the data model</b></span></p>
+    </div>
+    <div class="card" style="margin:8px 0">
+      <span class="tag good">LOOK</span>
+      <h4 style="margin:10px 0 4px"><span class="l-th">หน้าตาเป็นยังไง</span><span class="l-en">What does it look like?</span></h4>
+      <p style="font-size:14.5px;margin:0;color:var(--ink-soft)"><span class="l-th">สี ฟอนต์ ปุ่ม และหน้าจอจริง → <b>design system + prototype</b></span><span class="l-en">Colors, type, buttons, real screens → <b>design system + prototype</b></span></p>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <span class="lab"><span class="l-th">กฎเหล็ก — ทุกอย่างต้องสาวกลับได้</span><span class="l-en">The iron rule — everything traces back</span></span>
+    <span class="l-th">FR-1 “เพิ่มงาน” → ต้องมีเอนทิตี <code>Task</code>, การกระทำ <code>addTask</code>, และหน้าจอ “เพิ่มงาน” ถ้าคุณวาดหน้าจอที่ไม่มี FR รองรับ ให้ลบทิ้ง ถ้ามี FR ที่ไม่มีหน้าจอ/ข้อมูลรองรับ แปลว่า design ยังไม่ครบ</span>
+    <span class="l-en">FR-1 “Add a task” → needs a <code>Task</code> entity, an <code>addTask</code> operation, and an “add task” screen. Draw a screen with no FR behind it → delete it. Have an FR with no screen/data behind it → the design isn't finished.</span>
+  </div>
+</div></section>
+
+<!-- ============ 3 ============ -->
+<section id="s3"><div class="wrap">
+  <p class="kicker">03 The map <span class="en">/ แผนที่ M3</span></p>
+  <h2 class="sec"><span class="l-th">แผนที่ของ M3 — 3 ชั้น กับคำสั่งที่ใช้จริง</span><span class="l-en">The M3 map — three layers and the commands you'll use</span></h2>
+  <p class="sub l-th">M3 มี 3 ชั้นงานที่ทำ <b>ตามลำดับ</b> โดยใช้ starter-kit-v2 ช่วย แต่ละ <span class="cmd">/คำสั่ง</span> ทำงานเดียวจบแล้วหยุดรายงาน — คุณเป็นคนสั่งชั้นถัดไปเอง</p>
+  <p class="sub l-en">M3 has three layers of work done <b>in order</b>, using starter-kit-v2 to help. Each <span class="cmd">/command</span> does one job then stops and reports — you decide when to run the next layer.</p>
+
+  <div class="rail">
+    <span class="stepchip"><b>M2</b> SRS</span>
+    <span class="arw">→</span>
+    <span class="stepchip"><span class="cmd">/design-system</span></span>
+    <span class="arw">→</span>
+    <span class="stepchip"><span class="cmd">/prototype</span></span>
+    <span class="arw">→</span>
+    <span class="stepchip"><span class="cmd">/tech-design</span></span>
+    <span class="arw">→</span>
+    <span class="stepchip"><b>M4</b> build</span>
+  </div>
+
+  <div class="scroll"><table>
+    <thead><tr>
+      <th><span class="l-th">ชั้น</span><span class="l-en">Layer</span></th>
+      <th><span class="l-th">ตอบคำถาม</span><span class="l-en">Answers</span></th>
+      <th><span class="l-th">คำสั่ง</span><span class="l-en">Command</span></th>
+      <th><span class="l-th">ผลลัพธ์ (ไฟล์)</span><span class="l-en">Output (file)</span></th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td><b><span class="l-th">สถาปัตยกรรม</span><span class="l-en">Architecture</span></b></td>
+        <td><span class="l-th">ชิ้นส่วน + ไดอะแกรม</span><span class="l-en">Parts + diagrams</span></td>
+        <td><span class="cmd">/tech-design</span></td>
+        <td class="mono">architecture.md</td>
+      </tr>
+      <tr>
+        <td><b><span class="l-th">โมเดลข้อมูล</span><span class="l-en">Data model</span></b></td>
+        <td><span class="l-th">เอนทิตี + การกระทำ</span><span class="l-en">Entities + operations</span></td>
+        <td><span class="cmd">/tech-design</span></td>
+        <td class="mono">architecture.md</td>
+      </tr>
+      <tr>
+        <td><b><span class="l-th">หน้าตา (visual)</span><span class="l-en">Visual look</span></b></td>
+        <td><span class="l-th">สี ฟอนต์ ปุ่ม การ์ด</span><span class="l-en">Colors, type, components</span></td>
+        <td><span class="cmd">/design-system</span></td>
+        <td class="mono">design-system.md</td>
+      </tr>
+      <tr>
+        <td><b><span class="l-th">Prototype</span><span class="l-en">Prototype</span></b></td>
+        <td><span class="l-th">หน้าจอคลิกได้จริง</span><span class="l-en">A clickable screen</span></td>
+        <td><span class="cmd">/prototype</span></td>
+        <td class="mono">prototypes/&lt;date&gt;/</td>
+      </tr>
+      <tr>
+        <td><b><span class="l-th">ตรวจสอบ</span><span class="l-en">Check</span></b></td>
+        <td><span class="l-th">design ครอบทุก FR ไหม</span><span class="l-en">Does it cover every FR?</span></td>
+        <td><span class="cmd">/sync-check</span></td>
+        <td class="mono">—</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <p><span class="l-th">ทุกไฟล์ไปอยู่ใน <code>docs/02-design/</code> ของโปรเจกต์คุณ</span><span class="l-en">Everything lands under <code>docs/02-design/</code> in your project:</span></p>
+  <div class="filetree">docs/
+├── 01-requirements/   <span class="note"># จาก M2 — spec.md, backlog.md (FR/NFR)</span>
+└── <span class="dir">02-design/</span>          <span class="note"># ← งานทั้งหมดของ M3 อยู่ตรงนี้</span>
+    ├── <span class="dir">architecture.md</span>  <span class="note"># สถาปัตยกรรม + โมเดลข้อมูล (tech-agnostic)</span>
+    ├── <span class="dir">design-system.md</span> <span class="note"># สี ฟอนต์ ระยะ ปุ่ม การ์ด (design tokens)</span>
+    └── <span class="dir">prototypes/</span>       <span class="note"># หน้าจอ HTML คลิกได้ 1 หน้า/รอบ</span>
+        └── 2569-mm-dd/</div>
+
+  <div class="callout warn">
+    <span class="lab"><span class="l-th">แยก “โมเดล logical” ออกจาก “เครื่องมือที่ใช้เก็บ/รัน”</span><span class="l-en">Separate the logical model from the tool that stores/runs it</span></span>
+    <span class="l-th"><b>ชั้น logical</b> (class/data model) <b>ยังไม่ผูกกับเทคโนโลยี</b> — <code>architecture.md</code> พูดถึง “collection ชื่อ <code>tasks</code> มีฟิลด์...” ไม่ใช่ “<code>Firestore doc.set()</code>” · ส่วน “<b>จะรันที่ไหน</b>” (deployment target เช่น Firebase) เลือกได้ที่ <b>ชั้น architecture</b> เพื่อให้ออกแบบมา deploy ได้จริง — ดู §4 · การลงมือ <b>build/deploy จริงคือ M4 (ต่อยอด ไม่คิดคะแนน)</b> · ทักษะ SE สำคัญคือแยก <em>อะไร</em> (logical) จาก <em>เก็บ/รันด้วยเครื่องมืออะไร</em> (physical)</span>
+    <span class="l-en">The <b>logical layer</b> (class/data model) stays <b>tech-agnostic</b> — <code>architecture.md</code> says “a collection called <code>tasks</code> with fields…”, not “<code>Firestore doc.set()</code>.” <b>Where it runs</b> (a deployment target such as Firebase) is chosen at the <b>architecture level</b> so the design is actually deployable — see §4 · the real <b>build/deploy is M4 (optional, not graded)</b> · the core SE skill is separating <em>what</em> the data is (logical) from <em>what tool stores/runs it</em> (physical).</span>
+  </div>
+</div></section>
+
+<!-- ============ 4 ============ -->
+<section id="s4"><div class="wrap">
+  <p class="kicker">04 Architecture <span class="en">/ สถาปัตยกรรม</span></p>
+  <h2 class="sec"><span class="l-th">สถาปัตยกรรม — แบ่งระบบเป็น 3 ชั้น</span><span class="l-en">Architecture — split the system into three layers</span></h2>
+  <p class="sub l-th">สถาปัตยกรรมคือโครงระดับบนที่กำหนดว่าระบบประกอบด้วยส่วนใดบ้างและส่วนเหล่านั้นสื่อสารกันอย่างไร สำหรับแอปในระดับวิชานี้ ใช้รูปแบบมาตรฐาน <b>3 ชั้น (three-tier)</b>: หน้าตา → ตรรกะ → ข้อมูล ซึ่งครอบคลุมความต้องการทั้งหมดโดยไม่ซับซ้อนเกินจำเป็น</p>
+  <p class="sub l-en">Architecture is the top-level structure defining which parts the system consists of and how those parts communicate. For an app at this level, use the standard <b>three-tier</b> pattern: presentation → logic → data — it covers every requirement without unnecessary complexity.</p>
+
+  <div class="fig">
+    <p class="cap">Three-tier pattern — each layer talks only to its neighbour</p>
+    <svg class="arch" viewBox="0 0 720 440" role="img" aria-labelledby="ttier-title ttier-desc" xmlns="http://www.w3.org/2000/svg">
+      <title id="ttier-title">The generic three-tier architecture pattern</title>
+      <desc id="ttier-desc">Three stacked full-width layers — Presentation, Logic, and Data — each with high internal cohesion; adjacent layers communicate only through a defined contract (low coupling), a request passing down and a response returning up, and no layer reaches past its neighbour.</desc>
+      <defs>
+        <marker id="aarw2" markerWidth="9" markerHeight="7" refX="7.5" refY="3.5" orient="auto"><path d="M0,0 L9,3.5 L0,7 Z"/></marker>
+      </defs>
+
+      <!-- arrows first (behind bars) -->
+      <line class="flow" x1="200" y1="120" x2="200" y2="174" marker-end="url(#aarw2)"/>
+      <line class="flow" x1="520" y1="174" x2="520" y2="122" marker-end="url(#aarw2)"/>
+      <line class="flow" x1="200" y1="248" x2="200" y2="302" marker-end="url(#aarw2)"/>
+      <line class="flow" x1="520" y1="302" x2="520" y2="250" marker-end="url(#aarw2)"/>
+
+      <!-- gap-1 labels -->
+      <rect class="mask" x="132" y="141" width="60" height="13"/><text class="alab" x="162" y="151" text-anchor="middle">REQUEST</text>
+      <rect class="mask" x="298" y="141" width="128" height="13"/><text class="alab" x="362" y="151" text-anchor="middle">low coupling · contract</text>
+      <rect class="mask" x="528" y="141" width="70" height="13"/><text class="alab" x="563" y="151" text-anchor="middle">RESPONSE</text>
+      <!-- gap-2 labels -->
+      <rect class="mask" x="140" y="269" width="52" height="13"/><text class="alab" x="166" y="279" text-anchor="middle">QUERY</text>
+      <rect class="mask" x="298" y="269" width="128" height="13"/><text class="alab" x="362" y="279" text-anchor="middle">low coupling · contract</text>
+      <rect class="mask" x="528" y="269" width="48" height="13"/><text class="alab" x="552" y="279" text-anchor="middle">DATA</text>
+
+      <!-- Presentation bar -->
+      <rect class="mask" x="80" y="48" width="560" height="72" rx="6"/><rect class="node n-ui" x="80" y="48" width="560" height="72" rx="6"/>
+      <rect class="tg ui" x="92" y="58" width="34" height="13" rx="2"/><text class="tgt ui" x="109" y="68" text-anchor="middle">UI</text>
+      <rect class="gchip" x="500" y="57" width="128" height="15" rx="3"/><text class="gtxt" x="564" y="68" text-anchor="middle">cohesion: high</text>
+      <text class="nml" x="92" y="94">Presentation</text>
+      <text class="sub" x="92" y="110">screens · forms — what the user sees · holds no business rules</text>
+
+      <!-- Logic bar (focal) -->
+      <rect class="mask" x="80" y="176" width="560" height="72" rx="6"/><rect class="node n-logic" x="80" y="176" width="560" height="72" rx="6"/>
+      <rect class="tg lo" x="92" y="186" width="52" height="13" rx="2"/><text class="tgt lo" x="118" y="196" text-anchor="middle">LOGIC</text>
+      <rect class="gchip" x="500" y="185" width="128" height="15" rx="3"/><text class="gtxt" x="564" y="196" text-anchor="middle">cohesion: high</text>
+      <text class="nml" x="92" y="222">Logic (Application)</text>
+      <text class="sub" x="92" y="238">the rules — FR/NFR live here · no UI, no storage</text>
+
+      <!-- Data bar -->
+      <rect class="mask" x="80" y="304" width="560" height="72" rx="6"/><rect class="node n-data" x="80" y="304" width="560" height="72" rx="6"/>
+      <rect class="tg da" x="92" y="314" width="46" height="13" rx="2"/><text class="tgt da" x="115" y="324" text-anchor="middle">DATA</text>
+      <rect class="gchip" x="500" y="313" width="128" height="15" rx="3"/><text class="gtxt" x="564" y="324" text-anchor="middle">cohesion: high</text>
+      <text class="nml" x="92" y="350">Data</text>
+      <text class="sub" x="92" y="366">stores — what persists · no caller reaches in</text>
+
+      <!-- legend -->
+      <line class="lgl" x1="80" y1="398" x2="640" y2="398"/>
+      <text class="lgt" x="80" y="418">LEGEND</text>
+      <rect class="sw-ui" x="144" y="409" width="12" height="12" rx="2"/><text class="lgt" x="162" y="418">Presentation</text>
+      <rect class="sw-lo" x="280" y="409" width="12" height="12" rx="2"/><text class="lgt" x="298" y="418">Logic</text>
+      <rect class="sw-da" x="372" y="409" width="12" height="12" rx="2"/><text class="lgt" x="390" y="418">Data</text>
+      <text class="lgt" x="452" y="418">arrows: request down · response up</text>
+    </svg>
+    <p class="mock-note"><span class="l-th">อ่านไดอะแกรม: แต่ละชั้นมี <b>cohesion สูง</b> (รวมเรื่องเดียวกันไว้ด้วยกัน) และคุยกับชั้นข้าง ๆ ผ่าน <b>contract</b> เท่านั้น = <b>coupling ต่ำ</b> · คำขอไหลลง คำตอบไหลขึ้น · <b>ชั้นบนห้ามข้ามไปคุยกับชั้นล่างสุดโดยตรง</b> — นี่คือ separation of concerns</span><span class="l-en">How to read it: each layer has <b>high cohesion</b> (related things grouped) and talks to its neighbour only through a <b>contract</b> = <b>low coupling</b> · requests flow down, responses up · <b>no layer skips to a non-adjacent one</b> — that is separation of concerns.</span></p>
+  </div>
+
+  <div class="layers">
+    <div class="layer ui">
+      <div class="lh"><span><span class="l-th">1. ชั้นหน้าตา (UI / Presentation)</span><span class="l-en">1. Presentation layer (UI)</span></span><span class="role">what the user sees</span></div>
+      <div class="ld"><span class="l-th">หน้าจอ ปุ่ม ฟอร์ม — รับ input จากผู้ใช้และแสดงผล ไม่เก็บกฎธุรกิจ (เช่น หน้า “เพิ่มงาน”, dashboard “สัปดาห์นี้”)</span><span class="l-en">Screens, buttons, forms — take user input and show results. Holds no business rules (e.g. the “add task” screen, the “this week” dashboard).</span></div>
+    </div>
+    <div class="conn">▲ ▼</div>
+    <div class="layer logic">
+      <div class="lh"><span><span class="l-th">2. ชั้นตรรกะ (Logic / Application)</span><span class="l-en">2. Logic layer (application)</span></span><span class="role">the rules</span></div>
+      <div class="ld"><span class="l-th">กฎและการกระทำ — “เตือนหนึ่งวันก่อนกำหนดส่ง”, “ผู้ใช้เห็นเฉพาะงานของตัวเอง” นี่คือที่อยู่ของ FR/NFR ในโค้ด</span><span class="l-en">Rules and operations — “remind one day before the due date,” “a user sees only their own tasks.” This is where your FRs/NFRs live in code.</span></div>
+    </div>
+    <div class="conn">▲ ▼</div>
+    <div class="layer data">
+      <div class="lh"><span><span class="l-th">3. ชั้นข้อมูล (Data)</span><span class="l-en">3. Data layer</span></span><span class="role">what persists</span></div>
+      <div class="ld"><span class="l-th">ที่เก็บข้อมูลถาวร — collection <code>tasks</code>, <code>users</code> (ยังไม่บอกว่าเป็น Firestore) ชั้นบนขอข้อมูลผ่านการกระทำ ไม่ยุ่งกับที่เก็บโดยตรง</span><span class="l-en">Where data persists — collections <code>tasks</code>, <code>users</code> (not yet “Firestore”). Upper layers ask for data through operations, never touching storage directly.</span></div>
+    </div>
+  </div>
+
+  <h3><span class="l-th">สองเกณฑ์ที่ใช้วัดคุณภาพของการแบ่งส่วน: Cohesion &amp; Coupling</span><span class="l-en">Two criteria for judging how you split the system: cohesion &amp; coupling</span></h3>
+  <div class="grid2">
+    <div class="card" style="margin:8px 0">
+      <span class="tag good"><span class="l-th">เป้าหมาย: สูง</span><span class="l-en">target: high</span></span>
+      <h4 style="margin:10px 0 4px">Cohesion <span style="color:var(--muted);font-weight:400">— <span class="l-th">ความเกาะกลุ่มภายในส่วน</span><span class="l-en">internal focus</span></span></h4>
+      <p style="font-size:15px;margin:0;color:var(--ink-soft)"><span class="l-th">แต่ละส่วนรวมเฉพาะสิ่งที่เกี่ยวข้องกันไว้ด้วยกัน เช่น ตรรกะเรื่อง “การเตือน” ทั้งหมดอยู่ในส่วนเดียว ทำให้ค้นหาและแก้ไขได้ตรงจุด</span><span class="l-en">Each part groups only things that belong together — e.g. all reminder logic sits in one part — so it is found and modified in one place.</span></p>
+    </div>
+    <div class="card" style="margin:8px 0">
+      <span class="tag warn"><span class="l-th">เป้าหมาย: ต่ำ</span><span class="l-en">target: low</span></span>
+      <h4 style="margin:10px 0 4px">Coupling <span style="color:var(--muted);font-weight:400">— <span class="l-th">การพึ่งพาระหว่างส่วน</span><span class="l-en">inter-part dependence</span></span></h4>
+      <p style="font-size:15px;margin:0;color:var(--ink-soft)"><span class="l-th">ส่วนต่าง ๆ ควรสื่อสารกันผ่านสัญญา (contract) ที่ระบุชัด ไม่เข้าถึงภายในของกันและกันโดยตรง เพื่อให้การแก้ส่วนหนึ่งไม่กระทบส่วนอื่น</span><span class="l-en">Parts should communicate through a defined contract, never reaching into each other's internals, so a change in one part does not affect another.</span></p>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <span class="lab"><span class="l-th">Separation of concerns</span><span class="l-en">Separation of concerns</span></span>
+    <span class="l-th">แต่ละชั้นทำหน้าที่ของตัวเองเรื่องเดียว — หน้าจอไม่ตัดสินกฎ, ตรรกะไม่วาดปุ่ม, ข้อมูลไม่รู้ว่าใครเรียกใช้ ทำแบบนี้แล้วเปลี่ยนหน้าตาไม่กระทบกฎ เปลี่ยนที่เก็บข้อมูลไม่กระทบหน้าจอ — และ AI แก้ทีละชั้นได้โดยไม่พังส่วนอื่น</span>
+    <span class="l-en">Each layer minds its own one job — the UI decides no rules, the logic draws no buttons, the data doesn't know who calls it. Then changing the look doesn't touch the rules, changing storage doesn't touch the screens — and the AI can edit one layer without breaking the others.</span>
+  </div>
+
+  <h3><span class="l-th">หลายสไตล์ใช้ร่วมกัน — เลือก “รูปที่เล็กที่สุดที่พอดี”</span><span class="l-en">Several styles at once — pick the smallest shape that fits</span></h3>
+  <p class="sub"><span class="l-th">คำถามที่เจอบ่อยคือ “ระบบเราเป็น Layered หรือ MVC หรือ Client-Server” — ที่จริง<b>ไม่ต้องเลือกอย่างเดียว</b> SWEBOK จัดสไตล์เป็น “ตระกูล” และแต่ละตระกูลตอบคนละคำถาม โปรเจกต์จริงจึงใช้หลายสไตล์พร้อมกัน (ตรงกับที่สอนในสัปดาห์ 5)</span><span class="l-en">A common question is “is my system Layered, or MVC, or Client-Server?” — you <b>don't pick just one</b>. SWEBOK sorts styles into families and each answers a different question, so a real project uses several at once (as taught in Week 5).</span></p>
+  <div class="scroll"><table>
+    <thead><tr><th><span class="l-th">สไตล์</span><span class="l-en">Style</span></th><th><span class="l-th">ตอบคำถาม</span><span class="l-en">Answers</span></th><th><span class="l-th">ในโปรเจกต์คุณ</span><span class="l-en">In your project</span></th></tr></thead>
+    <tbody>
+      <tr><td><b>Layered / N-Tier</b></td><td><span class="l-th">ระบบจัดชั้นบนลงล่างยังไง</span><span class="l-en">How is it organized top-to-bottom?</span></td><td><span class="l-th">คือ 3 ชั้นด้านบน (UI → Logic → Data)</span><span class="l-en">the three tiers above (UI → Logic → Data)</span></td></tr>
+      <tr><td><b>Client-Server</b></td><td><span class="l-th">ใครคุยกับใครผ่านเครือข่าย</span><span class="l-en">Who talks to whom over a network?</span></td><td><span class="l-th">มือถือ/เบราว์เซอร์ ↔ backend</span><span class="l-en">phone/browser ↔ backend</span></td></tr>
+      <tr><td><b>MVC</b></td><td><span class="l-th">จัดระเบียบ <em>โค้ด</em> ในชั้น logic ยังไง</span><span class="l-en">How is the <em>code</em> inside a layer organized?</span></td><td><span class="l-th">จัดโค้ดในเซิร์ฟเวอร์ — <b>ไม่ใช่</b>รูป deployment</span><span class="l-en">organizes server code — <b>not</b> the deployment shape</span></td></tr>
+      <tr><td><b>Monolith ↔ Microservices</b></td><td><span class="l-th">มีกี่หน่วยที่ deploy แยกกัน</span><span class="l-en">How many independently-deployed units?</span></td><td><span class="l-th"><b>Monolith</b> — หน่วยเดียว</span><span class="l-en"><b>Monolith</b> — one unit</span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout good">
+    <span class="lab"><span class="l-th">รูปที่แนะนำสำหรับทีมนักศึกษา 1 เทอม</span><span class="l-en">Recommended shape for a one-semester team</span></span>
+    <span class="l-th"><b>Monolith + Layered + Client-Server</b> — ง่ายต่อการสร้าง ทดสอบ และอธิบายใน oral exam · <b>MVC</b> ไว้จัดโค้ดฝั่งเซิร์ฟเวอร์ (ไม่เปลี่ยนรูป deploy) · <b>Microservices ไม่ใช่โปรเจกต์เทอมนี้</b> (over-engineering)</span>
+    <span class="l-en"><b>Monolith + Layered + Client-Server</b> — simplest to build, test, and defend in the oral exam · use <b>MVC</b> to organize server code (it doesn't change the deploy shape) · <b>microservices are not this term's project</b> (over-engineering).</span>
+  </div>
+
+  <h3><span class="l-th">จะรันที่ไหน — tech stack (fullstack) + ลอง deploy บน Firebase ฟรี</span><span class="l-en">Where it runs — a fullstack + a free Firebase deploy</span></h3>
+  <p class="sub"><span class="l-th"><b>หลักการยังเหมือนเดิม:</b> ชั้น <em>logical</em> (class/data model) ยังไม่ผูกเครื่องมือ — เขียน “collection <code>tasks</code>” ไม่ใช่ “Firestore <code>doc.set()</code>” · แต่ที่ชั้น <b>architecture/deployment</b> คุณเลือก “รูปที่จะรัน” ได้แล้ว เพื่อ<b>ออกแบบมาให้ deploy ได้จริง</b> เราแนะนำ <b>Firebase (แพ็กฟรี Spark)</b> เพราะโมเดล <em>collection/document</em> ของคุณ map ตรงกับ <b>Firestore</b> พอดี</span><span class="l-en"><b>The principle holds:</b> the <em>logical</em> layer (class/data model) still names no tool — write “a <code>tasks</code> collection,” not “Firestore <code>doc.set()</code>.” But at the <b>architecture/deployment</b> level you may now pick the shape it runs on, so the design is <b>actually deployable</b>. We recommend <b>Firebase (free Spark plan)</b> because your <em>collection/document</em> model maps cleanly onto <b>Firestore</b>.</span></p>
+
+  <div class="fig">
+    <p class="cap">StudyMate — Deployment view (Client-Server on Firebase, free tier)</p>
+    <svg class="arch" viewBox="0 0 720 416" role="img" aria-labelledby="depl-title depl-desc" xmlns="http://www.w3.org/2000/svg">
+      <title id="depl-title">StudyMate deployment on Firebase</title>
+      <desc id="depl-desc">A client device (browser or phone) running the presentation layer talks over HTTPS to a Firebase node on the free Spark plan, which hosts the static UI, runs the logic in Cloud Functions, stores data as Firestore documents guarded by Security Rules that enforce NFR-5, and signs users in with Authentication.</desc>
+      <defs><marker id="aarw3" markerWidth="9" markerHeight="7" refX="7.5" refY="3.5" orient="auto"><path d="M0,0 L9,3.5 L0,7 Z"/></marker></defs>
+
+      <!-- firebase zone -->
+      <rect class="zn" x="296" y="64" width="392" height="296" rx="8"/>
+      <rect class="mask" x="308" y="68" width="256" height="12"/>
+      <text class="znlab" x="316" y="77" text-anchor="start">«node» FIREBASE · SPARK (FREE)</text>
+
+      <!-- arrows first -->
+      <line class="flow" x1="228" y1="196" x2="292" y2="196" marker-end="url(#aarw3)"/>
+      <line class="flow" x1="484" y1="266" x2="504" y2="266" marker-end="url(#aarw3)"/>
+      <line class="flow dash" x1="584" y1="192" x2="584" y2="226" marker-end="url(#aarw3)"/>
+      <rect class="mask" x="230" y="176" width="52" height="13"/><text class="alab" x="256" y="186" text-anchor="middle">HTTPS</text>
+      <rect class="mask" x="560" y="200" width="48" height="13"/><text class="alab" x="584" y="210" text-anchor="middle">rules</text>
+
+      <!-- client device -->
+      <rect class="mask" x="48" y="150" width="176" height="92" rx="6"/><rect class="node n-ui" x="48" y="150" width="176" height="92" rx="6"/>
+      <rect class="tg ui" x="60" y="160" width="52" height="13" rx="2"/><text class="tgt ui" x="86" y="170" text-anchor="middle">DEVICE</text>
+      <text class="nm" x="136" y="200" text-anchor="middle">Browser / Phone</text><text class="sub" x="136" y="216" text-anchor="middle">Presentation (UI)</text>
+
+      <!-- Hosting -->
+      <rect class="mask" x="320" y="112" width="164" height="76" rx="6"/><rect class="node n-ui" x="320" y="112" width="164" height="76" rx="6"/>
+      <rect class="tg ui" x="332" y="120" width="40" height="13" rx="2"/><text class="tgt ui" x="352" y="130" text-anchor="middle">HOST</text>
+      <text class="nm" x="402" y="152" text-anchor="middle">Hosting</text><text class="sub" x="402" y="168" text-anchor="middle">static UI (build)</text>
+
+      <!-- Authentication -->
+      <rect class="mask" x="504" y="112" width="160" height="76" rx="6"/><rect class="node n-svc" x="504" y="112" width="160" height="76" rx="6"/>
+      <rect class="tg ex" x="516" y="120" width="40" height="13" rx="2"/><text class="tgt ex" x="536" y="130" text-anchor="middle">AUTH</text>
+      <text class="nm" x="584" y="152" text-anchor="middle">Authentication</text><text class="sub" x="584" y="168" text-anchor="middle">sign-in</text>
+
+      <!-- Cloud Functions (focal) -->
+      <rect class="mask" x="320" y="228" width="164" height="76" rx="6"/><rect class="node n-logic" x="320" y="228" width="164" height="76" rx="6"/>
+      <rect class="tg lo" x="332" y="236" width="40" height="13" rx="2"/><text class="tgt lo" x="352" y="246" text-anchor="middle">FUNC</text>
+      <text class="nm" x="402" y="268" text-anchor="middle">Cloud Functions</text><text class="sub" x="402" y="284" text-anchor="middle">Logic · operations</text>
+
+      <!-- Firestore -->
+      <rect class="mask" x="504" y="228" width="160" height="76" rx="6"/><rect class="node n-data" x="504" y="228" width="160" height="76" rx="6"/>
+      <rect class="tg da" x="516" y="236" width="28" height="13" rx="2"/><text class="tgt da" x="530" y="246" text-anchor="middle">DB</text>
+      <text class="nm" x="584" y="268" text-anchor="middle">Firestore</text><text class="sub" x="584" y="284" text-anchor="middle">Data · documents</text>
+      <rect class="nfrchip" x="512" y="310" width="148" height="15" rx="3"/><text class="nfrtxt" x="586" y="321" text-anchor="middle">Security Rules ⇐ NFR-5</text>
+
+      <!-- legend -->
+      <line class="lgl" x1="48" y1="380" x2="672" y2="380"/>
+      <text class="lgt" x="48" y="400">LEGEND</text>
+      <rect class="sw-ui" x="112" y="391" width="12" height="12" rx="2"/><text class="lgt" x="130" y="400">Presentation</text>
+      <rect class="sw-lo" x="248" y="391" width="12" height="12" rx="2"/><text class="lgt" x="266" y="400">Logic (focal)</text>
+      <rect class="sw-da" x="380" y="391" width="12" height="12" rx="2"/><text class="lgt" x="398" y="400">Data</text>
+      <line class="sw-ex" x1="480" y1="397" x2="504" y2="397"/><text class="lgt" x="510" y="400">guard / async</text>
+    </svg>
+    <p class="mock-note"><span class="l-th">อ่านไดอะแกรม: ฝั่ง client รันแค่ <b>Presentation</b> · ทุกอย่างที่เหลืออยู่บน Firebase (แพ็กฟรี) — <b>Hosting</b> เสิร์ฟหน้าเว็บ, <b>Cloud Functions</b> คือชั้น Logic, <b>Firestore</b> คือชั้น Data (เก็บเป็น document), <b>Authentication</b> + <b>Security Rules</b> บังคับ NFR-5 “เห็นเฉพาะงานของตน”</span><span class="l-en">How to read it: the client runs only <b>Presentation</b> · everything else lives on Firebase (free) — <b>Hosting</b> serves the page, <b>Cloud Functions</b> is the Logic layer, <b>Firestore</b> is the Data layer (documents), and <b>Authentication</b> + <b>Security Rules</b> enforce NFR-5 “see only your own tasks.”</span></p>
+  </div>
+
+  <div class="scroll"><table>
+    <thead><tr><th><span class="l-th">ชั้น</span><span class="l-en">Layer</span></th><th><span class="l-th">บริการ Firebase (Spark ฟรี)</span><span class="l-en">Firebase service (free Spark)</span></th><th><span class="l-th">ทำหน้าที่</span><span class="l-en">Role</span></th></tr></thead>
+    <tbody>
+      <tr><td><b>Presentation</b></td><td class="mono">Hosting</td><td><span class="l-th">เสิร์ฟหน้าเว็บ static (HTML/CSS/JS หรือ build ของ React/Vue)</span><span class="l-en">serve the static UI (plain HTML/CSS/JS or a React/Vue build)</span></td></tr>
+      <tr><td><b>Logic</b></td><td class="mono">Cloud Functions</td><td><span class="l-th">operations/กฎ: <code>addTask</code>, <code>scheduleReminder</code> …</span><span class="l-en">operations/rules: <code>addTask</code>, <code>scheduleReminder</code> …</span></td></tr>
+      <tr><td><b>Data</b></td><td class="mono">Firestore</td><td><span class="l-th">เก็บ collection <code>users</code>, <code>tasks</code> เป็น document</span><span class="l-en">store <code>users</code>, <code>tasks</code> collections as documents</span></td></tr>
+      <tr><td><b>Security · NFR-5</b></td><td class="mono">Auth + Security Rules</td><td><span class="l-th">ล็อกอิน + กฎ “ผู้ใช้เห็นเฉพาะงานของตน”</span><span class="l-en">sign-in + a rule enforcing “users see only their own tasks”</span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout info">
+    <span class="lab"><span class="l-th">เริ่มเล็ก ๆ ก่อน</span><span class="l-en">Start small</span></span>
+    <span class="l-th">Firebase <b>Spark = ฟรี</b> พอสำหรับ MVP: Hosting + Firestore + Auth + Cloud Functions (มีโควตา) · เริ่มที่ <code>localhost</code> หรือ free tier ก่อน แล้วค่อยขยายถ้าจำเป็น — โฟกัสที่ product ไม่ใช่ระบบ deploy</span>
+    <span class="l-en">Firebase <b>Spark is free</b> and enough for an MVP: Hosting + Firestore + Auth + Cloud Functions (quota-limited) · start on <code>localhost</code> or the free tier, then scale only if needed — focus on the product, not the pipeline.</span>
+  </div>
+
+  <div class="callout brand">
+    <span class="lab"><span class="l-th">บันทึกเหตุผล ไม่ใช่แค่ผลลัพธ์ — ADR 3 บรรทัด</span><span class="l-en">Record why, not just what — the 3-line ADR</span></span>
+    <span class="l-th">ทุกการตัดสินใจสถาปัตยกรรม (เช่น “ทำไมเลือก Firebase/Monolith”) เขียน <b>ADR</b> สั้น ๆ 1 อันในเอกสารออกแบบ: <b>1) Context</b> — FR/NFR ใดบังคับให้ต้องเลือก · <b>2) Decision</b> — เลือกอะไร · <b>3) Consequence</b> — ได้อะไร เสียอะไร เมื่อไรจะทบทวน · ผู้ตรวจให้คะแนน “เลือก X เพราะ Y เหนือ Z” มากกว่าไดอะแกรมสวยที่ไม่มีเหตุผล (ตรงกับสัปดาห์ 5)</span>
+    <span class="l-en">For each architecture decision (e.g. “why Firebase/Monolith”) write one short <b>ADR</b> in your design doc: <b>1) Context</b> — which FR/NFR forces the choice · <b>2) Decision</b> — what you chose · <b>3) Consequence</b> — what you gain, give up, and when you'd revisit · graders reward “we chose X because Y, over Z” far more than a slick diagram with no reasons (as in Week 5).</span>
+  </div>
+</div></section>
+
+<!-- ============ 5 ============ -->
+<section id="s5"><div class="wrap">
+  <p class="kicker">05 Diagrams <span class="en">/ ไดอะแกรม</span></p>
+  <h2 class="sec"><span class="l-th">ไดอะแกรมที่ต้องรู้จัก — วาดเท่าที่ช่วยคิด</span><span class="l-en">The diagrams to know — draw only what helps thinking</span></h2>
+  <p class="sub l-th">ไดอะแกรมเป็นสัญกรณ์ภาพที่สื่อโครงสร้างและพฤติกรรมของระบบอย่างไม่กำกวมให้ทั้งทีมและ AI ใช้ร่วมกัน หลักการคือ <b>วาดเฉพาะที่จำเป็น</b> — เลือกชนิดที่ตอบคำถามที่กำลังออกแบบอยู่ ในระดับวิชานี้ ต้องส่ง <b>อย่างน้อย 2 ไดอะแกรม</b>: Use Case (ระบุว่าผู้ใช้แต่ละบทบาททำอะไรได้) และอีก 1 ไดอะแกรมเชิงข้อมูลหรือลำดับ</p>
+  <p class="sub l-en">Diagrams are a visual notation that conveys a system's structure and behavior unambiguously for the team and the AI to share. The principle is <b>draw only what you need</b> — choose the type that answers the question you're currently designing. At this level you submit <b>at least two diagrams</b>: a Use Case (what each user role can do) and one data or sequence diagram.</p>
+
+  <div class="scroll"><table>
+    <thead><tr>
+      <th><span class="l-th">ไดอะแกรม</span><span class="l-en">Diagram</span></th>
+      <th><span class="l-th">ตอบคำถาม</span><span class="l-en">Answers the question</span></th>
+      <th><span class="l-th">ใช้เมื่อ</span><span class="l-en">Use when</span></th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td><b>Use Case</b></td>
+        <td><span class="l-th">ใคร(actor)ทำอะไรกับระบบได้บ้าง</span><span class="l-en">Which actor can do what with the system</span></td>
+        <td><span class="l-th">ต้นทาง — วางภาพรวมจาก FR <span class="tag accent" style="margin-left:4px">ต้องส่ง</span></span><span class="l-en">Up front — overview from your FRs <span class="tag accent" style="margin-left:4px">required</span></span></td>
+      </tr>
+      <tr>
+        <td><b>Sequence</b></td>
+        <td><span class="l-th">ขั้นตอนคุยกันของชิ้นส่วน ตามเวลา</span><span class="l-en">Step-by-step message flow over time</span></td>
+        <td><span class="l-th">มี flow ยุ่ง เช่น “เตือนก่อนส่ง” ที่ผ่านหลายชั้น</span><span class="l-en">A tricky flow, e.g. “remind before due” crossing layers</span></td>
+      </tr>
+      <tr>
+        <td><b>Class / Domain</b></td>
+        <td><span class="l-th">เอนทิตีมีฟิลด์อะไร สัมพันธ์กันยังไง</span><span class="l-en">What fields entities have and how they relate</span></td>
+        <td><span class="l-th">ออกแบบข้อมูลที่มีความสัมพันธ์หลายเอนทิตี</span><span class="l-en">Designing data with several related entities</span></td>
+      </tr>
+      <tr>
+        <td><b>State</b></td>
+        <td><span class="l-th">สิ่งหนึ่งเปลี่ยนสถานะยังไง</span><span class="l-en">How one thing changes state</span></td>
+        <td><span class="l-th">มีสถานะชัด เช่น งาน: ค้าง→ทำอยู่→เสร็จ</span><span class="l-en">Clear states, e.g. a task: open→doing→done</span></td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="tree">
+    <div class="tnode"><span class="l-th">เลือกไดอะแกรมไหนดี? ถามว่า “ฉันกำลังติดคำถามอะไร”</span><span class="l-en">Which diagram? Ask “what am I stuck on?”</span></div>
+    <div class="tbranch">
+      <div class="leaf go"><span class="h"><span class="l-th">ติดที่ “ใครทำอะไรได้”</span><span class="l-en">Stuck on “who does what”</span></span><span class="l-th">→ Use Case (เริ่มที่นี่เสมอ)</span><span class="l-en">→ Use Case (always start here)</span></div>
+      <div class="leaf warn"><span class="h"><span class="l-th">ติดที่ “ขั้นตอนไหลยังไง”</span><span class="l-en">Stuck on “how the steps flow”</span></span><span class="l-th">→ Sequence</span><span class="l-en">→ Sequence</span></div>
+    </div>
+    <div class="tbranch">
+      <div class="leaf go"><span class="h"><span class="l-th">ติดที่ “ข้อมูลรูปทรงไหน”</span><span class="l-en">Stuck on “what shape the data is”</span></span><span class="l-th">→ Class/Domain (คู่กับ section 6)</span><span class="l-en">→ Class/Domain (pairs with §6)</span></div>
+      <div class="leaf warn"><span class="h"><span class="l-th">ติดที่ “ของนี้มีกี่สถานะ”</span><span class="l-en">Stuck on “what states this has”</span></span><span class="l-th">→ State</span><span class="l-en">→ State</span></div>
+    </div>
+  </div>
+
+  <p><span class="l-th">ตัวอย่าง Use Case ของ StudyMate (แปลง FR ตรง ๆ):</span><span class="l-en">A StudyMate Use Case (a direct read of the FRs):</span></p>
+  <div class="fig">
+    <p class="cap">StudyMate — UML Use Case Diagram</p>
+    <svg class="uml umlsvg" viewBox="0 0 760 440" width="760" role="img" aria-labelledby="uc-title uc-desc">
+      <title id="uc-title">StudyMate use case diagram</title>
+      <desc id="uc-desc">A primary actor Student is associated with four use cases inside the StudyMate system boundary — manage tasks, view this week, receive reminder, and enter a plan in Thai — while a secondary actor, the external reminder service, supports the receive-reminder use case.</desc>
+
+      <!-- system boundary -->
+      <rect class="sysfill" x="192" y="48" width="380" height="356" rx="8"/>
+      <rect class="sysln" x="192" y="48" width="380" height="356" rx="8"/>
+      <text class="syslab" x="208" y="72">StudyMate</text>
+
+      <!-- associations (drawn before ellipses so ends tuck under) -->
+      <line class="assoc" x1="90" y1="188" x2="252" y2="112"/>
+      <line class="assoc" x1="90" y1="188" x2="252" y2="192"/>
+      <line class="assoc" x1="90" y1="188" x2="252" y2="272"/>
+      <line class="assoc" x1="90" y1="188" x2="252" y2="352"/>
+      <line class="assoc" x1="508" y1="272" x2="652" y2="268"/>
+
+      <!-- use cases (ellipses) -->
+      <ellipse class="ell" cx="380" cy="112" rx="132" ry="32"/>
+      <text class="nm l-th" x="380" y="110" text-anchor="middle">จัดการงาน</text>
+      <text class="nm l-en" x="380" y="110" text-anchor="middle">Manage tasks</text>
+      <text class="frt" x="380" y="128" text-anchor="middle">FR-1</text>
+
+      <ellipse class="ell" cx="380" cy="192" rx="132" ry="32"/>
+      <text class="nm l-th" x="380" y="190" text-anchor="middle">ดูงานสัปดาห์นี้</text>
+      <text class="nm l-en" x="380" y="190" text-anchor="middle">View this week</text>
+      <text class="frt" x="380" y="208" text-anchor="middle">FR-2</text>
+
+      <ellipse class="ell" cx="380" cy="272" rx="132" ry="32"/>
+      <text class="nm l-th" x="380" y="270" text-anchor="middle">รับการเตือน</text>
+      <text class="nm l-en" x="380" y="270" text-anchor="middle">Receive reminder</text>
+      <text class="frt" x="380" y="288" text-anchor="middle">FR-3</text>
+
+      <ellipse class="ell" cx="380" cy="352" rx="132" ry="32"/>
+      <text class="nm l-th" x="380" y="350" text-anchor="middle">พิมพ์แผนภาษาไทย</text>
+      <text class="nm l-en" x="380" y="350" text-anchor="middle">Enter plan in Thai</text>
+      <text class="frt" x="380" y="368" text-anchor="middle">FR-4</text>
+
+      <!-- primary actor: Student -->
+      <g class="stick">
+        <circle cx="64" cy="148" r="13"/>
+        <line x1="64" y1="161" x2="64" y2="212"/>
+        <line x1="40" y1="184" x2="88" y2="184"/>
+        <line x1="64" y1="212" x2="48" y2="244"/>
+        <line x1="64" y1="212" x2="80" y2="244"/>
+      </g>
+      <text class="actlab l-th" x="64" y="266" text-anchor="middle">นักศึกษา</text>
+      <text class="actlab l-en" x="64" y="266" text-anchor="middle">Student</text>
+
+      <!-- secondary actor: external reminder service -->
+      <g class="stick">
+        <circle cx="676" cy="232" r="13"/>
+        <line x1="676" y1="245" x2="676" y2="296"/>
+        <line x1="652" y1="268" x2="700" y2="268"/>
+        <line x1="676" y1="296" x2="660" y2="328"/>
+        <line x1="676" y1="296" x2="692" y2="328"/>
+      </g>
+      <text class="actlab l-th" x="676" y="352" text-anchor="middle">ระบบเตือนภายนอก</text>
+      <text class="actlab l-en" x="676" y="352" text-anchor="middle">Reminder service</text>
+      <text class="st l-th" x="676" y="370" text-anchor="middle">«secondary actor»</text>
+      <text class="st l-en" x="676" y="370" text-anchor="middle">«secondary actor»</text>
+    </svg>
+  </div>
+  <p class="sub" style="margin-top:8px;font-size:14.5px"><span class="l-th"><b>อ่านไดอะแกรม:</b> ผู้กระทำหลัก (นักศึกษา) เชื่อมกับ use case แต่ละวงรีด้วยเส้น association ส่วนบริการเตือนภายนอกเป็น <b>ผู้กระทำรอง (secondary actor)</b> อยู่นอกขอบเขตระบบ ป้าย <span class="fr">FR-x</span> เป็นการโยงกลับไปยัง requirement (annotation) — สังเกตว่า <b>NFR ไม่ปรากฏเป็น use case</b> เพราะเป็นข้อกำหนดเชิงคุณภาพ ไม่ใช่สิ่งที่ผู้ใช้ “ทำ”</span><span class="l-en"><b>How to read it:</b> the primary actor (Student) connects to each use-case ellipse with an association line; the external reminder service is a <b>secondary actor</b> outside the system boundary. The <span class="fr">FR-x</span> tags are traceability annotations back to the requirements — note that <b>NFRs never appear as use cases</b>, since they are quality constraints, not things a user "does".</span></p>
+
+  <div class="callout brand">
+    <span class="lab"><span class="l-th">วาดด้วยอะไรก็ได้</span><span class="l-en">Draw it in anything</span></span>
+    <span class="l-th">ใช้เครื่องมือใดก็ได้ — <b>Mermaid</b> (เขียนเป็นข้อความแล้วได้ภาพ และให้ AI ช่วยร่างได้), draw.io, Excalidraw หรือวาดมือแล้วถ่ายรูป ข้อกำหนดคือไดอะแกรมต้อง <b>อ่านออก มี label และผูกกับ FR</b> เกณฑ์ประเมินคือความชัดเจนและความถูกต้อง</span>
+    <span class="l-en">Use any tool — <b>Mermaid</b> (write text, get a diagram; the AI can draft it), draw.io, Excalidraw, or a photo of a hand drawing. The requirement is that the diagram be <b>legible, labeled, and tied to FRs</b>. It is assessed on clarity and correctness.</span>
+  </div>
+</div></section>
+
+<!-- ============ 6 ============ -->
+<section id="s6"><div class="wrap">
+  <p class="kicker">06 Data model <span class="en">/ โมเดลข้อมูล</span></p>
+  <h2 class="sec"><span class="l-th">โมเดลข้อมูล — คิดเรื่องข้อมูลก่อนเครื่องมือ</span><span class="l-en">The data model — think about data before tools</span></h2>
+  <p class="sub l-th">นี่คือหัวใจของ <span class="cmd">/tech-design</span> และเป็นทักษะ SE ที่แยกมือใหม่จากมืออาชีพ: ออกแบบว่า <b>ระบบเก็บอะไร (เอนทิตี + ฟิลด์)</b> และ <b>ทำอะไรกับมันได้ (operations)</b> โดย <b>ยังไม่พูดถึงฐานข้อมูลตัวไหน</b></p>
+  <p class="sub l-en">This is the heart of <span class="cmd">/tech-design</span> and the SE skill that separates beginners from pros: design <b>what the system stores</b> (entities + fields) and <b>what it can do with them</b> (operations) — <b>without naming any database yet</b>.</p>
+
+  <h3><span class="l-th">1) เอนทิตีและฟิลด์</span><span class="l-en">1) Entities and fields</span></h3>
+  <p><span class="l-th">เอนทิตีคือ “คำนาม” หลักในระบบ ของ StudyMate คือ <code>User</code> และ <code>Task</code>:</span><span class="l-en">Entities are the main “nouns” in your system. StudyMate's are <code>User</code> and <code>Task</code>:</span></p>
+  <div class="scroll"><table>
+    <thead><tr>
+      <th><span class="l-th">เอนทิตี</span><span class="l-en">Entity</span></th>
+      <th><span class="l-th">ฟิลด์</span><span class="l-en">Fields</span></th>
+      <th><span class="l-th">มาจาก</span><span class="l-en">Comes from</span></th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td class="mono">User</td>
+        <td class="mono">id, name, email</td>
+        <td>NFR-5 <span class="l-th">(ต้องรู้ว่าใครเป็นเจ้าของงาน)</span><span class="l-en">(need an owner)</span></td>
+      </tr>
+      <tr>
+        <td class="mono">Task</td>
+        <td class="mono">id, ownerId, title, dueDate, status, remindAt</td>
+        <td>FR-1, FR-3</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <h3><span class="l-th">2) ความสัมพันธ์</span><span class="l-en">2) Relationships</span></h3>
+  <div class="fig">
+    <p class="cap"><span class="l-th">ความสัมพันธ์ User – Task (หนึ่ง-ต่อ-กลุ่ม)</span><span class="l-en">User – Task relationship (one-to-many)</span></p>
+    <div class="erd">
+      <div class="ent">
+        <div class="eh">User</div>
+        <div class="ef"><span class="k">id</span></div>
+        <div class="ef">name</div>
+        <div class="ef">email</div>
+      </div>
+      <div class="erel">
+        <span class="rn" style="margin-bottom:4px"><span class="l-th">เป็นเจ้าของ (owns)</span><span class="l-en">owns</span></span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="card-n" style="font-size:13px">1</span>
+          <span class="rl" style="width:70px"></span>
+          <span class="card-n" style="font-size:13px">0..*</span>
+        </div>
+      </div>
+      <div class="ent">
+        <div class="eh">Task</div>
+        <div class="ef"><span class="k">id</span></div>
+        <div class="ef"><span class="k">ownerId</span> → User.id</div>
+        <div class="ef">title, dueDate</div>
+        <div class="ef">status, remindAt</div>
+      </div>
+    </div>
+    <p class="mock-note" style="text-align:center"><span class="l-th"><code>Task.ownerId</code> อ้างถึง <code>User.id</code> — เป็นกลไกบังคับใช้ <span class="fr nfr">NFR-5</span> (ผู้ใช้เห็นเฉพาะงานของตน)</span><span class="l-en"><code>Task.ownerId</code> references <code>User.id</code> — the mechanism that enforces <span class="fr nfr">NFR-5</span> (users see only their own tasks).</span></p>
+  </div>
+
+  <h3><span class="l-th">3) การกระทำ (operations) — ผูกกับ FR ทุกตัว</span><span class="l-en">3) Operations — mapped to every FR</span></h3>
+  <div class="scroll"><table>
+    <thead><tr>
+      <th><span class="l-th">การกระทำ</span><span class="l-en">Operation</span></th>
+      <th><span class="l-th">ทำอะไร</span><span class="l-en">Does what</span></th>
+      <th>FR</th>
+    </tr></thead>
+    <tbody>
+      <tr><td class="mono">addTask / editTask</td><td><span class="l-th">เพิ่ม/แก้งานพร้อมกำหนดส่ง</span><span class="l-en">Add/edit a task with a due date</span></td><td>FR-1</td></tr>
+      <tr><td class="mono">listTasksThisWeek</td><td><span class="l-th">คืนงานของสัปดาห์นี้ของเจ้าของ</span><span class="l-en">Return this week's tasks for the owner</span></td><td>FR-2</td></tr>
+      <tr><td class="mono">scheduleReminder</td><td><span class="l-th">ตั้งเตือน 1 วันก่อนกำหนด</span><span class="l-en">Set a reminder one day before due</span></td><td>FR-3</td></tr>
+      <tr><td class="mono">parseThaiPlan</td><td><span class="l-th">แปลงข้อความไทย → event ให้ยืนยัน</span><span class="l-en">Turn Thai text → an event to confirm</span></td><td>FR-4</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout warn">
+    <span class="lab"><span class="l-th">อย่ารั่วเทคโนโลยีเข้าโมเดล</span><span class="l-en">Don't leak tech into the model</span></span>
+    <span class="l-th"><b>เขียนแบบนี้:</b> “collection <code>tasks</code> แต่ละ document มี <code>ownerId</code>” — <b>ไม่ใช่:</b> “ใช้ Firestore <code>doc.set()</code> กับ React state” เรื่องเครื่องมือเก็บไว้ M4 ถ้าโมเดล logical ดี คุณจะ map ลงฐานข้อมูลไหนก็ได้</span>
+    <span class="l-en"><b>Write:</b> “a <code>tasks</code> collection; each document has an <code>ownerId</code>” — <b>not:</b> “use Firestore <code>doc.set()</code> with React state.” Tools are an M4 concern. A good logical model maps onto <em>any</em> database later.</span>
+  </div>
+
+  <div class="callout info">
+    <span class="lab"><span class="l-th">ตรวจความครบด้วยตาราง FR → data</span><span class="l-en">Check coverage with an FR → data table</span></span>
+    <span class="l-th">ไล่ FR ทุกตัวใน backlog แล้วถามว่า “ข้อนี้ต้องใช้เอนทิตี ฟิลด์ และ operation อะไร” ถ้ามี FR ที่ตอบไม่ได้ = โมเดลยังไม่ครบ ถ้ามีฟิลด์ที่ไม่มี FR ใช้ = อาจเกินจำเป็น <span class="cmd">/sync-check tech-design</span> ทำให้อัตโนมัติ</span>
+    <span class="l-en">Walk every FR in the backlog and ask “what entity, field, and operation does this need?” An FR with no answer = incomplete model; a field no FR uses = probably excess. <span class="cmd">/sync-check tech-design</span> does this for you.</span>
+  </div>
+
+  <h3><span class="l-th">Detailed design — เจาะเข้าไปในกล่องที่ยากที่สุด (4 ขั้น)</span><span class="l-en">Detailed design — open your hardest box (4 steps)</span></h3>
+  <p class="sub"><span class="l-th">สถาปัตยกรรมวาด “กล่อง”; <b>detailed design เปิด 1 กล่อง</b> (มักเป็นกล่องที่ถือ FR ยากที่สุด) แล้วตอบ 4 คำถาม “ยังไง” — ต่อยอดจาก use-case ของสัปดาห์ก่อน: จาก “ระบบทำอะไร” สู่ “<b>คลาสไหน</b>ทำ ถือ<b>ข้อมูล</b>อะไร คุยผ่าน<b>call</b>ไหน เรียงตาม<b>ลำดับ</b>อย่างไร” (ระดับการออกแบบที่ 2 ตามสัปดาห์ 5)</span><span class="l-en">Architecture drew the “boxes”; <b>detailed design opens one box</b> (usually the one carrying your hardest FR) and answers four “how” questions — going deeper than last week's use-case: from “what the system does” to “<b>which classes</b> do it, holding <b>which data</b>, talking through <b>which calls</b>, in <b>what order</b>” (design level 2, per Week 5).</span></p>
+  <div class="rail"><span class="stepchip"><b>1</b> class <span class="l-th">อ็อบเจกต์</span><span class="l-en">objects</span></span><span class="arw">→</span><span class="stepchip"><b>2</b> data <span class="l-th">สคีมา</span><span class="l-en">schema</span></span><span class="arw">→</span><span class="stepchip"><b>3</b> interface <span class="l-th">สัญญา/API</span><span class="l-en">the calls / API</span></span><span class="arw">→</span><span class="stepchip"><b>4</b> sequence <span class="l-th">ลำดับ</span><span class="l-en">behavior</span></span></div>
+
+  <div class="grid2">
+    <div class="card" style="margin:8px 0">
+      <span class="tag accent">1 · Class design</span>
+      <h4 style="margin:10px 0 4px"><span class="l-th">คลาส — อ็อบเจกต์และงานของมัน</span><span class="l-en">Classes — objects and their jobs</span></h4>
+      <p style="font-size:14.5px;margin:0 0 8px;color:var(--ink-soft)"><span class="l-th">วิธีหาเร็ว ๆ: ในประโยค FR <b>คำนาม → คลาส</b>, <b>คำกริยา → เมท็อด</b> · คลาส = สิ่งที่มัน “รู้” (attributes) + สิ่งที่มัน “ทำได้” (methods)</span><span class="l-en">Fast way: in an FR sentence, <b>nouns → classes</b>, <b>verbs → methods</b> · a class = what it “knows” (attributes) + what it “can do” (methods).</span></p>
+      <div class="diagram">class Task
+  - id: int
+  - title: String
+  - dueDate: Date
+  - status: Status
+  + markDone()
+  + isOverdue(): bool</div>
+    </div>
+    <div class="card" style="margin:8px 0">
+      <span class="tag good">2 · Data design</span>
+      <h4 style="margin:10px 0 4px"><span class="l-th">สคีมา — คลาส → ตาราง หรือ document</span><span class="l-en">Schema — classes → tables or documents</span></h4>
+      <p style="font-size:14.5px;margin:0 0 8px;color:var(--ink-soft)"><span class="l-th">คลาสที่ต้องเก็บถาวร → 1 ตาราง (SQL) หรือ 1 <b>document</b> (Firestore) · fields มี type + <b>PK</b> (id) + <b>FK</b> (ลิงก์ไปตัวอื่น) — จับให้ถูกตั้งแต่ตอนนี้ ประหยัด migration ทีหลัง</span><span class="l-en">Each persisting class → one table (SQL) or one <b>document</b> (Firestore) · fields get types + a <b>PK</b> (id) + <b>FK</b> (link to another) — get these right now to save painful migrations later.</span></p>
+      <div class="diagram">// Firestore — tasks/{id}
+{
+  ownerId: "u_01",   // FK → users/{id}  · NFR-5
+  title:   "ส่งรายงาน",
+  dueDate: "2569-09-30",
+  status:  "open",
+  remindAt:"2569-09-29"
+}</div>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="card" style="margin:8px 0">
+      <span class="tag accent">3 · Interface design</span>
+      <h4 style="margin:10px 0 4px"><span class="l-th">สัญญาระหว่างโมดูล = coupling ต่ำ</span><span class="l-en">The contract between modules = low coupling</span></h4>
+      <p style="font-size:14.5px;margin:0 0 8px;color:var(--ink-soft)"><span class="l-th">อินเทอร์เฟซ = ชุด call เล็ก ๆ ที่โมดูลเปิดให้คนอื่นพึ่ง · คนเรียกพึ่งแค่ “ลายเซ็น” ไม่ใช่ไส้ใน · ถ้าเป็น client-server อันนี้ก็คือ <b>REST API</b> ของคุณ</span><span class="l-en">An interface = the small set of calls a module exposes for others to rely on · callers depend on the signature, never the insides · if it's client-server, this becomes your <b>REST API</b>.</span></p>
+      <div class="diagram">interface TaskRepository {
+  save(task: Task): void
+  findDueBefore(d: Date): Task[]
+  listByOwner(ownerId: Id): Task[]
+}</div>
+    </div>
+    <div class="card" style="margin:8px 0">
+      <span class="tag brand">4 · Sequence</span>
+      <h4 style="margin:10px 0 4px"><span class="l-th">พฤติกรรม — 1 ฉาก ไล่ทีละข้อความ</span><span class="l-en">Behavior — one scenario, message by message</span></h4>
+      <p style="font-size:14.5px;margin:0 0 8px;color:var(--ink-soft)"><span class="l-th">class diagram คือภาพนิ่ง · <b>sequence</b> คือฉากที่เดินจริง — อ็อบเจกต์ (บน) ส่งข้อความลงตามเวลา · <b>เส้นทึบ = call, เส้นประ = return</b> · วาดให้ FR ที่ยากสุด</span><span class="l-en">A class diagram is a static snapshot · a <b>sequence</b> shows one scenario play out — objects (top) exchange messages down a timeline · <b>solid = a call, dashed = a return</b> · draw it for your hardest FR.</span></p>
+      <div class="diagram">Student → TodayScreen : openApp()
+TodayScreen → Logic : checkDue(now)
+Logic → TaskRepo : findDueBefore(now)
+TaskRepo --&gt; Logic : List&lt;Task&gt;
+Logic --&gt; TodayScreen : dueTasks
+TodayScreen → Student : render()</div>
+    </div>
+  </div>
+  <div class="callout info">
+    <span class="lab"><span class="l-th">เส้นระหว่างคลาส 4 แบบ (รู้จักไว้)</span><span class="l-en">The four relationships (know them)</span></span>
+    <span class="l-th"><b>Association</b> “มี/รู้จัก” (เส้นทึบ + multiplicity เช่น Course 1—* Task) · <b>Dependency</b> “ใช้” (เส้นประ ลูกศร) · <b>Generalization</b> “เป็นชนิดของ” (สืบทอด) · <b>Composition/Aggregation</b> “เป็นส่วนของ” · สองอันแรกใช้บ่อยสุด อีกสองอันไว้อ่านไดอะแกรมให้ออก</span>
+    <span class="l-en"><b>Association</b> “has/knows” (solid + multiplicity, e.g. Course 1—* Task) · <b>Dependency</b> “uses” (dashed arrow) · <b>Generalization</b> “is-a” (inheritance) · <b>Composition/Aggregation</b> “part-of” · you'll draw the first two constantly; recognise the other two when reading.</span>
+  </div>
+  <div class="callout warn">
+    <span class="lab"><span class="l-th">ยังคงสาวกลับได้ทุกชิ้น</span><span class="l-en">Still traces back — every piece</span></span>
+    <span class="l-th">ทุก <b>คลาส · ตาราง/ฟิลด์ · call · ข้อความใน sequence</b> ต้องผูกกลับไปหา FR/NFR ได้ · ถ้าเจอคลาสหรือ field ที่ไม่มี FR ใช้ = ตัดทิ้ง (gold-plating) เหมือนกฎเดียวกับชั้น architecture</span>
+    <span class="l-en">Every <b>class · table/field · call · sequence message</b> must map back to an FR/NFR · a class or field no FR uses = delete it (gold-plating) — the same rule as the architecture layer.</span>
+  </div>
+
+  <h4><span class="l-th">ตัวอย่างเต็ม — Class diagram (โครงสร้างข้อมูลแบบสถิต)</span><span class="l-en">Worked example — Class diagram (static structure)</span></h4>
+  <div class="fig">
+    <p class="cap">StudyMate — Class diagram · Student · Task · Course</p>
+    <svg class="cls" viewBox="0 0 720 300" role="img" aria-labelledby="cls-title cls-desc" xmlns="http://www.w3.org/2000/svg">
+      <title id="cls-title">StudyMate class diagram</title>
+      <desc id="cls-desc">Three classes — Student, Task, and Course — where a Student has many Tasks and a Course has many Tasks; Task carries the attributes and the operations markDone and isOverdue. A legend lists the six UML relationship types.</desc>
+      <defs>
+        <marker id="cl-oa" markerWidth="11" markerHeight="9" refX="9" refY="4.5" orient="auto"><polyline points="1,1 9,4.5 1,8"/></marker>
+        <marker id="cl-tri" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path class="tri" d="M1,1 L12,6 L1,11 Z"/></marker>
+        <marker id="cl-df" markerWidth="18" markerHeight="10" refX="16" refY="5" orient="auto"><path class="dia-f" d="M1,5 L9,1 L17,5 L9,9 Z"/></marker>
+        <marker id="cl-do" markerWidth="18" markerHeight="10" refX="16" refY="5" orient="auto"><path class="dia-o" d="M1,5 L9,1 L17,5 L9,9 Z"/></marker>
+      </defs>
+
+      <!-- relationships first -->
+      <line class="rel" x1="220" y1="124" x2="278" y2="124" marker-end="url(#cl-oa)"/>
+      <rect class="mask" x="226" y="112" width="12" height="11"/><text class="mult" x="232" y="120" text-anchor="middle">1</text>
+      <rect class="mask" x="256" y="112" width="24" height="11"/><text class="mult" x="268" y="120" text-anchor="middle">0..*</text>
+      <line class="rel" x1="540" y1="148" x2="482" y2="148" marker-end="url(#cl-oa)"/>
+      <rect class="mask" x="522" y="136" width="12" height="11"/><text class="mult" x="528" y="144" text-anchor="middle">1</text>
+      <rect class="mask" x="484" y="136" width="24" height="11"/><text class="mult" x="496" y="144" text-anchor="middle">0..*</text>
+
+      <!-- Student -->
+      <rect class="mask" x="40" y="104" width="180" height="72" rx="6"/><rect class="box" x="40" y="104" width="180" height="72" rx="6"/>
+      <text class="cn" x="130" y="120" text-anchor="middle">Student</text>
+      <line class="cdiv" x1="40" y1="128" x2="220" y2="128"/>
+      <text class="mem" x="50" y="141">+ id: Id</text>
+      <text class="mem" x="50" y="157">+ name: String</text>
+      <text class="mem" x="50" y="173">+ email: String</text>
+
+      <!-- Task (focal) -->
+      <rect class="mask" x="280" y="48" width="200" height="136" rx="6"/><rect class="box foc" x="280" y="48" width="200" height="136" rx="6"/>
+      <text class="cn" x="380" y="64" text-anchor="middle">Task</text>
+      <line class="cdiv" x1="280" y1="72" x2="480" y2="72"/>
+      <text class="mem" x="290" y="85">- id: Id</text>
+      <text class="mem" x="290" y="101">- ownerId: Id</text>
+      <text class="mem" x="290" y="117">+ dueDate: Date</text>
+      <text class="mem" x="290" y="133">+ status: Status</text>
+      <text class="mem" x="290" y="149">+ remindAt: Date</text>
+      <line class="cdiv" x1="280" y1="156" x2="480" y2="156"/>
+      <text class="mem" x="290" y="169">+ markDone()</text>
+      <text class="mem" x="290" y="181">+ isOverdue(): bool</text>
+
+      <!-- Course -->
+      <rect class="mask" x="540" y="104" width="150" height="72" rx="6"/><rect class="box" x="540" y="104" width="150" height="72" rx="6"/>
+      <text class="cn" x="615" y="120" text-anchor="middle">Course</text>
+      <line class="cdiv" x1="540" y1="128" x2="690" y2="128"/>
+      <text class="mem" x="550" y="141">+ id: Id</text>
+      <text class="mem" x="550" y="157">+ code: String</text>
+      <text class="mem" x="550" y="173">+ name: String</text>
+
+      <!-- legend: the six relationship types -->
+      <line class="lgl" x1="40" y1="222" x2="680" y2="222"/>
+      <text class="lgt" x="40" y="238">RELATIONSHIPS</text>
+      <line class="rel" x1="96" y1="260" x2="120" y2="260" marker-end="url(#cl-tri)"/><text class="lgt" x="130" y="263">inheritance</text>
+      <line class="rel" x1="288" y1="260" x2="312" y2="260" marker-start="url(#cl-df)"/><text class="lgt" x="320" y="263">composition</text>
+      <line class="rel" x1="476" y1="260" x2="500" y2="260" marker-end="url(#cl-oa)"/><text class="lgt" x="510" y="263">association</text>
+      <line class="rel dash" x1="96" y1="284" x2="120" y2="284" marker-end="url(#cl-tri)"/><text class="lgt" x="130" y="287">realization</text>
+      <line class="rel" x1="288" y1="284" x2="312" y2="284" marker-start="url(#cl-do)"/><text class="lgt" x="320" y="287">aggregation</text>
+      <line class="rel dash" x1="476" y1="284" x2="500" y2="284" marker-end="url(#cl-oa)"/><text class="lgt" x="510" y="287">dependency</text>
+    </svg>
+    <p class="mock-note"><span class="l-th">อ่าน class diagram: แต่ละกล่องมี 3 ช่อง — <b>ชื่อคลาส · attributes (รู้อะไร) · operations (ทำอะไรได้)</b> · เส้นระหว่างกล่องคือความสัมพันธ์ (หัวลูกศรมีความหมาย ดู legend) · <b>Student 1 — 0..* Task</b> และ <b>Course 1 — 0..* Task</b> = หนึ่งต่อกลุ่ม · Task เป็นคลาสหลัก (โฟกัส)</span><span class="l-en">Reading it: each box has three compartments — <b>class name · attributes (what it knows) · operations (what it does)</b> · lines are relationships (the arrowheads carry meaning — see legend) · <b>Student 1 — 0..* Task</b> and <b>Course 1 — 0..* Task</b> are one-to-many · Task is the focal class.</span></p>
+  </div>
+
+  <h4><span class="l-th">ตัวอย่างเต็ม — Sequence diagram (พฤติกรรม 1 ฉาก)</span><span class="l-en">Worked example — Sequence diagram (one scenario)</span></h4>
+  <div class="fig">
+    <p class="cap">StudyMate — “นักศึกษาเปิดแอป → เห็นการเตือนของวันนี้” · student opens app → sees today's reminders</p>
+    <svg class="seq" viewBox="0 0 720 320" role="img" aria-labelledby="seq-title seq-desc" xmlns="http://www.w3.org/2000/svg">
+      <title id="seq-title">StudyMate open-app reminder sequence</title>
+      <desc id="seq-desc">A sequence for “student opens the app and sees today's reminders”: the Student calls the Today screen, which asks the Logic layer to check what's due, which queries the Task repository; the tasks return back up the chain and the screen renders today's reminders to the student.</desc>
+      <defs>
+        <marker id="sqf" markerWidth="9" markerHeight="7" refX="7.5" refY="3.5" orient="auto"><path d="M0,0 L9,3.5 L0,7 Z"/></marker>
+        <marker id="sqa" class="acc" markerWidth="9" markerHeight="7" refX="7.5" refY="3.5" orient="auto"><path d="M0,0 L9,3.5 L0,7 Z"/></marker>
+      </defs>
+
+      <!-- lifelines -->
+      <line class="life" x1="86" y1="64" x2="86" y2="312"/>
+      <line class="life" x1="270" y1="64" x2="270" y2="312"/>
+      <line class="life" x1="458" y1="64" x2="458" y2="312"/>
+      <line class="life" x1="644" y1="64" x2="644" y2="312"/>
+
+      <!-- activation bars -->
+      <rect class="actbar" x="266" y="96" width="8" height="160"/>
+      <rect class="actbar" x="454" y="128" width="8" height="96"/>
+      <rect class="actbar" x="640" y="160" width="8" height="32"/>
+
+      <!-- messages -->
+      <line class="msg" x1="86" y1="96" x2="266" y2="96" marker-end="url(#sqf)"/>
+      <rect class="mask" x="144" y="76" width="64" height="13"/><text class="ml" x="176" y="86" text-anchor="middle">openApp()</text>
+      <line class="msg" x1="274" y1="128" x2="454" y2="128" marker-end="url(#sqf)"/>
+      <rect class="mask" x="322" y="108" width="84" height="13"/><text class="ml" x="364" y="118" text-anchor="middle">checkDue(now)</text>
+      <line class="msg" x1="462" y1="160" x2="640" y2="160" marker-end="url(#sqf)"/>
+      <rect class="mask" x="495" y="140" width="112" height="13"/><text class="ml" x="551" y="150" text-anchor="middle">findDueBefore(now)</text>
+      <line class="ret" x1="640" y1="192" x2="462" y2="192" marker-end="url(#sqf)"/>
+      <rect class="mask" x="519" y="172" width="64" height="13"/><text class="ml" x="551" y="182" text-anchor="middle">List&lt;Task&gt;</text>
+      <line class="ret" x1="454" y1="224" x2="274" y2="224" marker-end="url(#sqf)"/>
+      <rect class="mask" x="336" y="204" width="56" height="13"/><text class="ml" x="364" y="214" text-anchor="middle">dueTasks</text>
+      <line class="msg hi" x1="266" y1="256" x2="90" y2="256" marker-end="url(#sqa)"/>
+      <rect class="mask" x="150" y="236" width="56" height="13"/><text class="ml" x="178" y="246" text-anchor="middle">render()</text>
+
+      <!-- actors (drawn last, on top) -->
+      <rect class="mask" x="20" y="24" width="132" height="40" rx="6"/><rect class="actor" x="20" y="24" width="132" height="40" rx="6"/><text class="an" x="86" y="49" text-anchor="middle">Student</text>
+      <rect class="mask" x="196" y="24" width="148" height="40" rx="6"/><rect class="actor" x="196" y="24" width="148" height="40" rx="6"/><text class="an" x="270" y="49" text-anchor="middle">Today Screen</text>
+      <rect class="mask" x="388" y="24" width="140" height="40" rx="6"/><rect class="actor" x="388" y="24" width="140" height="40" rx="6"/><text class="an" x="458" y="49" text-anchor="middle">Logic</text>
+      <rect class="mask" x="576" y="24" width="136" height="40" rx="6"/><rect class="actor" x="576" y="24" width="136" height="40" rx="6"/><text class="an" x="644" y="49" text-anchor="middle">TaskRepo</text>
+    </svg>
+    <p class="mock-note"><span class="l-th">อ่าน sequence: เวลาไหล<b>บนลงล่าง</b> · <b>เส้นทึบ = call, เส้นประ = return</b> · แถบแนวตั้ง = ช่วงที่อ็อบเจกต์ถือการทำงาน (activation) · <b>เส้นสีเน้น = ผลสำเร็จ</b> (แสดงการเตือนให้ผู้ใช้)</span><span class="l-en">Reading it: time flows <b>top→down</b> · <b>solid = a call, dashed = a return</b> · vertical bars = when an object holds control (activation) · the <b>accent line = the happy-path result</b> (reminders rendered to the user).</span></p>
+  </div>
+
+  <h4><span class="l-th">ตัวอย่างเต็ม — State diagram (วงจรสถานะของ Task)</span><span class="l-en">Worked example — State diagram (a Task's lifecycle)</span></h4>
+  <div class="fig">
+    <p class="cap">StudyMate — Task status: open → doing → done</p>
+    <svg class="stm" viewBox="0 0 720 184" role="img" aria-labelledby="stm-title stm-desc" xmlns="http://www.w3.org/2000/svg">
+      <title id="stm-title">Task status state machine</title>
+      <desc id="stm-desc">A Task moves from a start point into open (to-do), then to doing (in progress) on start, then to done (complete) when marked done, which is the end; a done task can be reopened back to open, and a done task triggers no reminder.</desc>
+      <defs><marker id="stf" markerWidth="9" markerHeight="7" refX="7.5" refY="3.5" orient="auto"><path d="M0,0 L9,3.5 L0,7 Z"/></marker></defs>
+
+      <!-- transitions first -->
+      <line class="tr" x1="42" y1="112" x2="80" y2="112" marker-end="url(#stf)"/>
+      <line class="tr" x1="224" y1="112" x2="292" y2="112" marker-end="url(#stf)"/>
+      <rect class="mask" x="236" y="90" width="48" height="13"/><text class="trl" x="260" y="100" text-anchor="middle">start</text>
+      <line class="tr" x1="436" y1="112" x2="504" y2="112" marker-end="url(#stf)"/>
+      <rect class="mask" x="438" y="90" width="64" height="13"/><text class="trl" x="470" y="100" text-anchor="middle">markDone()</text>
+      <line class="tr" x1="648" y1="112" x2="676" y2="112" marker-end="url(#stf)"/>
+      <path class="tr" d="M578,84 C578,40 154,40 154,84" marker-end="url(#stf)"/>
+      <rect class="mask" x="338" y="34" width="56" height="13"/><text class="trl" x="366" y="44" text-anchor="middle">reopen</text>
+
+      <!-- start / end -->
+      <circle class="dot" cx="36" cy="112" r="6"/>
+      <circle class="ring" cx="688" cy="112" r="8"/><circle class="dot" cx="688" cy="112" r="4"/>
+
+      <!-- states -->
+      <rect class="mask" x="84" y="84" width="140" height="56" rx="8"/><rect class="st" x="84" y="84" width="140" height="56" rx="8"/>
+      <text class="stn" x="154" y="108" text-anchor="middle">open</text><text class="sts" x="154" y="126" text-anchor="middle">ค้าง · to-do</text>
+      <rect class="mask" x="296" y="84" width="140" height="56" rx="8"/><rect class="st" x="296" y="84" width="140" height="56" rx="8"/>
+      <text class="stn" x="366" y="108" text-anchor="middle">doing</text><text class="sts" x="366" y="126" text-anchor="middle">ทำอยู่ · doing</text>
+      <rect class="mask" x="508" y="84" width="140" height="56" rx="8"/><rect class="st foc" x="508" y="84" width="140" height="56" rx="8"/>
+      <text class="stn" x="578" y="108" text-anchor="middle">done</text><text class="sts" x="578" y="126" text-anchor="middle">เสร็จ · complete</text>
+    </svg>
+    <p class="mock-note"><span class="l-th">อ่าน state: <b>จุดทึบ = เริ่ม, วงแหวน = จบ</b> · ป้ายบนลูกศร = <b>event</b> ที่ทำให้เปลี่ยนสถานะ · โยงกับ acceptance ของ FR-3: งานสถานะ <b>done จะไม่ทำให้เกิดการเตือน</b></span><span class="l-en">Reading it: <b>filled dot = start, ringed dot = end</b> · a label on an arrow is the <b>event</b> that triggers the change · ties to FR-3's acceptance: a <b>done task triggers no reminder</b>.</span></p>
+  </div>
+</div></section>
+
+<!-- ============ 7 ============ -->
+<section id="s7"><div class="wrap">
+  <p class="kicker">07 Design system <span class="en">/ ภาษาการออกแบบ</span></p>
+  <h2 class="sec"><span class="l-th">Design system — ตกลงหน้าตากลาง ทำครั้งเดียว ใช้ทุกที่</span><span class="l-en">Design system — agree the look once, reuse everywhere</span></h2>
+  <p class="sub l-th">ก่อนวาดหน้าจอแม้แต่หน้าเดียว ให้กำหนด “ภาษาการออกแบบ” กลางไว้ก่อน — สี ฟอนต์ ระยะห่าง และชิ้นส่วนที่ใช้ซ้ำ (ปุ่ม การ์ด ช่องกรอก) เก็บเป็น <b>design tokens</b> แล้วทุกหน้าจออ้างอิงค่าเดียวกัน ไม่ต้องเลือกสีมั่วใหม่ทุกครั้ง</p>
+  <p class="sub l-en">Before drawing a single screen, set a shared “design language” — colors, fonts, spacing, and reusable components (buttons, cards, inputs) — captured as <b>design tokens</b>. Every screen then references the same values, so you never pick a random color again.</p>
+
+  <div class="scroll"><table>
+    <thead><tr>
+      <th><span class="l-th">token</span><span class="l-en">Token group</span></th>
+      <th><span class="l-th">ตัวอย่าง</span><span class="l-en">Example</span></th>
+      <th><span class="l-th">ทำไมสำคัญ</span><span class="l-en">Why it matters</span></th>
+    </tr></thead>
+    <tbody>
+      <tr><td class="mono">color</td><td class="mono">--primary, --bg, --danger</td><td><span class="l-th">ทุกหน้าโทนเดียวกัน สื่อสารสถานะได้</span><span class="l-en">Consistent tone; states read clearly</span></td></tr>
+      <tr><td class="mono">type</td><td class="mono">font, size-scale</td><td><span class="l-th">ลำดับความสำคัญของข้อความชัด</span><span class="l-en">Clear text hierarchy</span></td></tr>
+      <tr><td class="mono">spacing</td><td class="mono">4 / 8 / 16 / 24 px</td><td><span class="l-th">เว้นระยะสม่ำเสมอ ไม่รก</span><span class="l-en">Even rhythm, uncluttered</span></td></tr>
+      <tr><td class="mono">components</td><td class="mono">Button, Card, Input</td><td><span class="l-th">ประกอบหน้าจอเร็ว หน้าตาเหมือนกัน</span><span class="l-en">Assemble screens fast, uniformly</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout info">
+    <span class="lab"><span class="l-th">วิธีที่แนะนำ: ออกแบบ 1 หน้าจอก่อน แล้วสกัดเป็น design system</span><span class="l-en">Recommended: design one screen first, then extract a design system</span></span>
+    <span class="l-th">ไม่ต้องเริ่มจากหน้ากระดาษเปล่า ให้ทำตามนี้: <b>(1)</b> เลือกหน้าจอที่สำคัญที่สุด (มักเป็น Must FR) แล้ว<b>ออกแบบ 1 หน้าจอ + เขียน spec สั้น ๆ ของมัน</b> (หน้านี้ทำอะไร, มี element อะไร, สถานะปกติ/ผิดพลาด) · <b>(2)</b> <b>สกัด design system</b> ออกจากหน้าจอนั้น — สี ฟอนต์ ระยะห่าง ปุ่ม การ์ด — บันทึกเป็น <code>design-system.md</code> ของทีม แล้วหน้าจออื่นอ้างอิงค่าเดียวกัน</span>
+    <span class="l-en">No blank page needed: <b>(1)</b> pick your most important screen (usually a Must FR) and <b>design that one screen + write a short spec for it</b> (what it does, its elements, its normal/error states) · <b>(2)</b> <b>extract a design system</b> from that screen — colors, fonts, spacing, buttons, cards — save it as your team's <code>design-system.md</code>, and every other screen references the same values.</span>
+  </div>
+  <div class="callout brand">
+    <span class="lab"><span class="l-th">เครื่องมือที่ช่วยได้ (เลือกอย่างใดอย่างหนึ่ง)</span><span class="l-en">Tools that help (pick one)</span></span>
+    <span class="l-th"><b>Claude Design</b> — ให้ช่วยร่างหน้าจอและสรุปเป็น design tokens/components แล้ว export เป็น <code>design-system.md</code> · หรือ <b>Figma (ผ่าน MCP)</b> — ออกแบบใน Figma แล้วดึง styles/variables ออกมาเป็น tokens · ทั้งสองทางได้ผลเหมือนกัน: <b>token ชุดเดียว ใช้ซ้ำทุกหน้า</b> (คุณตัดสินใจ เครื่องมือช่วยลงรายละเอียด)</span>
+    <span class="l-en"><b>Claude Design</b> — have it draft the screen and distill design tokens/components, then export a <code>design-system.md</code> · or <b>Figma (via MCP)</b> — design in Figma and pull its styles/variables out as tokens · either path gives the same thing: <b>one token set, reused on every screen</b> (you decide; the tool fills in the detail).</span>
+  </div>
+  <div class="callout warn">
+    <span class="lab"><span class="l-th">กฎ: หน้าจอห้ามคิดสีเอง</span><span class="l-en">Rule: screens never invent colors</span></span>
+    <span class="l-th">prototype และแอปจริงต้อง <b>ใช้ token เท่านั้น</b> (เช่น <code>--primary</code>) ห้ามใส่ <code>#3b82f6</code> ลอย ๆ ถ้าต้องเปลี่ยนสี ให้แก้ที่ <code>design-system.md</code> ที่เดียว แล้วทุกหน้าจอเปลี่ยนตาม — นี่คือ low coupling ในเวอร์ชันงานดีไซน์</span>
+    <span class="l-en">Prototypes and the real app must <b>use tokens only</b> (e.g. <code>--primary</code>), never a stray <code>#3b82f6</code>. To change a color, edit <code>design-system.md</code> in one place and every screen follows — low coupling, applied to design.</span>
+  </div>
+</div></section>
+
+<!-- ============ 8 ============ -->
+<section id="s8"><div class="wrap">
+  <p class="kicker">08 Prototype <span class="en">/ ต้นแบบ</span></p>
+  <h2 class="sec"><span class="l-th">Prototype — เห็นและคลิกก่อนสร้างจริง</span><span class="l-en">Prototype — see and click it before you build</span></h2>
+  <p class="sub l-th">Prototype คือหน้าจอ HTML <b>ที่คลิกได้แต่ยังไม่มีข้อมูลจริง</b> ทำหน้าที่ให้คุณและผู้ใช้ทดลองใช้งานและให้ความเห็นเรื่องหน้าตาและการไหลของงาน <b>ก่อน</b> ลงมือสร้างจริง เป็นวิธีตรวจสอบความถูกต้องของแนวคิดในต้นทุนต่ำ</p>
+  <p class="sub l-en">A prototype is an HTML screen that's <b>clickable but has no real data yet</b>. Its role is to let you and your users try the interface and give feedback on the look and the flow <b>before</b> the real build begins — a low-cost way to validate the concept.</p>
+
+  <div class="whys">
+    <div class="step"><div class="q"><span class="l-th">หนึ่งหน้าจอต่อหนึ่งรอบ</span><span class="l-en">One screen per run</span></div><div class="a"><span class="l-th"><span class="cmd">/prototype</span> หน้า “เพิ่มงาน” ทีละหน้า ไม่สั่ง “prototype ทั้งแอป” ซึ่งให้ผลลัพธ์กว้างเกินและควบคุมคุณภาพยาก เริ่มจากหน้าที่สำคัญที่สุด (มักเป็น Must FR) ก่อน</span><span class="l-en">Run <span class="cmd">/prototype</span> on the “add task” screen, one at a time — not “prototype the whole app,” which produces a broad, hard-to-control result. Start with the most important screen (usually a Must FR).</span></div></div>
+    <div class="step"><div class="q"><span class="l-th">ใช้ design system</span><span class="l-en">Obey the design system</span></div><div class="a"><span class="l-th">หน้าจอต้องใช้ token จาก <code>design-system.md</code> ไม่ใช่สีใหม่ ผลลัพธ์จะออกมากลมกลืนกับหน้าจออื่นทันที</span><span class="l-en">The screen must use tokens from <code>design-system.md</code>, not new colors — it comes out consistent with the rest for free.</span></div></div>
+    <div class="step"><div class="q"><span class="l-th">เปิดในเบราว์เซอร์ ลองกด</span><span class="l-en">Open in a browser, click around</span></div><div class="a"><span class="l-th">ไฟล์ไปอยู่ <code>docs/02-design/prototypes/&lt;date&gt;/</code> เปิดดู เอาให้เพื่อน/ผู้ใช้ลอง จดสิ่งที่ต้องแก้</span><span class="l-en">The file lands in <code>docs/02-design/prototypes/&lt;date&gt;/</code>. Open it, hand it to a friend/user, note what to change.</span></div></div>
+    <div class="step"><div class="q"><span class="l-th">อย่าลืมทางที่ผิด (error states)</span><span class="l-en">Don't forget the unhappy path</span></div><div class="a"><span class="l-th">แสดงตอน “ไม่มีงาน”, “กรอกไม่ครบ”, “โหลดอยู่” ด้วย ไม่ใช่แค่ตอนทุกอย่างสมบูรณ์ — ผูกกับ acceptance G-W-T จาก M2</span><span class="l-en">Show “no tasks yet,” “missing field,” “loading” — not only the perfect case. Tie these to your M2 Given–When–Then acceptance.</span></div></div>
+  </div>
+
+  <div class="callout brand">
+    <span class="lab"><span class="l-th">Prototype ≠ แอปจริง</span><span class="l-en">Prototype ≠ the real app</span></span>
+    <span class="l-th">ไม่ต้องทำ prototype ให้บันทึกข้อมูลจริงหรือเชื่อมฐานข้อมูล — นั่นเป็นงานของ M4 หน้าที่ของ prototype คือ <b>ตรวจสอบหน้าตาและการไหลของงานให้ถูกต้อง</b> ปัญหาการใช้งานที่พบใน prototype จะยังคงอยู่ในแอปจริงหากไม่แก้ จึงควรแก้ตั้งแต่ขั้นนี้</span>
+    <span class="l-en">A prototype need not save real data or wire a database — that is M4's work. Its job is to <b>validate the look and the flow</b>. Usability problems found in the prototype will remain in the real app if left unaddressed, so resolve them at this stage.</span>
+  </div>
+</div></section>
+
+<!-- ============ 9 ============ -->
+<section id="s9"><div class="wrap">
+  <p class="kicker">09 Smells <span class="en">/ กลิ่นไม่ดี</span></p>
+  <h2 class="sec"><span class="l-th">10 กลิ่นไม่ดีของ design — เจอแล้วแก้ก่อนส่ง</span><span class="l-en">10 design smells — fix them before you submit</span></h2>
+  <p class="sub l-th">“design smell” คือสัญญาณที่บ่งชี้ว่าการออกแบบมีปัญหาเชิงโครงสร้างซึ่งควรแก้ก่อนลงมือสร้าง ตรวจ design ของคุณกับรายการต่อไปนี้</p>
+  <p class="sub l-en">A “design smell” is a signal that the design has a structural problem worth fixing before you build. Check your design against the following list.</p>
+
+  <ol class="biglist">
+    <li><b><span class="l-th">ออกแบบเกิน (over-engineering / YAGNI)</span><span class="l-en">Over-engineering (YAGNI)</span></b><span class="l-th">ใส่ระบบ plugin, microservices, cache หลายชั้น ทั้งที่โปรเจกต์มี 4 FR — “You Aren't Gonna Need It”</span><span class="l-en">Plugins, microservices, multi-layer caches for a 4-FR project — “You Aren't Gonna Need It.”</span></li>
+    <li><b><span class="l-th">Gold-plating</span><span class="l-en">Gold-plating</span></b><span class="l-th">หน้าจอ/ฟีเจอร์สวยหรูที่ไม่มี FR รองรับ — ลบทิ้ง</span><span class="l-en">A shiny screen/feature no FR asks for — delete it.</span></li>
+    <li><b><span class="l-th">รั่วเทคโนโลยีเข้า “โมเดลข้อมูล logical”</span><span class="l-en">Tech leaked into the logical data model</span></b><span class="l-th">เขียน <code>Firestore doc.set()</code>/React state ปนใน โมเดลข้อมูล (เอนทิตี/ฟิลด์) · <b>การเลือก Firebase ที่ชั้น architecture/deployment ไม่นับเป็น smell</b> (ดู §4)</span><span class="l-en"><code>Firestore doc.set()</code>/React state mixed into the data model (entities/fields) · <b>naming Firebase at the architecture/deployment level is fine</b> (see §4).</span></li>
+    <li><b><span class="l-th">Coupling สูง</span><span class="l-en">High coupling</span></b><span class="l-th">หน้าจอเขียนกฎธุรกิจเอง แก้ที่หนึ่งพังอีกที่</span><span class="l-en">The UI holds business rules; change one place, another breaks.</span></li>
+    <li><b><span class="l-th">Cohesion ต่ำ (God component)</span><span class="l-en">Low cohesion (God component)</span></b><span class="l-th">กล่องเดียวทำทุกอย่าง — ทั้ง UI ตรรกะ และข้อมูล</span><span class="l-en">One box does everything — UI, logic, and data.</span></li>
+    <li><b><span class="l-th">หน้าจอไม่มีทางที่ผิด</span><span class="l-en">No error/empty states</span></b><span class="l-th">มีแต่ตอนสมบูรณ์ ไม่มี “ไม่มีข้อมูล/กรอกผิด/โหลดอยู่”</span><span class="l-en">Only the happy case — no “empty/invalid/loading.”</span></li>
+    <li><b><span class="l-th">ค่าปริศนา (magic values)</span><span class="l-en">Magic values</span></b><span class="l-th">สี/ตัวเลขลอย ๆ ในหน้าจอ ไม่ผ่าน design token</span><span class="l-en">Stray colors/numbers in screens, not via tokens.</span></li>
+    <li><b><span class="l-th">FR ไม่มีที่อยู่ใน design</span><span class="l-en">An FR with no home</span></b><span class="l-th">มี FR แต่ไม่มีเอนทิตี/หน้าจอ/operation รองรับ</span><span class="l-en">An FR with no entity/screen/operation behind it.</span></li>
+    <li><b><span class="l-th">ไดอะแกรมไม่ตรงข้อความ</span><span class="l-en">Diagram contradicts the text</span></b><span class="l-th">ภาพวาดอย่าง เขียนอีกอย่าง — ทีมสับสน</span><span class="l-en">The picture says one thing, the prose another — the team gets confused.</span></li>
+    <li><b><span class="l-th">ปรับแต่งเร็วเกิน (premature optimization)</span><span class="l-en">Premature optimization</span></b><span class="l-th">ห่วงความเร็วระดับล้านผู้ใช้ ทั้งที่ยังไม่มีแอป — ทำให้ถูกก่อน ค่อยทำให้เร็ว</span><span class="l-en">Worrying about million-user speed with no app yet — make it right, then fast.</span></li>
+  </ol>
+
+  <div class="callout info">
+    <span class="lab"><span class="l-th">หลักคิดกันเกิน: “ง่ายที่สุดที่ยัง(พอ)ใช้ได้”</span><span class="l-en">The antidote: “the simplest thing that still works”</span></span>
+    <span class="l-th">เป้าหมายของ design ในวิชานี้ไม่ใช่ “อลังการ” แต่คือ <b>เล็กที่สุดที่ตอบทุก Must FR ได้จริง</b> ถ้าลังเลว่าจะใส่หรือไม่ใส่ ให้ถามว่า “FR ไหนบังคับให้มี” ตอบไม่ได้ = ไม่ใส่</span>
+    <span class="l-en">The goal here isn't grandeur; it's <b>the smallest design that truly satisfies every Must FR</b>. When unsure whether to add something, ask “which FR forces this?” No answer = leave it out.</span>
+  </div>
+</div></section>
+
+<!-- ============ 10 ============ -->
+<section id="s10"><div class="wrap">
+  <p class="kicker">10 AI-First <span class="en">/ ออกแบบด้วย AI</span></p>
+  <h2 class="sec"><span class="l-th">ออกแบบด้วย AI — คุณตัดสินใจ AI ลงรายละเอียด</span><span class="l-en">Design with AI — you decide, the AI fills in the detail</span></h2>
+  <p class="sub l-th">AI วาดไดอะแกรม ร่างโมเดลข้อมูล และสร้าง prototype ได้เร็วมาก แต่มัน <b>ไม่รู้ว่าอะไรคือ “พอดี”</b> สำหรับโปรเจกต์คุณ — มันมักออกแบบเกิน หน้าที่ของคุณคือให้ทิศทาง ตัดสินใจ และตัดของเกินออก</p>
+  <p class="sub l-en">AI draws diagrams, drafts data models, and builds prototypes fast — but it <b>doesn't know what “just enough” is</b> for your project, and tends to over-design. Your job is to give direction, decide, and cut the excess.</p>
+
+  <h3><span class="l-th">3 จังหวะ</span><span class="l-en">Three beats</span></h3>
+  <div class="whys">
+    <div class="step"><div class="q"><span class="l-th">ป้อนของจริง</span><span class="l-en">Feed it the real inputs</span></div><div class="a"><span class="l-th">ให้ AI อ่าน SRS/backlog จริงของคุณก่อน แล้วสั่งทีละชั้น (<span class="cmd">/tech-design</span> → <span class="cmd">/design-system</span> → <span class="cmd">/prototype</span>) ไม่ใช่ “ออกแบบทั้งระบบให้ที”</span><span class="l-en">Point it at your actual SRS/backlog first, then run one layer at a time (<span class="cmd">/tech-design</span> → <span class="cmd">/design-system</span> → <span class="cmd">/prototype</span>) — not “design the whole system.”</span></div></div>
+    <div class="step"><div class="q"><span class="l-th">ตรวจ 3 ข้อ</span><span class="l-en">Review three things</span></div><div class="a"><span class="l-th">(ก) ทุกชิ้นสาวกลับหา FR ได้ไหม (ข) มีของเกิน/รั่วเทคโนโลยีไหม (ค) มีทางที่ผิดครบไหม — สั่ง AI ตัด/แก้ตามนี้</span><span class="l-en">(a) does each piece trace to an FR, (b) any excess or leaked tech, (c) are the unhappy paths covered — tell the AI to cut/fix accordingly.</span></div></div>
+    <div class="step"><div class="q"><span class="l-th">ตรวจความครบ</span><span class="l-en">Check coverage</span></div><div class="a"><span class="l-th"><span class="cmd">/sync-check tech-design</span> และ <span class="cmd">/sync-check prototype</span> เพื่อยืนยันว่า design ครอบทุก High-priority FR ก่อนส่ง</span><span class="l-en">Run <span class="cmd">/sync-check tech-design</span> and <span class="cmd">/sync-check prototype</span> to confirm the design covers every High-priority FR before submitting.</span></div></div>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0"><span class="l-th">prompt ที่แนะนำ</span><span class="l-en">The prompt to use</span></h4>
+    <div class="diagram" style="white-space:pre-wrap"><span class="l-th">อ่าน docs/01-requirements/backlog.md แล้วออกแบบเฉพาะ "โมเดลข้อมูล
+เชิง logical" (เอนทิตี ฟิลด์ ความสัมพันธ์ operations) ให้ครอบเฉพาะ FR
+ระดับ High — ห้ามระบุฐานข้อมูลหรือ framework, ห้ามเพิ่มฟีเจอร์ที่ไม่มี
+ใน backlog, ทุก operation ต้องระบุว่าตอบ FR ไหน แล้วหยุดรอให้ผมตรวจ</span><span class="l-en">Read docs/01-requirements/backlog.md and design ONLY the logical data
+model (entities, fields, relationships, operations) covering the High-
+priority FRs. Do NOT name any database or framework. Do NOT add features
+not in the backlog. Every operation must cite the FR it satisfies. Then
+stop and wait for me to review.</span></div>
+  </div>
+
+  <div class="callout warn">
+    <span class="lab"><span class="l-th">อย่าให้ AI ข้ามไปสร้างของจริง</span><span class="l-en">Don't let the AI jump to building</span></span>
+    <span class="l-th">ถ้า AI เริ่มเขียนโค้ด Firestore หรือ React ใน M3 = มันข้ามไป M4 แล้ว ให้ดึงกลับ: “ยังเป็นชั้น logical เท่านั้น ห้ามผูกเทคโนโลยี” การ commit เครื่องมือเป็นการตัดสินใจของ <b>คุณ</b> ไม่ใช่ค่า default ของ AI</span>
+    <span class="l-en">If the AI starts writing Firestore or React code in M3, it jumped to M4. Pull it back: “stay logical only, no tech.” Committing to a tool is <b>your</b> decision, not the AI's default.</span>
+  </div>
+</div></section>
+
+<!-- ============ 11 ============ -->
+<section id="s11"><div class="wrap">
+  <p class="kicker">11 Example <span class="en">/ ตัวอย่างของอาจารย์</span></p>
+  <h2 class="sec"><span class="l-th">ตัวอย่างเต็ม — design ย่อของ StudyMate</span><span class="l-en">A worked example — StudyMate's compact design</span></h2>
+  <p class="sub l-th">ต่อยอดจาก SRS ของ StudyMate ใน M2 นี่คือ design 4 ส่วนที่ผูกกับ FR/NFR เดิมทุกจุด — ให้เห็น “รูปทรง” ของ M3 ที่ผ่านเกณฑ์</p>
+  <p class="sub l-en">Building on StudyMate's M2 SRS, here is a four-part design tied to the same FR/NFR IDs — the “shape” of a passing M3.</p>
+
+  <h3><span class="l-th">1. สถาปัตยกรรม (3 ชั้น)</span><span class="l-en">1. Architecture (three-tier)</span></h3>
+  <div class="fig">
+    <p class="cap">StudyMate — System Architecture (three-tier)</p>
+    <svg class="arch" viewBox="0 0 760 500" role="img" aria-labelledby="smarch-title smarch-desc" xmlns="http://www.w3.org/2000/svg">
+      <title id="smarch-title">StudyMate three-tier system architecture</title>
+      <desc id="smarch-desc">Three stacked layers — Presentation (add-task screen, this-week dashboard, reminder banner), Application Logic (four operations enforcing NFR-5), and Data (users and tasks stores) — with an external reminder service that fires into the logic layer; each connection is annotated with the FR or NFR it satisfies.</desc>
+      <defs>
+        <marker id="aarw" markerWidth="9" markerHeight="7" refX="7.5" refY="3.5" orient="auto"><path d="M0,0 L9,3.5 L0,7 Z"/></marker>
+      </defs>
+
+      <!-- zones (drawn first) -->
+      <rect class="zn" x="32" y="44" width="528" height="104" rx="8"/>
+      <rect class="mask" x="44" y="48" width="118" height="12"/>
+      <text class="znlab" x="52" y="57">PRESENTATION · UI</text>
+      <rect class="zn" x="32" y="176" width="528" height="120" rx="8"/>
+      <rect class="mask" x="44" y="180" width="150" height="12"/>
+      <text class="znlab" x="52" y="189">APPLICATION LOGIC</text>
+      <rect class="zn" x="32" y="328" width="528" height="104" rx="8"/>
+      <rect class="mask" x="44" y="332" width="64" height="12"/>
+      <text class="znlab" x="52" y="341">DATA</text>
+
+      <!-- arrows (drawn before nodes so z-order puts them behind) -->
+      <line class="flow" x1="124" y1="132" x2="124" y2="206" marker-end="url(#aarw)"/>
+      <line class="flow" x1="296" y1="132" x2="296" y2="206" marker-end="url(#aarw)"/>
+      <line class="flow" x1="468" y1="208" x2="468" y2="134" marker-end="url(#aarw)"/>
+      <line class="flow" x1="166" y1="280" x2="166" y2="358" marker-end="url(#aarw)"/>
+      <line class="flow" x1="426" y1="280" x2="426" y2="358" marker-end="url(#aarw)"/>
+      <line class="flow dash" x1="592" y1="244" x2="548" y2="244" marker-end="url(#aarw)"/>
+
+      <!-- arrow labels / FR-NFR chips -->
+      <rect class="frchip" x="132" y="161" width="36" height="15" rx="3"/><text class="frtxt" x="150" y="172" text-anchor="middle">FR-1</text>
+      <rect class="frchip" x="304" y="161" width="36" height="15" rx="3"/><text class="frtxt" x="322" y="172" text-anchor="middle">FR-2</text>
+      <rect class="frchip" x="476" y="161" width="36" height="15" rx="3"/><text class="frtxt" x="494" y="172" text-anchor="middle">FR-3</text>
+      <rect class="mask" x="172" y="308" width="48" height="14"/><text class="alab" x="176" y="318">READ/WRITE</text>
+      <rect class="nfrchip" x="434" y="308" width="60" height="15" rx="3"/><text class="nfrtxt" x="464" y="319" text-anchor="middle">NFR-5</text>
+      <rect class="mask" x="550" y="223" width="42" height="13"/><text class="alab" x="571" y="233" text-anchor="middle">FIRES</text>
+
+      <!-- Presentation nodes -->
+      <rect class="mask" x="48" y="76" width="152" height="56" rx="6"/><rect class="node n-ui" x="48" y="76" width="152" height="56" rx="6"/>
+      <rect class="tg ui" x="56" y="84" width="46" height="12" rx="2"/><text class="tgt ui" x="79" y="93" text-anchor="middle">SCREEN</text>
+      <text class="nm" x="124" y="113" text-anchor="middle">Add-task screen</text><text class="sub" x="124" y="127" text-anchor="middle">user input</text>
+      <rect class="mask" x="220" y="76" width="152" height="56" rx="6"/><rect class="node n-ui" x="220" y="76" width="152" height="56" rx="6"/>
+      <rect class="tg ui" x="228" y="84" width="30" height="12" rx="2"/><text class="tgt ui" x="243" y="93" text-anchor="middle">VIEW</text>
+      <text class="nm" x="296" y="113" text-anchor="middle">This-week dashboard</text><text class="sub" x="296" y="127" text-anchor="middle">read-only list</text>
+      <rect class="mask" x="392" y="76" width="152" height="56" rx="6"/><rect class="node n-ui" x="392" y="76" width="152" height="56" rx="6"/>
+      <rect class="tg ui" x="400" y="84" width="34" height="12" rx="2"/><text class="tgt ui" x="417" y="93" text-anchor="middle">ALERT</text>
+      <text class="nm" x="468" y="113" text-anchor="middle">Reminder banner</text><text class="sub" x="468" y="127" text-anchor="middle">notification</text>
+
+      <!-- Logic node (focal) -->
+      <rect class="mask" x="48" y="208" width="496" height="72" rx="6"/><rect class="node n-logic" x="48" y="208" width="496" height="72" rx="6"/>
+      <rect class="tg lo" x="56" y="216" width="40" height="12" rx="2"/><text class="tgt lo" x="76" y="225" text-anchor="middle">LOGIC</text>
+      <rect class="nfrchip" x="372" y="214" width="164" height="16" rx="3"/><text class="nfrtxt" x="454" y="225" text-anchor="middle">NFR-5 · own tasks only</text>
+      <text class="nm" x="296" y="242" text-anchor="middle">Application Logic</text>
+      <text class="sub" x="296" y="258" text-anchor="middle">addTask · listTasksThisWeek</text>
+      <text class="sub" x="296" y="272" text-anchor="middle">scheduleReminder · parseThaiPlan</text>
+
+      <!-- Data nodes -->
+      <rect class="mask" x="48" y="360" width="236" height="56" rx="6"/><rect class="node n-data" x="48" y="360" width="236" height="56" rx="6"/>
+      <rect class="tg da" x="56" y="368" width="40" height="12" rx="2"/><text class="tgt da" x="76" y="377" text-anchor="middle">STORE</text>
+      <text class="nm" x="166" y="395" text-anchor="middle">users</text><text class="sub" x="166" y="409" text-anchor="middle">id · name · email</text>
+      <rect class="mask" x="308" y="360" width="236" height="56" rx="6"/><rect class="node n-data" x="308" y="360" width="236" height="56" rx="6"/>
+      <rect class="tg da" x="316" y="368" width="40" height="12" rx="2"/><text class="tgt da" x="336" y="377" text-anchor="middle">STORE</text>
+      <text class="nm" x="426" y="395" text-anchor="middle">tasks</text><text class="sub" x="426" y="409" text-anchor="middle">ownerId · dueDate · status</text>
+
+      <!-- External node -->
+      <rect class="mask" x="592" y="212" width="136" height="64" rx="6"/><rect class="node n-ext" x="592" y="212" width="136" height="64" rx="6"/>
+      <rect class="tg ex" x="600" y="220" width="28" height="12" rx="2"/><text class="tgt ex" x="614" y="229" text-anchor="middle">EXT</text>
+      <text class="nm" x="660" y="248" text-anchor="middle">Reminder service</text><text class="sub" x="660" y="263" text-anchor="middle">«external» push</text>
+
+      <!-- legend strip -->
+      <line class="lgl" x1="32" y1="452" x2="728" y2="452"/>
+      <text class="lgt" x="32" y="473">LEGEND</text>
+      <rect class="sw-ui" x="96" y="464" width="12" height="12" rx="2"/><text class="lgt" x="114" y="473">Presentation</text>
+      <rect class="sw-lo" x="228" y="464" width="12" height="12" rx="2"/><text class="lgt" x="246" y="473">Logic (rules)</text>
+      <rect class="sw-da" x="372" y="464" width="12" height="12" rx="2"/><text class="lgt" x="390" y="473">Data stores</text>
+      <line class="sw-ex" x1="500" y1="470" x2="524" y2="470"/><text class="lgt" x="530" y="473">External / async</text>
+    </svg>
+    <p class="mock-note"><span class="l-th">อ่านไดอะแกรม: การไหลลงจากบนสู่ล่าง — <b>หน้าจอ → Logic → Data</b> ทุกเส้นกำกับด้วย <span class="fr">FR</span>/<span class="fr nfr">NFR</span> ที่รองรับ · Logic เป็นชั้นที่บังคับกฎ NFR-5 · บริการเตือนภายนอกเป็น secondary actor ที่ “ยิง” เข้ามาที่ Logic (เส้นประ)</span><span class="l-en">How to read it: flow runs top→down — <b>screens → Logic → Data</b> — every edge is annotated with the <span class="fr">FR</span>/<span class="fr nfr">NFR</span> it satisfies · Logic is the layer that enforces NFR-5 · the external reminder service is a secondary actor that “fires” into Logic (dashed).</span></p>
+  </div>
+
+  <h3><span class="l-th">2. Use Case + ความสัมพันธ์ข้อมูล</span><span class="l-en">2. Use Case + data relationship</span></h3>
+  <div class="grid2">
+    <div class="fig" style="margin:0">
+      <p class="cap"><span class="l-th">Use case ของ Student</span><span class="l-en">Student's use cases</span></p>
+      <div class="uc" style="margin:8px 0"><span>Manage tasks</span><span class="fr">FR-1</span></div>
+      <div class="uc" style="margin:8px 0"><span>View this week</span><span class="fr">FR-2</span></div>
+      <div class="uc" style="margin:8px 0"><span>Receive reminder</span><span class="fr">FR-3</span></div>
+      <div class="uc" style="margin:8px 0"><span>Enter plan in Thai</span><span class="fr">FR-4</span></div>
+    </div>
+    <div class="fig" style="margin:0">
+      <p class="cap"><span class="l-th">ความสัมพันธ์ &amp; สถานะข้อมูล</span><span class="l-en">Data relationship &amp; state</span></p>
+      <div class="erd" style="justify-content:flex-start;gap:0">
+        <div class="ent" style="min-width:74px"><div class="eh">User</div></div>
+        <div class="erel"><div style="display:flex;align-items:center;gap:6px"><span class="card-n" style="font-size:13px">1</span><span class="rl" style="width:40px"></span><span class="card-n" style="font-size:13px">0..*</span></div></div>
+        <div class="ent" style="min-width:74px"><div class="eh">Task</div></div>
+      </div>
+      <ul class="clean" style="margin:14px 0 0">
+        <li style="font-family:var(--mono);font-size:13px"><code>Task.ownerId</code> → <code>User.id</code></li>
+        <li style="font-family:var(--mono);font-size:13px">status: open → doing → done</li>
+        <li style="font-family:var(--mono);font-size:13px">remindAt = dueDate − 1&nbsp;day <span class="fr">FR-3</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <h3><span class="l-th">3. Design tokens (ย่อ)</span><span class="l-en">3. Design tokens (excerpt)</span></h3>
+  <div class="scroll"><table>
+    <thead><tr><th>token</th><th class="l-th">ค่า</th><th class="l-en" style="display:none">value</th><th><span class="l-th">ใช้กับ</span><span class="l-en">used for</span></th></tr></thead>
+    <tbody>
+      <tr><td class="mono">--primary</td><td class="mono">calm blue</td><td><span class="l-th">ปุ่มหลัก, ลิงก์</span><span class="l-en">primary button, links</span></td></tr>
+      <tr><td class="mono">--danger</td><td class="mono">red</td><td><span class="l-th">งานเลยกำหนด, ลบ</span><span class="l-en">overdue task, delete</span></td></tr>
+      <tr><td class="mono">--radius</td><td class="mono">12px</td><td><span class="l-th">การ์ด, ปุ่ม (ขอบมน)</span><span class="l-en">cards, buttons (rounded)</span></td></tr>
+      <tr><td class="mono">space</td><td class="mono">4/8/16/24</td><td><span class="l-th">ระยะห่างทุกหน้า</span><span class="l-en">spacing everywhere</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3><span class="l-th">4. Prototype: หน้า “เพิ่มงาน” (โครง)</span><span class="l-en">4. Prototype: the “add task” screen (sketch)</span></h3>
+  <div class="fig">
+    <p class="cap"><span class="l-th">Prototype: หน้า “เพิ่มงาน”</span><span class="l-en">Prototype: the “add task” screen</span></p>
+    <div class="mock">
+      <div class="mbar">＋ <span class="l-th">เพิ่มงาน</span><span class="l-en">Add task</span></div>
+      <div class="mbody">
+        <div class="mfield">
+          <label><span class="l-th">ชื่องาน</span><span class="l-en">Title</span> <span class="fr">FR-1</span></label>
+          <div class="minput"><span class="l-th">พิมพ์ชื่องาน…</span><span class="l-en">Type a title…</span></div>
+        </div>
+        <div class="mfield">
+          <label><span class="l-th">กำหนดส่ง</span><span class="l-en">Due date</span> <span class="fr">FR-1</span> → remindAt <span class="fr">FR-3</span></label>
+          <div class="minput"><span>2569-09-30</span><span>📅</span></div>
+        </div>
+        <div class="mbtn"><span class="l-th">บันทึก</span><span class="l-en">Save</span></div>
+        <div class="merr">⚠ <span class="l-th">กรุณากรอกชื่องานก่อน</span><span class="l-en">Please enter a title first</span></div>
+      </div>
+    </div>
+    <p class="mock-note" style="text-align:center"><span class="l-th"><b>ใช้ token:</b> <code>--primary</code> (แถบบน/ปุ่ม), <code>--radius</code> (ขอบมน), <code>--danger</code> (แถบ error) · มี <b>error state</b> ตาม unhappy path</span><span class="l-en"><b>Uses tokens:</b> <code>--primary</code> (bar/button), <code>--radius</code> (corners), <code>--danger</code> (error bar) · includes an <b>error state</b> for the unhappy path</span></p>
+  </div>
+
+  <div class="callout brand">
+    <span class="lab"><span class="l-th">ทุกลูกศรสาวกลับได้</span><span class="l-en">Every arrow traces back</span></span>
+    <span class="l-th">ทั้ง 4 ส่วนมีความสอดคล้องกันครบ (traceability): หน้าจอ → operation → เอนทิตี → FR และ NFR-5 ปรากฏเป็นกฎจริงในชั้น logic ความสอดคล้องนี้ต่อเนื่องจาก M1 และจะใช้เป็นฐานการทดสอบใน M4</span>
+    <span class="l-en">All four parts are fully traceable: screen → operation → entity → FR, and NFR-5 appears as a real rule in the logic layer. This traceability continues from M1 and becomes the basis for testing in M4.</span>
+  </div>
+</div></section>
+
+<!-- ============ 12 ============ -->
+<section id="s12"><div class="wrap">
+  <p class="kicker">12 Scorecard <span class="en">/ วัดความพร้อม</span></p>
+  <h2 class="sec"><span class="l-th">design ของคุณพร้อมส่งหรือยัง</span><span class="l-en">Is your design ready to submit?</span></h2>
+  <p class="sub l-th">ให้คะแนนตัวเองแต่ละข้อ: <b>0</b> = ยังไม่มี, <b>1</b> = มีแต่อ่อน, <b>2</b> = แน่น เต็ม 20 คะแนน — ควรได้ ≥14 ก่อนส่ง</p>
+  <p class="sub l-en">Rate each item: <b>0</b> = missing, <b>1</b> = present but weak, <b>2</b> = solid. Out of 20 — aim for ≥14 before submitting.</p>
+
+  <div class="card" id="scorebox">
+    <div class="score-total">
+      <span><span class="l-th">คะแนนรวม</span><span class="l-en">Total</span></span>
+      <span class="n" id="ds_total">0 / 20</span>
+    </div>
+    <div class="verdict" id="ds_verdict" style="background:var(--surface-2);color:var(--muted)">
+      <span class="l-th">ให้คะแนนให้ครบทุกข้อเพื่อดูผล</span><span class="l-en">Rate every item to see the verdict.</span>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 13 ============ -->
+<section id="s13"><div class="wrap">
+  <p class="kicker">13 Deliverable <span class="en">/ ส่งงาน</span></p>
+  <h2 class="sec"><span class="l-th">M3 ส่งอะไร และให้คะแนนยังไง</span><span class="l-en">M3 — what to submit &amp; how it's graded</span></h2>
+
+  <h3><span class="l-th">ส่งอะไร</span><span class="l-en">What to submit</span></h3>
+  <ul class="clean">
+    <li><span class="l-th"><b>architecture.md</b> — สถาปัตยกรรม (3 ชั้น) + โมเดลข้อมูล (เอนทิตี ฟิลด์ ความสัมพันธ์ operations) แบบ tech-agnostic</span><span class="l-en"><b>architecture.md</b> — the three-tier architecture + data model (entities, fields, relationships, operations), tech-agnostic.</span></li>
+    <li><span class="l-th"><b>ไดอะแกรม ≥2 ชิ้น</b> — Use Case (บังคับ) + อีก 1 (sequence / class / state) มี label และผูกกับ FR</span><span class="l-en"><b>≥2 diagrams</b> — a Use Case (required) + one more (sequence / class / state), labeled and tied to FRs.</span></li>
+    <li><span class="l-th"><b>design-system.md</b> — design tokens (สี ฟอนต์ ระยะ) + ชิ้นส่วนที่ใช้ซ้ำ</span><span class="l-en"><b>design-system.md</b> — design tokens (color, type, spacing) + reusable components.</span></li>
+    <li><span class="l-th"><b>Prototype ≥1 หน้า</b> — HTML คลิกได้ ใช้ token มีทางที่ผิด (error/empty state)</span><span class="l-en"><b>≥1 prototype screen</b> — clickable HTML using tokens, with an error/empty state.</span></li>
+    <li><span class="l-th"><b>ตาราง traceability</b> — FR → operation → เอนทิตี → หน้าจอ + บันทึกการใช้ AI</span><span class="l-en"><b>A traceability table</b> — FR → operation → entity → screen + an AI-use note.</span></li>
+  </ul>
+
+  <h3><span class="l-th">เกณฑ์ให้คะแนน (เต็ม 10 คะแนน = 5% ของวิชา)</span><span class="l-en">Grading rubric (10 points = 5% of the course)</span></h3>
+  <div class="scroll"><table>
+    <thead><tr>
+      <th style="width:44%"><span class="l-th">เกณฑ์</span><span class="l-en">Criterion</span></th>
+      <th><span class="l-th">ดี (เต็ม)</span><span class="l-en">Strong (full)</span></th>
+      <th><span class="l-th">พอใช้</span><span class="l-en">Partial</span></th>
+      <th><span class="l-th">อ่อน</span><span class="l-en">Weak</span></th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td><b>1.</b> <span class="l-th">สถาปัตยกรรมชัด แยกชั้น/หน้าที่ได้</span><span class="l-en">Clear architecture; layers/concerns separated</span></td>
+        <td><span class="l-th">3 ชั้นชัด low coupling</span><span class="l-en">3 tiers, low coupling</span></td>
+        <td><span class="l-th">มีแต่ชั้นปนกัน</span><span class="l-en">present but mixed</span></td>
+        <td><span class="l-th">ก้อนเดียว</span><span class="l-en">one blob</span></td>
+      </tr>
+      <tr>
+        <td><b>2.</b> <span class="l-th">ไดอะแกรม ≥2 ถูกต้อง มี label ผูก FR</span><span class="l-en">≥2 correct diagrams, labeled, tied to FRs</span></td>
+        <td><span class="l-th">ครบ ตรงข้อความ</span><span class="l-en">complete, consistent</span></td>
+        <td><span class="l-th">มีแต่ไม่ครบ</span><span class="l-en">some gaps</span></td>
+        <td><span class="l-th">ไม่มี/ผิด</span><span class="l-en">missing/wrong</span></td>
+      </tr>
+      <tr>
+        <td><b>3.</b> <span class="l-th">โมเดลข้อมูล tech-agnostic ครอบทุก FR</span><span class="l-en">Tech-agnostic data model covering every FR</span></td>
+        <td><span class="l-th">ครบ ไม่รั่วเทค</span><span class="l-en">complete, no leaks</span></td>
+        <td><span class="l-th">ขาดบางข้อ</span><span class="l-en">some FRs uncovered</span></td>
+        <td><span class="l-th">รั่วเทค/ไม่ครบ</span><span class="l-en">leaks/incomplete</span></td>
+      </tr>
+      <tr>
+        <td><b>4.</b> <span class="l-th">Design system + prototype (มี error state)</span><span class="l-en">Design system + prototype (with error state)</span></td>
+        <td><span class="l-th">ใช้ token + ทางผิด</span><span class="l-en">tokens + unhappy path</span></td>
+        <td><span class="l-th">happy path เท่านั้น</span><span class="l-en">happy path only</span></td>
+        <td><span class="l-th">ไม่มี</span><span class="l-en">none</span></td>
+      </tr>
+      <tr>
+        <td><b>5.</b> <span class="l-th">Traceability + ไม่มี gold-plating</span><span class="l-en">Traceability + no gold-plating</span></td>
+        <td><span class="l-th">สาวกลับได้ทุกชิ้น</span><span class="l-en">everything traces back</span></td>
+        <td><span class="l-th">มีบางส่วน</span><span class="l-en">partial</span></td>
+        <td><span class="l-th">ไม่มี/เกินเยอะ</span><span class="l-en">none/lots of excess</span></td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout warn">
+    <span class="lab"><span class="l-th">กฎการอนุมัติ</span><span class="l-en">Approval rule</span></span>
+    <span class="l-th">design ที่ยังมีกลิ่นหนัก ๆ (รั่วเทคโนโลยี, FR ไม่มีที่อยู่, ไม่มีทางที่ผิด) จะถูก <b>ส่งกลับให้แก้ ไม่ใช่ตก</b> และให้คะแนนครั้งเดียวเมื่อส่งฉบับแก้ เคล็ดลับ ให้ผ่าน Scorecard section 12 ที่ 14/20 ขึ้นไป และรัน <span class="cmd">/sync-check</span> ทั้ง tech-design และ prototype ก่อนส่ง</span>
+    <span class="l-en">A design with heavy smells (leaked tech, homeless FRs, no unhappy paths) is <b>returned for revision, not failed</b> — graded once on resubmission. Tip: clear 14/20 on the Section 12 scorecard and run <span class="cmd">/sync-check</span> on both tech-design and prototype before you submit.</span>
+  </div>
+
+  <div class="callout brand">
+    <span class="lab"><span class="l-th">ต่อยอด (ไม่บังคับ · ไม่คิดคะแนน) → M4 Build &amp; Deploy</span><span class="l-en">Optional next (not graded) → M4 Build &amp; Deploy</span></span>
+    <span class="l-th"><b>M3 (design) คือชิ้นงานสุดท้ายของสายนี้ที่คิดคะแนน</b> · <b>M4 เป็นขั้น “ต่อยอด” ที่แนะนำอย่างยิ่งแต่ไม่มีผลต่อคะแนน</b> — ลองสร้างจริงและ <b>deploy บน Firebase (แพ็กฟรี)</b>: map โมเดล logical ลง Firestore, เขียน Security Rules ตาม NFR-5, และทดสอบกับ acceptance G-W-T เดิม · ทำเพื่อ <b>ประสบการณ์จริงและใส่ portfolio</b> — เส้นด้าย Problem → FR/NFR → Design เดินต่อได้ถึงของที่ deploy ได้จริง</span>
+    <span class="l-en"><b>M3 (design) is the last graded piece of this track.</b> <b>M4 is an optional, strongly-recommended extension that does not affect your grade</b> — try building it for real and <b>deploying on Firebase (free plan)</b>: map the logical model onto Firestore, write Security Rules from NFR-5, and test against the same G-W-T acceptance · do it for <b>real experience and a portfolio piece</b> — the Problem → FR/NFR → Design thread runs all the way to something you can actually deploy.</span>
+  </div>
+
+  <button class="print-btn" onclick="window.print()" style="margin-top: 24px;"><span class="l-th">พิมพ์ หรือ บันทึกเป็น PDF</span><span class="l-en">Print / Save as PDF</span></button>
+</div></section>
+
+<footer><div class="wrap">
+  <span>Intro to Software Engineering — <span class="l-th">ปีการศึกษา 2569</span><span class="l-en">Academic Year 2569</span> — Milestone 3 (Software Design &amp; Modeling)</span>
+  <span>School of Applied Digital Technology, MFU</span>
+</div></footer>
+
+<script>
+  // ---- language toggle ----
+  (function(){
+    const saved = (function(){try{return localStorage.getItem('m3_lang')}catch(e){return null}})();
+    if(saved==='en'||saved==='th'){ document.body.dataset.lang = saved; }
+    function setLang(l){
+      document.body.dataset.lang = l;
+      document.documentElement.lang = l;
+      try{ localStorage.setItem('m3_lang', l); }catch(e){}
+      document.querySelectorAll('.langbar button').forEach(b=>b.classList.toggle('on', b.dataset.set===l));
+    }
+    document.querySelectorAll('.langbar button').forEach(b=>{
+      b.addEventListener('click',()=>setLang(b.dataset.set));
+    });
+    document.querySelectorAll('.langbar button').forEach(b=>b.classList.toggle('on', b.dataset.set===document.body.dataset.lang));
+  })();
+
+  // ---- design readiness scorecard ----
+  const DS_ITEMS = [
+    {th:'สถาปัตยกรรมแบ่งชั้น/หน้าที่ชัด (UI / logic / data)', en:'Architecture separates layers/concerns (UI / logic / data)'},
+    {th:'Coupling ต่ำ, cohesion สูง (แก้ชั้นหนึ่งไม่พังอีกชั้น)', en:'Low coupling, high cohesion (one layer changes safely)'},
+    {th:'Use Case diagram ครบ actor + FR หลัก', en:'Use Case diagram covers actors + the main FRs'},
+    {th:'มีไดอะแกรมที่ 2 (sequence/class/state) มี label', en:'A second diagram (sequence/class/state), labeled'},
+    {th:'โมเดลข้อมูลเป็น logical (ไม่ระบุ DB/framework)', en:'Data model is logical (no DB/framework named)'},
+    {th:'ทุก FR ระดับ High มีเอนทิตี/operation/หน้าจอรองรับ', en:'Every High FR has an entity/operation/screen behind it'},
+    {th:'design-system.md มี token (สี ฟอนต์ ระยะ) + components', en:'design-system.md has tokens (color/type/space) + components'},
+    {th:'Prototype ≥1 หน้า ใช้ token (ไม่มีสีลอย)', en:'≥1 prototype screen uses tokens (no stray colors)'},
+    {th:'Prototype มีทางที่ผิด (error/empty/loading state)', en:'Prototype shows unhappy paths (error/empty/loading)'},
+    {th:'มี traceability + ไม่มี gold-plating (ไม่มีของเกิน FR)', en:'Traceability holds; no gold-plating (nothing beyond the FRs)'},
+  ];
+  const dsScores = {};
+  (function buildScore(){
+    const box = document.getElementById('scorebox');
+    const anchor = box.querySelector('.score-total');
+    DS_ITEMS.forEach((it,i)=>{
+      const row = document.createElement('div');
+      row.className='score-item';
+      row.innerHTML = '<div class="q"><b>'+(i+1)+'. <span class="l-th">'+it.th+'</span><span class="l-en">'+it.en+'</span></b></div>'+
+        '<div class="dots" data-i="'+i+'">'+[0,1,2].map(v=>'<button data-v="'+v+'">'+v+'</button>').join('')+'</div>';
+      box.insertBefore(row, anchor);
+    });
+    box.querySelectorAll('.dots').forEach(d=>{
+      d.querySelectorAll('button').forEach(b=>{
+        b.addEventListener('click',()=>{
+          const i=d.dataset.i;
+          dsScores[i]=+b.dataset.v;
+          d.querySelectorAll('button').forEach(x=>x.classList.toggle('on', x===b));
+          dsTotal();
+        });
+      });
+    });
+  })();
+  function dsTotal(){
+    const t = Object.values(dsScores).reduce((a,b)=>a+b,0);
+    document.getElementById('ds_total').textContent = t+' / 20';
+    const v = document.getElementById('ds_verdict');
+    let bg,col,msg_th,msg_en;
+    if(Object.keys(dsScores).length<DS_ITEMS.length){ bg='var(--surface-2)';col='var(--muted)';msg_th='ให้คะแนนให้ครบทุกข้อเพื่อดูผล';msg_en='Rate every item to see the verdict.'; }
+    else if(t>=17){ bg='var(--good-soft)';col='var(--good)';msg_th='พร้อมส่ง — design แน่นดี';msg_en='Ready to submit — a solid design.'; }
+    else if(t>=14){ bg='var(--good-soft)';col='var(--good)';msg_th='ผ่านเกณฑ์ ลองเก็บข้อที่ยังได้ 1 ให้เป็น 2';msg_en='Passing — push the 1s up to 2s if you can.'; }
+    else if(t>=10){ bg='var(--warn-soft)';col='var(--warn)';msg_th='ใกล้แล้ว แก้จุดที่ได้ 0–1 ก่อนส่ง';msg_en='Close — fix the 0–1 items before submitting.'; }
+    else { bg='var(--bad-soft)';col='var(--bad)';msg_th='ยังไม่พร้อม กลับไปเสริมสถาปัตยกรรม/โมเดลข้อมูล/prototype';msg_en='Not ready — strengthen architecture/data model/prototype.'; }
+    v.style.background=bg; v.style.color=col;
+    v.innerHTML='<span class="l-th">'+msg_th+'</span><span class="l-en">'+msg_en+'</span>';
+  }
+</script>
+</body>
+</html>
