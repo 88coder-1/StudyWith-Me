@@ -93,6 +93,38 @@ td:first-child{font-weight:600;color:var(--term);min-width:9em}
 figure.fig{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
 figure.fig figcaption{font-size:.95rem}
 .figgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.flow span.s small{display:block;font-weight:400;color:var(--muted);font-size:.85rem;line-height:1.35}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.box{background:var(--soft);border-radius:8px;padding:10px 12px;min-width:0;font-size:.93rem}
+.box h4{margin:0 0 4px;font-family:var(--font-display);font-size:.98rem;color:var(--term)}
+.box .ex{display:block;margin-top:6px;color:var(--muted)}
+.box.w{border-left:4px solid var(--bad)}
+.box.a{border-left:4px solid var(--accent)}
+.box.g{border-left:4px solid var(--good)}
+.cp{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.cp.mini{background:var(--soft);border:0;padding:12px 14px}
+.cp h3{font-size:.95rem}
+.cp details{border-top:1px solid var(--line);padding-top:8px}
+.cp summary{cursor:pointer;font-weight:500}
+.cp details p{margin-top:6px;padding-left:14px;border-left:3px solid var(--accent)}
+.lbl{display:inline-block;font-size:.78rem;font-weight:700;border-radius:4px;padding:0 7px;margin-right:8px;min-width:3.4em;text-align:center}
+.lbl.fr{background:var(--accent);color:var(--accent-fg)}
+.lbl.nfr{background:var(--hl);color:var(--hl-fg)}
+.sortlist{list-style:none;padding:0;display:flex;flex-direction:column;gap:6px}
+.sortlist li{background:var(--soft);border-radius:6px;padding:6px 10px}
+.sortlist li+li{margin-top:0}
+.k1,.k2,.k3{border-radius:4px;padding:0 4px}
+.k1{background:var(--hl);color:var(--hl-fg)}
+.k2{background:var(--good-bg)}
+.k3{background:var(--bad-bg)}
+.layers{display:flex;flex-direction:column;gap:4px}
+.layers div{background:var(--soft);border-radius:6px;padding:8px 12px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px}
+.layers div b{min-width:9em}
+.layers i{font-style:normal;color:var(--muted);text-align:center;font-size:.85rem}
+.sev{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.sev div{border-radius:6px;padding:6px 4px;text-align:center;font-size:.82rem;background:var(--soft);min-width:0}
+.sev div b{display:block;font-size:1.1rem}
+.sev .hot{background:var(--bad-bg)}
 .figbox{overflow-x:auto}
 svg.d{display:block;width:100%;height:auto;max-width:640px}
 .d line,.d path,.d rect,.d ellipse,.d circle,.d polygon{stroke:var(--fg);stroke-width:1.5;fill:var(--surface)}
@@ -260,6 +292,10 @@ svg.d{display:block;width:100%;height:auto;max-width:640px}
         <tr><td>Doghouse vs skyscraper</td><td><span class="l-th">Programming เหมือนสร้างบ้านหมา คนเดียวทำได้ ไม่ต้องวางแผน ส่วน engineering เหมือนสร้างตึกสูง ต้องมีทีม แบบแปลน และแผนบำรุงรักษา</span><span class="l-en">Programming is like building a doghouse: one person, little planning. Engineering is like building a skyscraper: a team, blueprints and planned maintenance</span></td><td><span class="l-th">ต่างกันที่ขนาด ทีม และผลเมื่อพัง</span><span class="l-en">The difference is scale, teamwork and the cost of failure</span></td></tr>
         <tr><td>Maintenance</td><td><span class="l-th">การดูแลและแก้ไขหลังปล่อยใช้งาน ใช้ต้นทุนกว่า 60% ของทั้งอายุระบบ</span><span class="l-en">Fixing and changing the system after launch; over 60% of its lifetime cost</span></td><td><span class="l-th">ซอฟต์แวร์ไม่เคยเสร็จ</span><span class="l-en">Software is never done</span></td></tr>
       </table>
+      <div class="grid">
+        <div class="box w"><h4><span class="l-th">Program · บ้านหมา</span><span class="l-en">Program · the doghouse</span></h4><span class="l-th">คนเดียวเขียน คนเดียวใช้ พังก็จำได้ว่าเพราะอะไร</span><span class="l-en">One person writes it and uses it; if it breaks, they remember why.</span><span class="ex"><span class="l-th">ตัวอย่าง: สคริปต์เปลี่ยนชื่อไฟล์ในเครื่องเรา</span><span class="l-en">Example: a script that renames the files on your laptop</span></span></div>
+        <div class="box g"><h4><span class="l-th">Software product · ตึกสูง</span><span class="l-en">Software product · the skyscraper</span></h4><span class="l-th">คนแปลกหน้าพึ่งพามัน เพื่อนร่วมทีมต้องแก้ต่อ ต้องอยู่ได้หลายปี</span><span class="l-en">Strangers depend on it, teammates must change it, and it must survive for years.</span><span class="ex"><span class="l-th">ตัวอย่าง: StudyMate ที่นักศึกษาหลายพันคนใช้ เก็บข้อมูลส่วนตัว</span><span class="l-en">Example: StudyMate, used by thousands of students and holding personal data</span></span></div>
+      </div>
     </div></details>
 
     <details class="tp"><summary><span class="l-th">ประเภทซอฟต์แวร์</span><span class="l-en">Types of software</span></summary><div class="in">
@@ -285,6 +321,19 @@ svg.d{display:block;width:100%;height:auto;max-width:640px}
         <tr><td>Performance</td><td><span class="l-th">เร็วและใช้ทรัพยากรในระดับที่ยอมรับได้</span><span class="l-en">Acceptable speed and cost</span></td><td><span class="l-th">หน้าจอโหลดนานเกินไป</span><span class="l-en">The screen takes too long to load</span></td></tr>
       </table>
       <p><span class="l-th"><b>สาเหตุ (root cause) ที่โปรเจกต์ล้มเหลว:</b> requirement ไม่ชัดหรือเปลี่ยนตลอด · วางแผนหรือประเมินเวลาผิด · การสื่อสารในทีมพัง ส่วนส่งช้า งบบาน คุณภาพแย่ เป็นอาการ (symptom)</span><span class="l-en"><b>Root causes of project failure:</b> unclear or shifting requirements · bad planning or estimation · broken team communication. Late delivery, budget overrun and poor quality are symptoms.</span></p>
+      <p><b><span class="l-th">เห็นสถานการณ์แล้วตอบ attribute ได้ทันที (ตัวอย่าง StudyMate)</span><span class="l-en">Scenario → attribute at a glance (StudyMate examples)</span></b></p>
+      <div class="grid">
+        <div class="box a"><h4>Reliability</h4><span class="l-th">แอปแครชแล้วงานที่บันทึกไว้หายหมด</span><span class="l-en">The app crashes and every saved task is gone</span></div>
+        <div class="box a"><h4>Security</h4><span class="l-th">เปลี่ยนเลขในลิงก์แล้วเห็นงานของเพื่อน</span><span class="l-en">Changing a number in the link shows a friend's tasks</span></div>
+        <div class="box a"><h4>Maintainability</h4><span class="l-th">แก้สีปุ่มนิดเดียว ต้องแก้ 12 ไฟล์</span><span class="l-en">Changing one button colour needs edits in 12 files</span></div>
+        <div class="box a"><h4>Usability</h4><span class="l-th">นักศึกษาใหม่หาปุ่มเพิ่มงานไม่เจอ</span><span class="l-en">A new student cannot find the add-task button</span></div>
+        <div class="box a"><h4>Performance</h4><span class="l-th">เปิดหน้าสัปดาห์นี้ต้องรอ 15 วินาที</span><span class="l-en">The week view takes 15 seconds to open</span></div>
+      </div>
+      <div class="cp mini">
+        <h3><span class="l-th">เช็กตรงนี้ก่อนไปต่อ</span><span class="l-en">Quick check before you move on</span></h3>
+        <details><summary><span class="l-th">แอปให้คนอื่นเห็นรายการงานของเราได้ ผิด quality attribute ใด</span><span class="l-en">The app lets other people see your task list. Which quality attribute fails?</span></summary><p><span class="l-th"><b>Security</b> ถ้าข้อมูลหายจะเป็น reliability</span><span class="l-en"><b>Security</b>. If data were lost instead, it would be reliability.</span></p></details>
+        <details><summary><span class="l-th">โปรเจกต์ส่งช้าเพราะลูกค้าเปลี่ยนความต้องการทุกสัปดาห์ ข้อใดคือสาเหตุ</span><span class="l-en">A project is late because the client changes their needs every week. What is the root cause?</span></summary><p><span class="l-th"><b>Requirement ไม่ชัดและเปลี่ยนตลอด</b> ส่วนการส่งช้าเป็นอาการ</span><span class="l-en"><b>Unclear, shifting requirements.</b> Being late is the symptom.</span></p></details>
+      </div>
     </div></details>
 
     <details class="tp"><summary><span class="l-th">ยุค AI และกติกา AI-honesty</span><span class="l-en">The AI era and the AI-honesty rule</span> <small><span class="l-th">ออกสอบบ่อย</span><span class="l-en">often tested</span></small></summary><div class="in">
@@ -299,6 +348,15 @@ svg.d{display:block;width:100%;height:auto;max-width:640px}
         <tr><td>Software process at a glance (Wk1)</td><td>Understand needs → Design → Build → Validate → Evolve</td><td><span class="l-th">ต่างจาก 4 activities ของบท 2 ที่รวม Design กับ Build เป็น Development</span><span class="l-en">Chapter 2's four activities merge Design and Build into Development</span></td></tr>
       </table>
       <p><span class="l-th"><b>3 สิ่งที่คนทำได้และ AI แทนไม่ได้:</b> Empathy &amp; UX (เข้าใจความรู้สึกผู้ใช้) · Requirements analysis (หาความต้องการจริง) · Architectural decisions (เลือก trade-off และรับผลที่ตามมา)</span><span class="l-en"><b>Three things only a human can own:</b> Empathy &amp; UX (feeling what users feel) · Requirements analysis (finding the true need) · Architectural decisions (choosing trade-offs and owning the consequences)</span></p>
+      <p><b><span class="l-th">ตัวอย่าง log–verify–explain เมื่อใช้ AI เขียนฟังก์ชัน</span><span class="l-en">Worked example: log–verify–explain when AI writes a function</span></b></p>
+      <div class="flow"><span class="s">Log<small><span class="l-th">บันทึกใน AI Log: ให้ AI เขียน isOverdue() ใช้ prompt อะไร แก้ส่วนไหน</span><span class="l-en">AI Log: AI wrote isOverdue(), the prompt used, what you changed</span></small></span><i>→</i><span class="s">Verify<small><span class="l-th">เขียน test: งานเลยกำหนด งานวันนี้ งานไม่มีวันกำหนด</span><span class="l-en">Write tests: an overdue task, a task due today, a task with no date</span></small></span><i>→</i><span class="s">Explain<small><span class="l-th">อธิบายได้ว่าเทียบ dueDate กับวันนี้อย่างไร</span><span class="l-en">Explain how it compares dueDate with today</span></small></span></div>
+      <p><b><span class="l-th">บทบาทของวิศวกรเมื่อมี AI</span><span class="l-en">The engineer's job when AI writes code</span></b></p>
+      <div class="flow"><span class="s">Frame<small><span class="l-th">กำหนดว่าจะสร้างอะไร</span><span class="l-en">decide what to build</span></small></span><i>→</i><span class="s">Decide<small><span class="l-th">เลือก trade-off</span><span class="l-en">choose the trade-off</span></small></span><i>→</i><span class="s">Verify<small><span class="l-th">ตรวจว่าใช้ได้จริง</span><span class="l-en">check it really works</span></small></span><i>→</i><span class="s">Own it<small><span class="l-th">รับผิดชอบเมื่อพัง</span><span class="l-en">answer for it when it fails</span></small></span></div>
+      <div class="cp mini">
+        <h3><span class="l-th">เช็กตรงนี้ก่อนไปต่อ</span><span class="l-en">Quick check before you move on</span></h3>
+        <details><summary><span class="l-th">AI เขียนฟังก์ชันให้ และคอมไพล์ผ่านแล้ว ส่งงานได้เลยไหม</span><span class="l-en">AI wrote a function and it compiles. Can you hand it in now?</span></summary><p><span class="l-th"><b>ยังไม่ได้</b> ต้อง log ว่าใช้ AI, verify ด้วยการทดสอบ และ explain ได้ว่าโค้ดทำงานอย่างไร</span><span class="l-en"><b>Not yet.</b> Log the AI use, verify it with tests, and be able to explain how it works.</span></p></details>
+        <details><summary><span class="l-th">งานใดยังเป็นของมนุษย์ แม้ AI จะช่วยได้มาก</span><span class="l-en">Which job stays human even when AI helps a lot?</span></summary><p><span class="l-th"><b>ตัดสินใจและรับผิดชอบ</b> ว่าผลลัพธ์ถูกต้องและปลอดภัยพอจะปล่อยใช้</span><span class="l-en"><b>Deciding and being accountable</b> for whether the result is correct and safe to ship.</span></p></details>
+      </div>
     </div></details>
 
     <div class="trap"><strong><span class="l-th">กับดัก</span><span class="l-en">Traps</span></strong>
@@ -339,6 +397,17 @@ svg.d{display:block;width:100%;height:auto;max-width:640px}
         <tr><td>SDLC</td><td><span class="l-th">วงจรชีวิตการพัฒนาซอฟต์แวร์ ตั้งแต่เริ่มคิดจนถึงเลิกใช้ (conception through retirement)</span><span class="l-en">Software development life cycle: from conception through retirement</span></td><td><span class="l-th">Deploy ไม่ใช่เส้นชัย</span><span class="l-en">Deployment is not the finish line</span></td></tr>
       </table>
       <p><span class="l-th"><b>ประเภทการบำรุงรักษา:</b> Corrective แก้ข้อผิดพลาด · Adaptive ปรับให้เข้ากับสภาพแวดล้อมใหม่ เช่น OS ใหม่ · Perfective ปรับปรุงให้ดีขึ้น</span><span class="l-en"><b>Types of maintenance:</b> Corrective fixes faults · Adaptive adjusts to a new environment such as a new OS · Perfective improves performance or maintainability</span></p>
+      <p><b><span class="l-th">ตัวอย่างจาก StudyMate</span><span class="l-en">StudyMate examples</span></b></p>
+      <div class="grid">
+        <div class="box a"><h4>Verification</h4><span class="l-th">Test ว่าไม่มีช่วงอ่านหนังสือทับเวลาเรียน</span><span class="l-en">A test checks no study session overlaps a class</span><span class="ex"><span class="l-th">ถาม: สร้างถูกตาม spec ไหม</span><span class="l-en">Asks: did we build it right?</span></span></div>
+        <div class="box g"><h4>Validation</h4><span class="l-th">ให้นักศึกษาจริงลองใช้แผน แล้วดูว่าเชื่อและใช้ตามไหม</span><span class="l-en">Real students try the plan; do they trust and follow it?</span><span class="ex"><span class="l-th">ถาม: สร้างสิ่งที่ถูกไหม</span><span class="l-en">Asks: did we build the right thing?</span></span></div>
+      </div>
+      <p><b><span class="l-th">ประเภทการบำรุงรักษา (Evolution)</span><span class="l-en">Types of maintenance (Evolution)</span></b></p>
+      <div class="grid">
+        <div class="box a"><h4>Corrective</h4><span class="l-th">แก้บั๊ก: แอปแครชเมื่อไม่มีวันกำหนดส่ง</span><span class="l-en">Fix a fault: the app crashes when a task has no due date</span></div>
+        <div class="box a"><h4>Adaptive</h4><span class="l-th">ปรับให้เข้ากับสภาพแวดล้อมใหม่: รองรับ iOS รุ่นใหม่</span><span class="l-en">Adapt to a new environment: support a new iOS version</span></div>
+        <div class="box a"><h4>Perfective</h4><span class="l-th">ทำให้ดีขึ้น: หน้าสัปดาห์นี้โหลดเร็วขึ้น</span><span class="l-en">Improve it: make the week view load faster</span></div>
+      </div>
     </div></details>
 
     <details class="tp"><summary>Plan-driven, Waterfall, Incremental <small><span class="l-th">ออกสอบบ่อย</span><span class="l-en">often tested</span></small></summary><div class="in">
@@ -353,6 +422,28 @@ svg.d{display:block;width:100%;height:auto;max-width:640px}
         <tr><td>V-Model / Spiral / Prototype</td><td><span class="l-th">V-Model จับคู่ทุกเฟสสร้างกับเฟสทดสอบ · Spiral เน้นจัดการความเสี่ยงทุกรอบ · Prototype สร้างต้นแบบเพื่อเรียนรู้</span><span class="l-en">V-Model pairs each build phase with a test phase · Spiral puts risk first in every loop · Prototype builds a model to learn</span></td><td><span class="l-th">เครื่องมือแพทย์ใช้ V · AI ที่ยังไม่แน่ใจใช้ Prototype</span><span class="l-en">Medical device: V · unproven AI: prototype</span></td></tr>
       </table>
       <p class="note"><span class="l-th">Waterfall: ข้อดีคือ milestone ชัด จัดการง่าย เอกสารดี ข้อเสียคือเปลี่ยนแปลงแพง และกว่าจะได้ของที่ใช้ได้ก็ช้า · Incremental: ข้อดีคือได้ feedback เร็ว เสี่ยงน้อย ข้อเสียคือโครงสร้างอาจเสื่อมถ้าไม่ดูแล</span><span class="l-en">Waterfall: clear milestones, easy to manage, good documents; but change is expensive and working software arrives late · Incremental: early feedback and lower risk; but the structure can degrade if nobody looks after it</span></p>
+      <figure class="fig"><div class="figbox"><svg class="d" viewBox="0 0 620 210" role="img" aria-label="Waterfall vs Incremental">
+        <text x="20" y="22" class="b">Waterfall</text>
+        <rect x="20" y="36" width="120" height="26"/><text x="80" y="54" text-anchor="middle">Requirements</text>
+        <rect x="60" y="80" width="120" height="26"/><text x="120" y="98" text-anchor="middle">Design</text>
+        <rect x="100" y="124" width="120" height="26"/><text x="160" y="142" text-anchor="middle">Build</text>
+        <rect x="140" y="168" width="120" height="26"/><text x="200" y="186" text-anchor="middle">Test &amp; deploy</text>
+        <line x1="120" y1="62" x2="120" y2="78" marker-end="url(#m-fill)"/><line x1="160" y1="106" x2="160" y2="122" marker-end="url(#m-fill)"/><line x1="200" y1="150" x2="200" y2="166" marker-end="url(#m-fill)"/>
+        <line class="soft" x1="310" y1="10" x2="310" y2="200"/>
+        <text x="330" y="22" class="b">Incremental</text>
+        <rect x="330" y="36" width="130" height="44"/><text x="342" y="55" class="b">V1</text><text x="370" y="55"><tspan class="l-th">เตือนงาน</tspan><tspan class="l-en">reminders</tspan></text><text x="342" y="72" class="sm">spec · build · test</text>
+        <rect x="330" y="96" width="190" height="44"/><text x="342" y="115" class="b">V2</text><text x="370" y="115"><tspan class="l-th">+ ดูทั้งสัปดาห์</tspan><tspan class="l-en">+ week view</tspan></text><text x="342" y="132" class="sm">spec · build · test</text>
+        <rect x="330" y="156" width="250" height="44"/><text x="342" y="175" class="b">V3</text><text x="370" y="175"><tspan class="l-th">+ รายงาน</tspan><tspan class="l-en">+ reports</tspan></text><text x="342" y="192" class="sm">spec · build · test</text>
+        <line x1="395" y1="80" x2="395" y2="94" marker-end="url(#m-fill)"/><line x1="395" y1="140" x2="395" y2="154" marker-end="url(#m-fill)"/>
+        <text x="470" y="62" class="sm"><tspan class="l-th">ผู้ใช้ลองแล้วให้ feedback</tspan><tspan class="l-en">users try it and give feedback</tspan></text>
+      </svg></div>
+      <figcaption><span class="l-th">Waterfall ทำแต่ละเฟสให้จบทั้งระบบก่อนไปเฟสถัดไป ผู้ใช้เห็นของจริงตอนท้าย · Incremental ทำครบทุกขั้นในก้อนเล็ก ๆ ส่งของที่ใช้ได้ทุกรอบ ระบบโตขึ้นเรื่อย ๆ</span><span class="l-en">Waterfall finishes each phase for the whole system before the next; users see working software only at the end · Incremental runs every step on a small slice and ships something usable each round, so the system grows.</span></figcaption></figure>
+      <p><b><span class="l-th">สถานการณ์ไหน ใช้กระบวนการไหน</span><span class="l-en">Which process fits which situation</span></b></p>
+      <div class="grid">
+        <div class="box a"><h4><span class="l-th">เครื่องปั๊มยาในโรงพยาบาล</span><span class="l-en">A hospital medicine pump</span></h4><span class="l-th">ระบบ safety-critical มีกฎระเบียบ requirement นิ่ง</span><span class="l-en">Safety-critical, regulated, stable requirements</span><span class="ex"><span class="l-th">→ Predictive: Waterfall หรือ V-Model</span><span class="l-en">→ Predictive: Waterfall or V-Model</span></span></div>
+        <div class="box a"><h4>StudyMate</h4><span class="l-th">ความต้องการเปลี่ยนตาม feedback ของนักศึกษา</span><span class="l-en">Needs change with student feedback</span><span class="ex"><span class="l-th">→ Incremental หรือ Scrum</span><span class="l-en">→ Incremental or Scrum</span></span></div>
+        <div class="box a"><h4><span class="l-th">ระบบ AI แนะนำแบบใหม่</span><span class="l-en">A brand-new AI advisor</span></h4><span class="l-th">ยังไม่รู้ว่า AI จะทำงานได้ดีแค่ไหน</span><span class="l-en">Nobody knows yet how well the AI will behave</span><span class="ex"><span class="l-th">→ Prototype หรือ Spiral (ลดความเสี่ยงก่อน)</span><span class="l-en">→ Prototype or Spiral (reduce risk first)</span></span></div>
+      </div>
     </div></details>
 
     <details class="tp"><summary>Agile Manifesto</summary><div class="in">
@@ -381,6 +472,24 @@ svg.d{display:block;width:100%;height:auto;max-width:640px}
         <tr><td>Sprint Review</td><td><span class="l-th">สาธิต increment ให้ stakeholder ดูและรับ feedback เรื่องผลิตภัณฑ์</span><span class="l-en">Show the increment to stakeholders and get feedback on the product</span></td><td>Event</td></tr>
         <tr><td>Sprint Retrospective</td><td><span class="l-th">ทบทวนว่าทีมทำงานกันอย่างไร แล้วเลือกสิ่งที่จะปรับใน sprint หน้า</span><span class="l-en">Reflect on how the team worked and pick improvements for the next sprint</span></td><td>Event</td></tr>
       </table>
+      <figure class="fig"><div class="figbox"><svg class="d" viewBox="0 0 620 232" role="img" aria-label="Scrum cycle">
+        <rect x="10" y="90" width="130" height="46"/><text x="75" y="110" text-anchor="middle" class="b">Product Backlog</text><text x="75" y="126" text-anchor="middle" class="sm"><tspan class="l-th">PO จัดลำดับ</tspan><tspan class="l-en">ordered by the PO</tspan></text>
+        <rect x="190" y="90" width="130" height="46"/><text x="255" y="110" text-anchor="middle" class="b">Sprint Backlog</text><text x="255" y="126" text-anchor="middle" class="sm"><tspan class="l-th">งานของรอบนี้</tspan><tspan class="l-en">work for this sprint</tspan></text>
+        <rect x="370" y="76" width="130" height="74"/><text x="435" y="108" text-anchor="middle" class="b">Sprint</text><text x="435" y="126" text-anchor="middle" class="sm"><tspan class="l-th">2–4 สัปดาห์</tspan><tspan class="l-en">2–4 weeks</tspan></text>
+        <rect x="532" y="90" width="80" height="46"/><text x="572" y="118" text-anchor="middle" class="b">Increment</text>
+        <line x1="140" y1="113" x2="188" y2="113" marker-end="url(#m-fill)"/><text x="165" y="84" text-anchor="middle" class="sm">Sprint</text><text x="165" y="96" text-anchor="middle" class="sm">Planning</text>
+        <line x1="320" y1="113" x2="368" y2="113" marker-end="url(#m-fill)"/><line x1="500" y1="113" x2="530" y2="113" marker-end="url(#m-fill)"/>
+        <path class="nf" d="M405 76 C405 36, 465 36, 465 74" marker-end="url(#m-fill)"/><text x="435" y="34" text-anchor="middle" class="sm">Daily Scrum</text>
+        <path class="nf" d="M572 136 L572 196 L75 196 L75 138" marker-end="url(#m-fill)"/>
+        <text x="330" y="188" text-anchor="middle">Sprint Review: <tspan class="l-th">ดูผลิตภัณฑ์กับ stakeholder</tspan><tspan class="l-en">inspect the product with stakeholders</tspan></text>
+        <text x="330" y="216" text-anchor="middle">Retrospective: <tspan class="l-th">ปรับวิธีทำงานของทีม</tspan><tspan class="l-en">improve how the team works</tspan></text>
+      </svg></div>
+      <figcaption><span class="l-th">Product Owner จัดลำดับ backlog · Developers สร้าง increment · Scrum Master ดูแลให้วงจรนี้เดินได้และขจัดอุปสรรค</span><span class="l-en">The Product Owner orders the backlog · Developers build the increment · the Scrum Master keeps this cycle running and removes blockers</span></figcaption></figure>
+      <div class="cp mini">
+        <h3><span class="l-th">เช็กตรงนี้ก่อนไปต่อ</span><span class="l-en">Quick check before you move on</span></h3>
+        <details><summary><span class="l-th">ใครเป็นคนตัดสินว่างานไหนใน Product Backlog ทำก่อน</span><span class="l-en">Who decides which Product Backlog item is done first?</span></summary><p><b>Product Owner</b></p></details>
+        <details><summary><span class="l-th">ทีมคุยกันว่า sprint ที่แล้วสื่อสารกันไม่ดี และตกลงจะใช้บอร์ดงานร่วมกัน เป็น event ใด</span><span class="l-en">The team discusses poor communication last sprint and agrees to share a task board. Which event is this?</span></summary><p><span class="l-th"><b>Sprint Retrospective</b> เพราะปรับวิธีทำงาน ไม่ได้ดูตัวผลิตภัณฑ์</span><span class="l-en"><b>Sprint Retrospective</b>: it improves how the team works, not the product.</span></p></details>
+      </div>
     </div></details>
 
     <div class="trap"><strong><span class="l-th">กับดัก</span><span class="l-en">Traps</span></strong>
@@ -422,6 +531,23 @@ svg.d{display:block;width:100%;height:auto;max-width:640px}
         <tr><td>NFR types</td><td><span class="l-th">Product (ของตัวซอฟต์แวร์), Organizational (กฎของลูกค้าหรือทีม), External (กฎหมาย จริยธรรม เช่น PDPA)</span><span class="l-en">Product (the software itself), Organizational (rules of the customer or team), External (law and ethics, e.g. PDPA)</span></td><td></td></tr>
       </table>
       <p class="note"><span class="l-th">วิธีแยก: ถามว่าประโยคนี้บอก "การกระทำที่ระบบทำได้" หรือบอก "เร็ว ปลอดภัย พร้อมใช้ ใช้ง่าย แค่ไหน" อย่าดูแค่กริยา คำว่า "เห็นได้เฉพาะของตัวเอง" มีกริยา เห็น แต่เจตนาคือจำกัดการเข้าถึง จึงเป็น NFR</span><span class="l-en">How to tell: ask whether the sentence states an action the system performs, or how fast, secure, available or easy it must be. Do not go by the verb alone. "Can see only their own" has the verb see, but its intent is to restrict access, so it is an NFR.</span></p>
+      <p><b><span class="l-th">ลองแยก: ข้อความของ StudyMate 9 ข้อ</span><span class="l-en">Try sorting: 9 StudyMate statements</span></b></p>
+      <ul class="sortlist">
+        <li><span class="lbl fr">FR</span><span class="l-th">ผู้ใช้เพิ่มงานพร้อมวันกำหนดส่งได้</span><span class="l-en">The user can add a task with a due date</span></li>
+        <li><span class="lbl fr">FR</span><span class="l-th">ระบบส่งการเตือน 1 วันก่อนกำหนดส่งของงานที่ยังเปิดอยู่</span><span class="l-en">The system sends a reminder 1 day before an open task is due</span></li>
+        <li><span class="lbl fr">FR</span><span class="l-th">ผู้ใช้ทำเครื่องหมายว่างานเสร็จได้</span><span class="l-en">The user can mark a task as done</span></li>
+        <li><span class="lbl fr">FR</span><span class="l-th">ผู้ใช้ดูงานของสัปดาห์นี้ได้</span><span class="l-en">The user can view this week's tasks</span></li>
+        <li><span class="lbl nfr">NFR</span><span class="l-th">การเตือนต้องมาถึงภายใน 1 นาทีจากเวลาที่กำหนด (performance)</span><span class="l-en">A reminder must arrive within 1 minute of its scheduled time (performance)</span></li>
+        <li><span class="lbl nfr">NFR</span><span class="l-th">นักศึกษาเห็นได้เฉพาะงานของตัวเอง (security)</span><span class="l-en">A student can see only their own tasks (security)</span></li>
+        <li><span class="lbl nfr">NFR</span><span class="l-th">ระบบพร้อมใช้งาน 99% ในสัปดาห์สอบ (reliability)</span><span class="l-en">The system is available 99% of the time in exam week (reliability)</span></li>
+        <li><span class="lbl nfr">NFR</span><span class="l-th">ผู้ใช้ใหม่เพิ่มงานแรกได้ภายใน 30 วินาทีโดยไม่ต้องมีคนช่วย (usability)</span><span class="l-en">A first-time user adds a task in under 30 seconds without help (usability)</span></li>
+        <li><span class="lbl nfr">NFR</span><span class="l-th">ระบบต้องขอความยินยอมก่อนเก็บข้อมูลส่วนตัว (legal / privacy)</span><span class="l-en">The system must get consent before storing personal data (legal / privacy)</span></li>
+      </ul>
+      <div class="cp mini">
+        <h3><span class="l-th">เช็กตรงนี้ก่อนไปต่อ</span><span class="l-en">Quick check before you move on</span></h3>
+        <details><summary><span class="l-th">“ระบบต้องพร้อมใช้งาน 99% ในสัปดาห์สอบ” เป็น FR หรือ NFR</span><span class="l-en">“The system must be available 99% of the time in exam week.” FR or NFR?</span></summary><p><span class="l-th"><b>NFR</b> (reliability) บอกว่าดีแค่ไหน ไม่ใช่สิ่งที่ระบบทำ</span><span class="l-en"><b>NFR</b> (reliability): it says how well, not what the system does.</span></p></details>
+        <details><summary><span class="l-th">“ผู้ใช้ส่งออกรายการงานเป็นไฟล์ PDF ได้” เป็น FR หรือ NFR</span><span class="l-en">“The user can export the task list as a PDF.” FR or NFR?</span></summary><p><span class="l-th"><b>FR</b> เป็นการกระทำที่ระบบทำได้</span><span class="l-en"><b>FR</b>: it is something the system does.</span></p></details>
+      </div>
     </div></details>
 
     <details class="tp"><summary><span class="l-th">Requirement ที่ดีต้องตรวจสอบได้</span><span class="l-en">A good requirement is verifiable</span></summary><div class="in">
@@ -434,6 +560,21 @@ svg.d{display:block;width:100%;height:auto;max-width:640px}
         <tr><td>Edge case</td><td><span class="l-th">กรณีขอบที่ต้องระบุให้ครบ</span><span class="l-en">A boundary case that must be stated</span></td><td><span class="l-th">FR-3: งานที่ทำเสร็จแล้วจะไม่เตือน</span><span class="l-en">FR-3: a completed task does not trigger a reminder</span></td></tr>
       </table>
       <p><span class="l-th">คำต้องห้ามใน requirement: quickly, easy, smart, user-friendly, เร็วมาก, พอใจ ให้เปลี่ยนเป็นตัวเลขหรือเงื่อนไข</span><span class="l-en">Words to avoid in a requirement: quickly, easy, smart, user-friendly, very fast, satisfied. Replace them with a number or a condition.</span></p>
+      <p><b><span class="l-th">ก่อนแก้ → หลังแก้</span><span class="l-en">Before → after</span></b></p>
+      <div class="grid">
+        <div class="box w"><h4><span class="l-th">✗ วัดไม่ได้</span><span class="l-en">✗ Not measurable</span></h4><span class="l-th">“ระบบควรเตือนผู้ใช้”</span><span class="l-en">“The system should remind users.”</span></div>
+        <div class="box g"><h4><span class="l-th">✓ ทดสอบได้</span><span class="l-en">✓ Testable</span></h4><span class="l-th">“ถ้างานยังเปิดอยู่และเหลือ 1 วันก่อนกำหนด ระบบต้องส่งการเตือน”</span><span class="l-en">“If a task is open and due in 1 day, the system shall send a reminder.”</span></div>
+        <div class="box w"><h4><span class="l-th">✗ วัดไม่ได้</span><span class="l-en">✗ Not measurable</span></h4><span class="l-th">“ระบบควรเก็บข้อมูลให้ปลอดภัย”</span><span class="l-en">“The system should keep data safe.”</span></div>
+        <div class="box g"><h4><span class="l-th">✓ ทดสอบได้</span><span class="l-en">✓ Testable</span></h4><span class="l-th">“ผู้ใช้เห็นเฉพาะข้อมูลของตัวเอง ถ้าขอข้อมูลของคนอื่นต้องได้ error 403”</span><span class="l-en">“A user sees only their own records; requesting another user's record returns 403.”</span></div>
+        <div class="box w"><h4><span class="l-th">✗ วัดไม่ได้</span><span class="l-en">✗ Not measurable</span></h4><span class="l-th">“ระบบควรใช้ง่าย”</span><span class="l-en">“The system should be user-friendly.”</span></div>
+        <div class="box g"><h4><span class="l-th">✓ ทดสอบได้</span><span class="l-en">✓ Testable</span></h4><span class="l-th">“ผู้ใช้ใหม่สมัครเสร็จภายใน 60 วินาทีโดยไม่ต้องมีคนช่วย”</span><span class="l-en">“A first-time user finishes sign-up in under 60 seconds without help.”</span></div>
+      </div>
+      <p><b><span class="l-th">กายวิภาคของ user story และ acceptance criteria</span><span class="l-en">Anatomy of a user story and its acceptance criteria</span></b></p>
+      <div class="panel stack">
+        <p>As a <span class="k1">student</span>, I want <span class="k2">a reminder 1 day before an open deadline</span>, so that <span class="k3">I submit on time</span>.</p>
+        <p class="muted"><span class="k1">role</span> <span class="l-th">ใคร</span><span class="l-en">who</span> · <span class="k2">goal</span> <span class="l-th">ต้องการอะไร</span><span class="l-en">what they want</span> · <span class="k3">benefit</span> <span class="l-th">ได้ประโยชน์อะไร</span><span class="l-en">why it matters</span></p>
+        <p><b>Given</b> <span class="l-th">งาน “ส่งรายงาน” ยังเปิดอยู่ และกำหนดส่งพรุ่งนี้</span><span class="l-en">the task “Submit report” is open and due tomorrow</span><br><b>When</b> <span class="l-th">ถึงเวลาตรวจการเตือนประจำวัน</span><span class="l-en">the daily reminder check runs</span><br><b>Then</b> <span class="l-th">นักศึกษาได้รับการเตือนภายใน 1 นาที</span><span class="l-en">the student receives a reminder within 1 minute</span></p>
+      </div>
     </div></details>
 
     <details class="tp"><summary><span class="l-th">กิจกรรม requirement, SRS, out-of-scope</span><span class="l-en">Requirements activities, the SRS, out-of-scope</span></summary><div class="in">
@@ -450,6 +591,12 @@ svg.d{display:block;width:100%;height:auto;max-width:640px}
         <tr><td>Traceability</td><td><span class="l-th">ทุก requirement สืบไปถึงการออกแบบ โค้ด และ test ได้</span><span class="l-en">Each requirement links to its design, code and tests</span></td><td></td></tr>
       </table>
       <p><span class="l-th"><b>AI-First:</b> ให้ AI ร่าง user story ได้ แต่ต้องตรวจกับหลักฐานจริง (บันทึกสัมภาษณ์ ผู้ใช้จริง) แล้วคัดและแก้ ไม่ใช่สั่ง AI ให้เขียน requirement จากอากาศ</span><span class="l-en"><b>AI-First:</b> AI may draft user stories, but verify them against real evidence (interview notes, real users), then cut and fix. Never ask AI to write requirements from nothing.</span></p>
+      <p><b><span class="l-th">4 กิจกรรม ด้วยตัวอย่าง StudyMate</span><span class="l-en">The 4 activities, with StudyMate</span></b></p>
+      <div class="flow"><span class="s">Elicitation<small><span class="l-th">สัมภาษณ์นักศึกษาเรื่องครั้งล่าสุดที่ลืมส่งงาน</span><span class="l-en">interview students about the last deadline they missed</span></small></span><i>→</i><span class="s">Analysis<small><span class="l-th">จัดกลุ่มความต้องการ หาข้อขัดแย้ง เลือกว่าอะไรทำก่อน</span><span class="l-en">group the needs, find conflicts, prioritize</span></small></span><i>→</i><span class="s">Specification<small><span class="l-th">เขียน FR-3 พร้อม acceptance criteria ลง SRS</span><span class="l-en">write FR-3 with acceptance criteria in the SRS</span></small></span><i>→</i><span class="s">Validation<small><span class="l-th">ให้ผู้ใช้และทีมอื่นรีวิวว่าถูกและครบ</span><span class="l-en">users and another team review it</span></small></span></div>
+      <div class="grid">
+        <div class="box a"><h4><span class="l-th">ใน scope ของ StudyMate</span><span class="l-en">In StudyMate's scope</span></h4><span class="l-th">เพิ่มงาน · ทำเครื่องหมายว่าเสร็จ · การเตือน · ดูทั้งสัปดาห์</span><span class="l-en">Add task · mark done · reminders · week view</span></div>
+        <div class="box w"><h4><span class="l-th">Out-of-scope</span><span class="l-en">Out-of-scope</span></h4><span class="l-th">แชตกับเพื่อน · ระบบให้คะแนน · เชื่อมระบบลงทะเบียนของมหาวิทยาลัย</span><span class="l-en">Chat with friends · grading · linking to the university's registration system</span><span class="ex"><span class="l-th">เขียนไว้เพื่อกัน scope creep</span><span class="l-en">Written down to prevent scope creep</span></span></div>
+      </div>
     </div></details>
 
     <div class="trap"><strong><span class="l-th">กับดัก</span><span class="l-en">Traps</span></strong>
@@ -491,6 +638,16 @@ svg.d{display:block;width:100%;height:auto;max-width:640px}
         <tr><td>Deployment diagram</td><td><span class="l-th">แต่ละชิ้นรันอยู่บนเครื่องไหน</span><span class="l-en">Which machine each piece runs on</span></td><td>Structural</td></tr>
       </table>
       <p class="note"><span class="l-th">Structural = มีอะไรอยู่ อยู่ที่ไหน · Behavioural = ใครทำอะไร ลำดับใด</span><span class="l-en">Structural = what exists and where it lives · Behavioural = who does what, in what order</span></p>
+      <p><b><span class="l-th">โจทย์ถามแบบนี้ ใช้ไดอะแกรมไหน</span><span class="l-en">Which diagram answers which question</span></b></p>
+      <table>
+        <tr><th><span class="l-th">สถานการณ์</span><span class="l-en">Situation</span></th><th><span class="l-th">ใช้</span><span class="l-en">Use</span></th></tr>
+        <tr><td><span class="l-th">แอปส่งอาหาร ลูกค้า คนส่ง ร้าน ใครทำอะไรได้บ้าง</span><span class="l-en">Food delivery: what can the customer, courier and restaurant each do?</span></td><td>Use case</td></tr>
+        <tr><td><span class="l-th">เช็กสต็อก แล้วส่งของหรือรอของ มีทางแยก</span><span class="l-en">Check stock, then ship or back-order: a branching flow</span></td><td>Activity</td></tr>
+        <tr><td><span class="l-th">ล็อกอิน: แอป → ระบบยืนยันตัวตน → ฐานข้อมูล ส่งข้อความตามลำดับ</span><span class="l-en">Login: app → auth service → database, messages in order</span></td><td>Sequence</td></tr>
+        <tr><td><span class="l-th">ร้านค้าออนไลน์มีข้อมูล order, product, customer อะไรบ้าง</span><span class="l-en">What data do order, product and customer records hold?</span></td><td>Class</td></tr>
+        <tr><td><span class="l-th">งานหนึ่งเปลี่ยนจาก open → doing → done อย่างไร</span><span class="l-en">How a task moves open → doing → done</span></td><td>State</td></tr>
+        <tr><td><span class="l-th">แอป API และฐานข้อมูลรันอยู่บนเครื่องไหน</span><span class="l-en">Which machine the app, API and database run on</span></td><td>Deployment</td></tr>
+      </table>
     </div></details>
 
     <details class="tp"><summary>Use-case diagram <small><span class="l-th">ออกสอบบ่อย</span><span class="l-en">often tested</span></small></summary><div class="in">
@@ -506,6 +663,21 @@ svg.d{display:block;width:100%;height:auto;max-width:640px}
         <tr><td>System boundary</td><td><span class="l-th">กรอบสี่เหลี่ยมที่บอกขอบเขตของระบบ</span><span class="l-en">The rectangle marking the edge of the system</span></td><td><span class="l-th">actor อยู่นอกกรอบ</span><span class="l-en">Actors sit outside it</span></td></tr>
       </table>
       <p><span class="l-th">ทุก FR กลายเป็น use case อย่างน้อยหนึ่งอัน ส่วน NFR ไม่ปรากฏเป็น use case เพราะไม่ใช่สิ่งที่ผู้ใช้ทำ</span><span class="l-en">Every FR becomes at least one use case. NFRs never appear as use cases, because they are not things a user does.</span></p>
+      <p><b><span class="l-th">จาก requirement หนึ่งประโยค ไปเป็นแบบจำลอง</span><span class="l-en">From one requirement sentence to models</span></b></p>
+      <div class="panel stack">
+        <p>A <span class="k1">student</span> <span class="k2">adds</span> a <span class="k1">task</span> with a <span class="k1">due date</span> and <span class="k2">gets a reminder</span> 1 day before.</p>
+        <p class="muted"><span class="k1"><span class="l-th">คำนาม</span><span class="l-en">nouns</span></span> → class / actor · <span class="k2"><span class="l-th">คำกริยา</span><span class="l-en">verbs</span></span> → use case / method</p>
+      </div>
+      <div class="grid">
+        <div class="box a"><h4>Actor</h4>Student</div>
+        <div class="box a"><h4>Use cases</h4>Add Task · Get Reminder</div>
+        <div class="box a"><h4>Classes</h4><span class="l-th">Student · Task (มี dueDate) · Reminder</span><span class="l-en">Student · Task (with dueDate) · Reminder</span></div>
+      </div>
+      <div class="cp mini">
+        <h3><span class="l-th">เช็กตรงนี้ก่อนไปต่อ</span><span class="l-en">Quick check before you move on</span></h3>
+        <details><summary><span class="l-th">ทุกครั้งที่ Place Order ต้อง Validate Cart ใช้ความสัมพันธ์ใด</span><span class="l-en">Every Place Order must Validate Cart. Which relationship?</span></summary><p><span class="l-th"><b>«include»</b> เพราะทำเสมอ ลูกศรชี้จาก Place Order ไปหา Validate Cart</span><span class="l-en"><b>«include»</b>, because it always happens. The arrow points from Place Order to Validate Cart.</span></p></details>
+        <details><summary><span class="l-th">Apply Discount Code ทำเฉพาะเมื่อลูกค้ามีโค้ด ใช้ความสัมพันธ์ใด และลูกศรชี้ไปทางไหน</span><span class="l-en">Apply Discount Code runs only when the customer has a code. Which relationship, and which way does the arrow point?</span></summary><p><span class="l-th"><b>«extend»</b> ลูกศรชี้จาก Apply Discount Code ไปหา Place Order</span><span class="l-en"><b>«extend»</b>. The arrow points from Apply Discount Code to Place Order.</span></p></details>
+      </div>
     </div></details>
 
     <details class="tp"><summary><span class="l-th">Class diagram และ Activity diagram</span><span class="l-en">Class diagram and Activity diagram</span></summary><div class="in">
@@ -563,6 +735,32 @@ svg.d{display:block;width:100%;height:auto;max-width:640px}
         <tr><td>Over-design</td><td><span class="l-th">ออกแบบเกินจำเป็น เช่น ใส่ microservices ให้โปรเจกต์ที่มี 4 FR</span><span class="l-en">Designing more than is needed, e.g. microservices for a 4-FR project</span></td><td><span class="l-th">ออกแบบเท่าที่ requirement บังคับ</span><span class="l-en">Design only what a requirement forces</span></td></tr>
       </table>
       <p class="note"><span class="l-th">จำ: เกาะกันเองในโมดูลให้แน่น (cohesion ↑) ผูกกับโมดูลอื่นให้หลวม (coupling ↓) ทดสอบเร็ว ๆ: ถ้าบอกหน้าที่ของโมดูลแล้วต้องใช้คำว่า "และ" แปลว่ามันทำมากไป</span><span class="l-en">Remember: hold together tightly inside a module (cohesion ↑), stay loose between modules (coupling ↓). Quick test: if you need the word "and" to say what a module does, it does too much.</span></p>
+      <div class="grid">
+        <div class="box w"><h4><span class="l-th">Cohesion ต่ำ ✗</span><span class="l-en">Low cohesion ✗</span></h4>StudyMateManager<span class="ex"><span class="l-th">ส่งการเตือน · จัดรูปแบบวันที่ · คุยฐานข้อมูล · วาดหน้าจอ · ตรวจรหัสผ่าน</span><span class="l-en">sends reminders · formats dates · talks to the database · draws the screen · checks passwords</span></span></div>
+        <div class="box g"><h4><span class="l-th">Cohesion สูง ✓</span><span class="l-en">High cohesion ✓</span></h4>ReminderService · TaskRepository · TaskListScreen<span class="ex"><span class="l-th">แต่ละชิ้นทำงานเดียว บอกหน้าที่ได้โดยไม่ต้องใช้คำว่า “และ”</span><span class="l-en">Each does one job; you can name it without saying “and”</span></span></div>
+      </div>
+      <figure class="fig"><div class="figbox"><svg class="d" viewBox="0 0 620 176" role="img" aria-label="High vs low coupling">
+        <text x="20" y="22" class="badt"><tspan class="l-th">✗ Coupling สูง</tspan><tspan class="l-en">✗ High coupling</tspan></text>
+        <rect x="20" y="40" width="120" height="32"/><text x="80" y="61" text-anchor="middle">TodayScreen</text>
+        <rect x="20" y="100" width="120" height="32"/><text x="80" y="121" text-anchor="middle">WeekScreen</text>
+        <rect x="185" y="70" width="110" height="32"/><text x="240" y="91" text-anchor="middle">tasks table</text>
+        <line x1="140" y1="56" x2="185" y2="80"/><line x1="140" y1="116" x2="185" y2="92"/><line x1="80" y1="72" x2="80" y2="100"/>
+        <text x="20" y="160" class="sm"><tspan class="l-th">เปลี่ยนชื่อคอลัมน์ → หน้าจอพังทุกหน้า</tspan><tspan class="l-en">rename a column → every screen breaks</tspan></text>
+        <line class="soft" x1="315" y1="10" x2="315" y2="168"/>
+        <text x="330" y="22" class="goodt"><tspan class="l-th">✓ Coupling ต่ำ</tspan><tspan class="l-en">✓ Low coupling</tspan></text>
+        <rect x="330" y="40" width="120" height="32"/><text x="390" y="61" text-anchor="middle">TodayScreen</text>
+        <rect x="330" y="100" width="120" height="32"/><text x="390" y="121" text-anchor="middle">WeekScreen</text>
+        <rect x="486" y="70" width="126" height="32"/><text x="549" y="91" text-anchor="middle">TaskRepository</text>
+        <line x1="450" y1="56" x2="484" y2="78" marker-end="url(#m-fill)"/><line x1="450" y1="116" x2="484" y2="94" marker-end="url(#m-fill)"/>
+        <text x="549" y="120" text-anchor="middle" class="sm">getTasks()</text>
+        <text x="330" y="160" class="sm"><tspan class="l-th">เปลี่ยนฐานข้อมูล → หน้าจอไม่ต้องแก้</tspan><tspan class="l-en">swap the database → screens stay the same</tspan></text>
+      </svg></div>
+      <figcaption><span class="l-th">ซ้าย: หน้าจอแตะตารางในฐานข้อมูลตรง ๆ และแตะกันเอง · ขวา: หน้าจอคุยผ่าน interface เล็ก ๆ ของ TaskRepository เท่านั้น</span><span class="l-en">Left: screens reach straight into database tables and into each other · Right: screens talk only through TaskRepository's small interface</span></figcaption></figure>
+      <div class="cp mini">
+        <h3><span class="l-th">เช็กตรงนี้ก่อนไปต่อ</span><span class="l-en">Quick check before you move on</span></h3>
+        <details><summary><span class="l-th">คลาส AppManager ส่งการเตือน คุยฐานข้อมูล และวาดหน้าจอ มีปัญหาอะไร</span><span class="l-en">An AppManager class sends reminders, talks to the database and draws the screen. What is wrong?</span></summary><p><span class="l-th"><b>Cohesion ต่ำ</b> (god class) ควรแยกเป็น ReminderService, TaskRepository, TaskListScreen</span><span class="l-en"><b>Low cohesion</b> (a god class). Split it into ReminderService, TaskRepository and TaskListScreen.</span></p></details>
+        <details><summary><span class="l-th">เปลี่ยนชื่อคอลัมน์ในฐานข้อมูลแล้วหน้าจอ 5 หน้าพัง บอกอะไรเกี่ยวกับ coupling</span><span class="l-en">Renaming one database column breaks 5 screens. What does that say about coupling?</span></summary><p><span class="l-th"><b>Coupling สูง</b> หน้าจอพึ่งไส้ในของฐานข้อมูลโดยตรง</span><span class="l-en"><b>High coupling</b>: the screens depend directly on the database's insides.</span></p></details>
+      </div>
     </div></details>
 
     <details class="tp"><summary><span class="l-th">สถาปัตยกรรม 4 สไตล์ และ MVC</span><span class="l-en">Four architecture styles, and MVC</span> <small><span class="l-th">ออกสอบบ่อย</span><span class="l-en">often tested</span></small></summary><div class="in">
@@ -577,6 +775,28 @@ svg.d{display:block;width:100%;height:auto;max-width:640px}
         <tr><td>MVP</td><td><span class="l-th">สายโซ่ View ⇄ Controller ⇄ Model ล้วน ไม่มี View สังเกต Model</span><span class="l-en">A pure View ⇄ Controller ⇄ Model chain; the View does not observe the Model</span></td><td><span class="l-th">ไม่ใช่ MVC</span><span class="l-en">Not MVC</span></td></tr>
       </table>
       <p><span class="l-th">ระบบจริงใช้หลายสไตล์พร้อมกันได้ StudyMate เป็น Layered + Client-Server + MVC + Monolith รูปที่แนะนำสำหรับทีมนักศึกษาคือ Monolith + Layered + Client-Server</span><span class="l-en">A real system uses several styles at once. StudyMate is Layered + Client-Server + MVC + Monolith. The recommended shape for a student team is Monolith + Layered + Client-Server.</span></p>
+      <p><b><span class="l-th">Layered: แต่ละชั้นทำอะไรใน StudyMate</span><span class="l-en">Layered: what each layer does in StudyMate</span></b></p>
+      <div class="layers">
+        <div><b>Presentation</b><span><span class="l-th">หน้าจอ Today, ปุ่ม + Add task</span><span class="l-en">the Today screen, the + Add task button</span></span></div>
+        <i><span class="l-th">↓ เรียกชั้นถัดไปเท่านั้น</span><span class="l-en">↓ calls only the next layer</span></i>
+        <div><b>Business logic</b><span><span class="l-th">“งานนี้เลยกำหนดไหม” “ถึงเวลาเตือนหรือยัง”</span><span class="l-en">“Is this task overdue?” “Should a reminder fire?”</span></span></div>
+        <i><span class="l-th">↓ เรียกชั้นถัดไปเท่านั้น</span><span class="l-en">↓ calls only the next layer</span></i>
+        <div><b>Data</b><span><span class="l-th">เก็บ Student, Task, Course, Reminder</span><span class="l-en">stores Student, Task, Course, Reminder</span></span></div>
+      </div>
+      <figure class="fig"><div class="figbox"><svg class="d" viewBox="0 0 620 200" role="img" aria-label="StudyMate architecture">
+        <polygon points="20,44 34,30 234,30 220,44"/><polygon points="220,44 234,30 234,170 220,184"/><rect x="20" y="44" width="200" height="140"/>
+        <text x="120" y="64" text-anchor="middle" class="sm">«device» Phone · MVC</text>
+        <rect x="40" y="76" width="160" height="28"/><text x="120" y="95" text-anchor="middle">View</text>
+        <rect x="40" y="112" width="160" height="28"/><text x="120" y="131" text-anchor="middle">Controller</text>
+        <rect x="40" y="148" width="160" height="28"/><text x="120" y="167" text-anchor="middle">Model (local)</text>
+        <polygon points="380,44 394,30 614,30 600,44"/><polygon points="600,44 614,30 614,170 600,184"/><rect x="380" y="44" width="220" height="140"/>
+        <text x="490" y="64" text-anchor="middle" class="sm">«node» Server · Layered monolith</text>
+        <rect x="400" y="76" width="180" height="28"/><text x="490" y="95" text-anchor="middle">Presentation (API)</text>
+        <rect x="400" y="112" width="180" height="28"/><text x="490" y="131" text-anchor="middle">Business logic</text>
+        <rect x="400" y="148" width="180" height="28"/><text x="490" y="167" text-anchor="middle">Data</text>
+        <line x1="234" y1="110" x2="380" y2="110"/><text x="307" y="102" text-anchor="middle">REST/HTTP</text><text x="307" y="126" text-anchor="middle" class="sm">client-server</text>
+      </svg></div>
+      <figcaption><span class="l-th">StudyMate ใช้ 4 สไตล์พร้อมกันโดยไม่ขัดกัน: Client-Server (มือถือคุยกับเซิร์ฟเวอร์) · MVC (จัดโค้ดในแอปมือถือ) · Layered (จัดโค้ดในเซิร์ฟเวอร์) · Monolith (deploy เซิร์ฟเวอร์เป็นก้อนเดียว)</span><span class="l-en">StudyMate uses four styles at once without conflict: Client-Server (phone talks to server) · MVC (code inside the phone app) · Layered (code inside the server) · Monolith (the server deploys as one unit)</span></figcaption></figure>
     </div></details>
 
     <details class="tp"><summary>Component, Deployment, Sequence</summary><div class="in">
@@ -602,6 +822,12 @@ svg.d{display:block;width:100%;height:auto;max-width:640px}
         <tr><td>Gold-plating</td><td><span class="l-th">เพิ่มของที่ไม่มี requirement ขอ</span><span class="l-en">Adding something no requirement asked for</span></td><td><span class="l-th">ตัดทิ้ง</span><span class="l-en">Cut it</span></td></tr>
       </table>
       <p class="note"><span class="l-th">ตัวอย่าง StudyMate ใน Review Guide กับสไลด์สัปดาห์ 5 เขียนสลับกันว่าเลือกทางไหน ถ้าข้อสอบถาม ให้ยึดตาม Review Guide ประเด็นที่ทั้งสองแหล่งตรงกันคือ NFR เป็นตัวบังคับการตัดสินใจ</span><span class="l-en">The StudyMate example is written the opposite way round in the Review Guide and in the Week 5 slides. If the exam asks, follow the Review Guide. Both sources agree on the point: the NFR forces the decision.</span></p>
+      <p><b><span class="l-th">ตัวอย่าง ADR 3 บรรทัด</span><span class="l-en">A filled-in 3-line ADR</span></b></p>
+      <div class="grid">
+        <div class="box a"><h4>Context</h4><span class="l-th">NFR-2: การเตือนต้องมาถึงภายใน 1 นาที แม้ผู้ใช้ไม่ได้เปิดแอป</span><span class="l-en">NFR-2: reminders must arrive within 1 minute, even when the app is closed</span></div>
+        <div class="box a"><h4>Decision</h4><span class="l-th">ใช้งาน scheduled บนเซิร์ฟเวอร์ แทนการเช็กตอนเปิดแอป</span><span class="l-en">Use a scheduled job on the server instead of checking when the app opens</span></div>
+        <div class="box a"><h4>Consequence</h4><span class="l-th">ได้: เตือนได้ตรงเวลา · เสีย: ต้องมีเซิร์ฟเวอร์ทำงานตลอด · ทบทวนเมื่อค่าใช้จ่ายสูงเกิน</span><span class="l-en">Gain: on-time reminders · Give up: a server must always run · Revisit if the cost grows too high</span></div>
+      </div>
     </div></details>
 
     <div class="trap"><strong><span class="l-th">กับดัก</span><span class="l-en">Traps</span></strong>
@@ -640,6 +866,24 @@ svg.d{display:block;width:100%;height:auto;max-width:640px}
         <tr><td>UX</td><td><span class="l-th">ประสบการณ์ทั้งหมด: ใช้ได้ไหม ไปถึงเป้าหมายได้ไหม</span><span class="l-en">The whole experience: can users reach their goal?</span></td><td>does it work</td></tr>
         <tr><td>UI</td><td><span class="l-th">พื้นผิวที่เห็น: หน้าจอ ปุ่ม สี ตัวอักษร</span><span class="l-en">The visible surface: screens, buttons, colour, type</span></td><td>does it look and feel right</td></tr>
       </table>
+      <div class="grid">
+        <div class="box a"><h4>Heuristic evaluation</h4><span class="l-th">ผู้เชี่ยวชาญ 3–5 คน ตรวจหน้าจอเทียบ 10 ข้อของ Nielsen จดทุกปัญหา ให้คะแนน 0–4</span><span class="l-en">3–5 experts check the screens against Nielsen's 10, note every issue, rate it 0–4</span><span class="ex"><span class="l-th">ไม่มีผู้ใช้จริง · ถูกและเร็ว</span><span class="l-en">No real users · cheap and fast</span></span></div>
+        <div class="box g"><h4>User testing</h4><span class="l-th">ให้นักศึกษาจริง 5 คนลอง “เพิ่มงานพรุ่งนี้และตั้งเตือน” พูดสิ่งที่คิดออกมา ทีมสังเกตโดยไม่ช่วย</span><span class="l-en">5 real students try “add tomorrow's assignment and set a reminder”, thinking aloud while the team watches without helping</span><span class="ex"><span class="l-th">ทุกจุดที่ลังเลคือปัญหาที่ต้องแก้</span><span class="l-en">Every hesitation is a finding</span></span></div>
+      </div>
+      <p><b><span class="l-th">Severity 0–4</span><span class="l-en">Severity 0–4</span></b></p>
+      <div class="sev">
+        <div><b>0</b><span class="l-th">ไม่เป็นปัญหา</span><span class="l-en">not a problem</span></div>
+        <div><b>1</b><span class="l-th">แค่ความสวยงาม</span><span class="l-en">cosmetic</span></div>
+        <div><b>2</b><span class="l-th">เล็กน้อย</span><span class="l-en">minor</span></div>
+        <div class="hot"><b>3</b><span class="l-th">ใหญ่ ควรแก้ก่อน</span><span class="l-en">major, fix early</span></div>
+        <div class="hot"><b>4</b><span class="l-th">หายนะ ต้องแก้ก่อนปล่อย</span><span class="l-en">catastrophe, fix before release</span></div>
+      </div>
+      <p class="muted"><span class="l-th">สไลด์ระบุแค่ 0 = ไม่เป็นปัญหา และ 4 = หายนะ ป้ายของระดับ 1–3 เป็นมาตรฐานของ Nielsen</span><span class="l-en">The slides only define 0 = no problem and 4 = catastrophe; the labels for 1–3 are Nielsen's standard ones.</span></p>
+      <div class="cp mini">
+        <h3><span class="l-th">เช็กตรงนี้ก่อนไปต่อ</span><span class="l-en">Quick check before you move on</span></h3>
+        <details><summary><span class="l-th">กด Save แล้วหน้าจอเงียบ ผิด heuristic ข้อใด และแก้อย่างไร</span><span class="l-en">You tap Save and nothing shows. Which heuristic fails, and what is the fix?</span></summary><p><span class="l-th"><b>Visibility of system status</b> แสดง “Saving…” แล้ว “Saved ✓”</span><span class="l-en"><b>Visibility of system status</b>. Show “Saving…” then “Saved ✓”.</span></p></details>
+        <details><summary><span class="l-th">ผู้เชี่ยวชาญ 3 คนตรวจหน้าจอเทียบ 10 ข้อของ Nielsen แล้วให้คะแนน 0–4 เรียกว่าอะไร</span><span class="l-en">Three experts check the screens against Nielsen's 10 and rate each issue 0–4. What is this?</span></summary><p><span class="l-th"><b>Heuristic evaluation</b> ถ้าให้ผู้ใช้จริงลองใช้จะเป็น user testing</span><span class="l-en"><b>Heuristic evaluation</b>. With real users trying it, it would be user testing.</span></p></details>
+      </div>
     </div></details>
 
     <details class="tp"><summary>Nielsen's 10 heuristics (1994)</summary><div class="in">
@@ -657,6 +901,15 @@ svg.d{display:block;width:100%;height:auto;max-width:640px}
         <tr><td>10 Help and documentation</td><td><span class="l-th">มีความช่วยเหลือเมื่อต้องการ</span><span class="l-en">Help when users need it</span></td><td><span class="l-th">ถูก: คำแนะนำในหน้าจอ</span><span class="l-en">Right: inline tips</span></td></tr>
       </table>
       <p class="note"><span class="l-th">ลบทันทีไม่มี undo: Review Guide ให้ตอบ User control and freedom ส่วนกล่องถามยืนยันก่อนลบเป็นตัวอย่างของ Error prevention ในสไลด์ ถ้าโจทย์เน้นว่า undo ไม่ได้ ให้ตอบข้อ 3</span><span class="l-en">Instant delete with no undo: the Review Guide's answer is User control and freedom. The slides use a confirm-before-delete dialog as an example of Error prevention. If the question stresses that there is no undo, answer number 3.</span></p>
+      <p><b><span class="l-th">เห็นปัญหา → รู้ข้อ → แก้</span><span class="l-en">See the problem → name the heuristic → fix it</span></b></p>
+      <div class="grid">
+        <div class="box w"><h4><span class="l-th">✗ กด Save แล้วเงียบ</span><span class="l-en">✗ Tap Save, nothing happens</span></h4>#1 Visibility of system status<span class="ex"><span class="l-th">✓ แสดง “Saving…” แล้ว “Saved ✓”</span><span class="l-en">✓ Show “Saving…” then “Saved ✓”</span></span></div>
+        <div class="box w"><h4><span class="l-th">✗ กด Delete แล้วงาน 3 ชิ้นหายทันที ย้อนไม่ได้</span><span class="l-en">✗ Delete removes 3 tasks at once, no way back</span></h4>#3 User control and freedom<span class="ex"><span class="l-th">✓ มีปุ่ม Undo หรือถาม “ลบ 3 งานใช่ไหม”</span><span class="l-en">✓ Offer Undo, or ask “Delete 3 tasks?”</span></span></div>
+        <div class="box w"><h4><span class="l-th">✗ ให้พิมพ์วันที่เอง พิมพ์ “30 ก.พ.” ได้</span><span class="l-en">✗ Free-text dates allow “30 February”</span></h4>#5 Error prevention<span class="ex"><span class="l-th">✓ ใช้ตัวเลือกวันที่ เลือกวันที่ไม่มีจริงไม่ได้</span><span class="l-en">✓ Use a date picker so impossible dates cannot be chosen</span></span></div>
+        <div class="box w"><h4><span class="l-th">✗ ให้พิมพ์รหัสวิชาจากความจำ</span><span class="l-en">✗ Users must type the course code from memory</span></h4>#6 Recognition rather than recall<span class="ex"><span class="l-th">✓ มี dropdown ให้เลือกวิชา</span><span class="l-en">✓ Offer a course dropdown</span></span></div>
+        <div class="box w"><h4><span class="l-th">✗ ข้อความ “Error 0x0007F”</span><span class="l-en">✗ The message “Error 0x0007F”</span></h4>#9 Help users recover from errors<span class="ex"><span class="l-th">✓ “บันทึกไม่ได้ ตรวจอินเทอร์เน็ต” + ปุ่ม Retry</span><span class="l-en">✓ “Couldn't save — check your connection.” + Retry</span></span></div>
+        <div class="box w"><h4><span class="l-th">✗ ใช้คำภายในระบบ เช่น “sync job failed”</span><span class="l-en">✗ Internal jargon such as “sync job failed”</span></h4>#2 Match the real world<span class="ex"><span class="l-th">✓ ใช้คำที่ผู้ใช้เข้าใจ “ยังไม่ได้บันทึกงาน”</span><span class="l-en">✓ Use words users know: “Your task isn't saved yet”</span></span></div>
+      </div>
     </div></details>
 
     <details class="tp"><summary>Accessibility: POUR / WCAG</summary><div class="in">
@@ -669,6 +922,13 @@ svg.d{display:block;width:100%;height:auto;max-width:640px}
         <tr><td>WCAG AA</td><td><span class="l-th">ระดับมาตรฐานที่ควรทำให้ถึง (A ต่ำสุด, AA มาตรฐาน, AAA สูงสุด)</span><span class="l-en">The level to aim for (A minimum, AA the standard, AAA highest)</span></td><td>contrast ≥ 4.5:1</td></tr>
       </table>
       <p><span class="l-th"><b>Anti-pattern:</b> ใช้สีแดงอย่างเดียวบอกช่องที่ต้องกรอก · ใช้ฟอนต์หลายแบบ · ทำข้อความทุกจุดขนาดเท่ากัน</span><span class="l-en"><b>Anti-patterns:</b> marking required fields with red alone · using many font families · making every text the same size</span></p>
+      <p><b><span class="l-th">ทำแบบนี้ ✗ เทียบกับ ✓</span><span class="l-en">Do this ✗ vs ✓</span></b></p>
+      <div class="grid">
+        <div class="box w"><h4><span class="l-th">✗ ตัวหนังสือเทาบนพื้นเทา (2:1)</span><span class="l-en">✗ Grey text on grey (2:1)</span></h4>Perceivable<span class="ex"><span class="l-th">✓ ตัวหนังสือเข้มบนพื้นขาว อย่างน้อย 4.5:1</span><span class="l-en">✓ Dark text on white, at least 4.5:1</span></span></div>
+        <div class="box w"><h4><span class="l-th">✗ บอกว่างานเลยกำหนดด้วยจุดสีแดงอย่างเดียว</span><span class="l-en">✗ Overdue shown only by a red dot</span></h4>Perceivable<span class="ex"><span class="l-th">✓ ใช้ไอคอน ⚠ + คำว่า Overdue</span><span class="l-en">✓ Use a ⚠ icon plus the word Overdue</span></span></div>
+        <div class="box w"><h4><span class="l-th">✗ กดปุ่มด้วยคีย์บอร์ดแล้วไม่เห็นว่าอยู่ที่ปุ่มไหน</span><span class="l-en">✗ Keyboard users cannot see which button is focused</span></h4>Operable<span class="ex"><span class="l-th">✓ มีกรอบ focus ที่มองเห็น</span><span class="l-en">✓ Show a visible focus ring</span></span></div>
+        <div class="box w"><h4><span class="l-th">✗ ช่องกรอกไม่มีป้ายชื่อ</span><span class="l-en">✗ Form fields without labels</span></h4>Understandable<span class="ex"><span class="l-th">✓ ทุกช่องมีป้าย และ error บอกวิธีแก้</span><span class="l-en">✓ Every field has a label; errors say how to fix them</span></span></div>
+      </div>
     </div></details>
 
     <details class="tp"><summary><span class="l-th">เนื้อหาเสริมจาก UX/UI primer</span><span class="l-en">Extra material from the UX/UI primer</span> <small><span class="l-th">โอกาสออกน้อยกว่า</span><span class="l-en">less likely on the exam</span></small></summary><div class="in">
