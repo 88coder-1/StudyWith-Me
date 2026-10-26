@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EC1 Comprehensive Master Study & Quiz Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Prompt', 'Inter', sans-serif; }
+        .code-font { font-family: 'Courier New', Courier, monospace; }
+        
+        /* Perspective for 3D flashcards */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-indigo-900 text-white shadow-xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-amber-400 text-indigo-950 p-2 rounded-lg font-black text-xl">EC1</div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight">English for Communication 1</h1>
+                    <p class="text-xs text-indigo-300">Master Study & Interactive Quiz Platform</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2 text-xs font-semibold">
+                <span class="bg-indigo-800 text-indigo-200 px-3 py-1.5 rounded-full border border-indigo-700 hidden sm:inline-block">
+                    <i class="fa-solid fa-graduation-cap mr-1 text-amber-400"></i> Final Exam Prep
+                </span>
+            </div>
+        </div>
+        
+        <!-- Tab Bar Navigation -->
+        <nav class="bg-indigo-950 text-indigo-200 border-t border-indigo-800">
+            <div class="max-w-7xl mx-auto px-4 flex space-x-1 overflow-x-auto py-1">
+                <button onclick="switchMainTab('summary')" id="btn-tab-summary" class="nav-tab px-4 py-2 rounded-md font-medium text-sm flex items-center space-x-2 whitespace-nowrap bg-indigo-800 text-white shadow">
+                    <i class="fa-solid fa-book-open"></i><span>1. สรุปเนื้อหาทั้งหมด (Summary)</span>
+                </button>
+                <button onclick="switchMainTab('flashcards')" id="btn-tab-flashcards" class="nav-tab px-4 py-2 rounded-md font-medium text-sm flex items-center space-x-2 whitespace-nowrap hover:bg-indigo-900">
+                    <i class="fa-solid fa-clone"></i><span>2. Flashcards ทบทวน</span>
+                </button>
+                <button onclick="switchMainTab('topic-quizzes')" id="btn-tab-topic-quizzes" class="nav-tab px-4 py-2 rounded-md font-medium text-sm flex items-center space-x-2 whitespace-nowrap hover:bg-indigo-900">
+                    <i class="fa-solid fa-list-check"></i><span>3. Quiz แยกตามหัวข้อ</span>
+                </button>
+                <button onclick="switchMainTab('master-quiz')" id="btn-tab-master-quiz" class="nav-tab px-4 py-2 rounded-md font-medium text-sm flex items-center space-x-2 whitespace-nowrap hover:bg-indigo-900 text-amber-300 font-semibold">
+                    <i class="fa-solid fa-trophy"></i><span>4. Quiz รวมทุกบท (Mock Exam)</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+
+        <!-- ================= SECTION 1: FULL SUMMARY ================= -->
+        <section id="sec-summary" class="main-sec space-y-8">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center">
+                    <i class="fa-solid fa-book text-indigo-600 mr-3"></i>สรุปเนื้อหาไวยากรณ์และทักษะภาษาอังกฤษ (EC1 Master Summary)
+                </h2>
+                <p class="text-sm text-slate-600">สรุปกระชับ เจาะลึกจุดหลอกข้อสอบทุกหัวข้อ พร้อมตัวอย่างการประยุกต์ใช้งาน</p>
+            </div>
+
+            <!-- Topic 1: Sentence Structure & Types -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <h3 class="text-xl font-bold text-indigo-900 border-b border-indigo-100 pb-3 flex items-center">
+                    <span class="bg-indigo-600 text-white w-7 h-7 rounded-full inline-flex items-center justify-center text-sm mr-2">1</span>
+                    Sentence Structures & Types (โครงสร้างและประเภทของประโยค)
+                </h3>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-0.5 rounded">Simple Sentence</span>
+                        <h4 class="font-bold text-slate-900 mt-2 mb-1">ประโยคความเดียว</h4>
+                        <p class="text-xs text-slate-600 mb-3">มี 1 Independent Clause (ใจความสมบูรณ์ 1 เดียว)</p>
+                        <div class="bg-white p-2.5 rounded border border-slate-200 text-xs space-y-1">
+                            <p class="font-semibold text-indigo-600">[S + V]</p>
+                            <p class="text-slate-700">"The doctor prescribed antibiotics."</p>
+                            <p class="text-slate-500 text-[11px] pt-1">⚠️ <i> Compound Subject/Predicate ก็ยังเป็น Simple!</i><br>"<span class="underline">Tom and Jerry</span> <span class="underline">studied and passed</span>."</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2 py-0.5 rounded">Compound Sentence</span>
+                        <h4 class="font-bold text-slate-900 mt-2 mb-1">ประโยคความรวม</h4>
+                        <p class="text-xs text-slate-600 mb-3">นำ 2 Independent Clauses มาเชื่อมกัน</p>
+                        <div class="bg-white p-2.5 rounded border border-slate-200 text-xs space-y-1">
+                            <p class="font-semibold text-indigo-600">[S+V], FANBOYS [S+V]</p>
+                            <p class="text-slate-700">"He studied hard, <span class="font-bold text-indigo-600">so</span> he passed."</p>
+                            <p class="text-slate-500 text-[11px] pt-1">🔑 <b>FANBOYS:</b> For, And, Nor, But, Or, Yet, So<br>หรือใช้ Semicolon: <span class="code-font">[S+V]; [S+V]</span></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span class="bg-purple-100 text-purple-800 text-xs font-bold px-2 py-0.5 rounded">Complex Sentence</span>
+                        <h4 class="font-bold text-slate-900 mt-2 mb-1">ประโยคความซ้อน</h4>
+                        <p class="text-xs text-slate-600 mb-3">1 Independent Clause + ≥1 Dependent Clause</p>
+                        <div class="bg-white p-2.5 rounded border border-slate-200 text-xs space-y-1">
+                            <p class="font-semibold text-indigo-600">[Sub. Conj. + S+V], [S+V]</p>
+                            <p class="text-slate-700">"<span class="font-bold text-indigo-600">Although</span> it rained, we went out."</p>
+                            <p class="text-slate-500 text-[11px] pt-1">🔑 <b>Sub. Conj:</b> because, although, if, when, since, after, before, unless, while</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deep dive table -->
+                <div class="bg-indigo-50/60 p-4 rounded-xl border border-indigo-100">
+                    <h4 class="font-bold text-indigo-950 text-sm mb-2">⚡ เทคนิคแยกความแตกต่างระหว่าง Simple vs Compound Sentence:</h4>
+                    <p class="text-xs text-slate-700">ให้ดูประธานหลังคำเชื่อม (เช่น and, but):</p>
+                    <ul class="list-disc list-inside text-xs text-slate-700 mt-1 space-y-1">
+                        <li><b>ไม่มีประธานใหม่หลังคำเชื่อม:</b> เป็น Compound Predicate 👉 <span class="font-bold text-blue-700">Simple Sentence</span> (เช่น <i>He came <u>and left</u> immediately.</i>)</li>
+                        <li><b>มีประธานใหม่หลังคำเชื่อม:</b> เป็น 2 ประโยคสมบูรณ์ 👉 <span class="font-bold text-indigo-700">Compound Sentence</span> (เช่น <i>He came, <u>and she left</u> immediately.</i>)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Topic 2: Sentence Structure Problems -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <h3 class="text-xl font-bold text-red-900 border-b border-red-100 pb-3 flex items-center">
+                    <span class="bg-red-600 text-white w-7 h-7 rounded-full inline-flex items-center justify-center text-sm mr-2">2</span>
+                    Sentence Problems (ข้อผิดพลาดในประโยคที่ออกสอบบ่อยที่สุด)
+                </h3>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="border border-red-200 bg-red-50/40 p-4 rounded-xl">
+                        <h4 class="font-bold text-red-900 flex items-center text-sm mb-2">
+                            <i class="fa-solid fa-triangle-exclamation text-red-500 mr-2"></i>Sentence Fragment
+                        </h4>
+                        <p class="text-xs text-slate-600 mb-2"><b>ปัญหา:</b> ประโยคไม่สมบูรณ์ ขาดประธาน, ขาดกริยาแท้ หรือมีแค่ Dependent Clause</p>
+                        <div class="bg-white p-2.5 rounded border border-red-100 text-xs space-y-1">
+                            <p class="text-red-600">❌ "Having completed all coursework."</p>
+                            <p class="text-emerald-700 font-medium">✓ "Having completed coursework, <u>she graduated.</u>"</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-red-200 bg-red-50/40 p-4 rounded-xl">
+                        <h4 class="font-bold text-red-900 flex items-center text-sm mb-2">
+                            <i class="fa-solid fa-triangle-exclamation text-red-500 mr-2"></i>Run-on (Fused) Sentence
+                        </h4>
+                        <p class="text-xs text-slate-600 mb-2"><b>ปัญหา:</b> เอา 2 ประโยคสมบูรณ์มาต่อกันโดยไม่มีเครื่องหมายวรรคตอนหรือคำเชื่อมใดๆ</p>
+                        <div class="bg-white p-2.5 rounded border border-red-100 text-xs space-y-1">
+                            <p class="text-red-600">❌ "I studied hard I passed the test."</p>
+                            <p class="text-emerald-700 font-medium">✓ "I studied hard, <u>so</u> I passed the test."</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-red-200 bg-red-50/40 p-4 rounded-xl">
+                        <h4 class="font-bold text-red-900 flex items-center text-sm mb-2">
+                            <i class="fa-solid fa-triangle-exclamation text-red-500 mr-2"></i>Comma Splice
+                        </h4>
+                        <p class="text-xs text-slate-600 mb-2"><b>ปัญหา:</b> เอา 2 ประโยคสมบูรณ์มาเชื่อมด้วย Comma (,) โดยไม่มี FANBOYS</p>
+                        <div class="bg-white p-2.5 rounded border border-red-100 text-xs space-y-1">
+                            <p class="text-red-600">❌ "She was tired, she fell asleep."</p>
+                            <p class="text-emerald-700 font-medium">✓ "She was tired; she fell asleep."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Special Warning Trap -->
+                <div class="bg-amber-100 p-4 rounded-xl border border-amber-300 text-amber-950 text-xs space-y-1">
+                    <p class="font-bold text-sm text-amber-900"><i class="fa-solid fa-fire text-amber-600 mr-1.5"></i>กับดักข้อสอบที่โดนหลอกบ่อยที่สุด: Conjunctive Adverbs!</p>
+                    <p>คำเชื่อมประเภท <code>however</code>, <code>therefore</code>, <code>consequently</code>, <code>for example</code>, <code>furthermore</code> <b>ไม่ใช่คำเชื่อม FANBOYS!</b></p>
+                    <p class="pt-1 font-mono">❌ <i>"The library was closed, however, online databases were open."</i> 👉 <b>Comma Splice!</b></p>
+                    <p class="font-mono text-emerald-800">✓ <i>"The library was closed<b>; however,</b> online databases were open."</i> 👉 <b>Correct! (ต้องใช้ Semicolon)</b></p>
+                </div>
+            </div>
+
+            <!-- Topic 3: Tenses & Giving Advice -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <h3 class="text-xl font-bold text-emerald-900 border-b border-emerald-100 pb-3 flex items-center">
+                    <span class="bg-emerald-600 text-white w-7 h-7 rounded-full inline-flex items-center justify-center text-sm mr-2">3</span>
+                    Tenses Distinctions & Modals for Giving Advice
+                </h3>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Past Continuous vs Past Simple -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                        <h4 class="font-bold text-indigo-900 text-sm">1. Past Continuous (was/were + V.ing) vs Past Simple (V.2)</h4>
+                        <p class="text-xs text-slate-600">เหตุการณ์กำลังดำเนินอยู่ (Long action) ถูกแทรกด้วยอีกเหตุการณ์ (Short action)</p>
+                        <ul class="text-xs space-y-1 list-disc list-inside text-slate-700 bg-white p-3 rounded border border-slate-200">
+                            <li><span class="font-semibold text-indigo-600">While / As</span> + Past Continuous (กำลังทำ), Past Simple (แทรก)</li>
+                            <li>Past Continuous + <span class="font-semibold text-indigo-600">when</span> + Past Simple</li>
+                            <li class="pt-1 italic text-slate-600">"<b>While</b> I <u>was studying</u>, the alarm <u>rang</u>."</li>
+                        </ul>
+                    </div>
+
+                    <!-- Present Perfect vs Past Simple -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                        <h4 class="font-bold text-indigo-900 text-sm">2. Present Perfect (has/have + V.3) vs Past Simple (V.2)</h4>
+                        <p class="text-xs text-slate-600">Past Simple บอกเวลาเจาะจงในอดีต / Present Perfect ไม่บอกเวลาหรือต่อเนื่องถึงปัจจุบัน</p>
+                        <div class="text-xs space-y-1 text-slate-700 bg-white p-3 rounded border border-slate-200">
+                            <p>• <b>Past Simple Key Words:</b> <i>yesterday, last night, in 2020, 2 days ago</i></p>
+                            <p>• <b>Present Perfect Key Words:</b> <i>since, for, already, yet, ever, never, recently</i></p>
+                            <p>• <b>For vs. Since:</b> <code>For</code> + จำนวนเวลา (for 5 years) / <code>Since</code> + จุดเริ่มต้น (since 2020)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Giving Advice Summary -->
+                <div class="bg-emerald-50/50 p-4 rounded-xl border border-emerald-200">
+                    <h4 class="font-bold text-emerald-950 text-sm mb-2"><i class="fa-solid fa-lightbulb text-amber-500 mr-2"></i>โครงสร้างการให้คำแนะนำ (Giving Advice)</h4>
+                    <div class="grid sm:grid-cols-3 gap-3 text-xs">
+                        <div class="bg-white p-2.5 rounded border border-emerald-100">
+                            <p class="font-bold text-slate-900">Should / Ought to</p>
+                            <p class="text-slate-600 mt-1">+ Bare Infinitive (V.1)</p>
+                            <p class="text-indigo-600 font-medium mt-1">"You <span class="underline">should rest</span>."</p>
+                        </div>
+                        <div class="bg-white p-2.5 rounded border border-emerald-100">
+                            <p class="font-bold text-slate-900">Had better (เตือน/ผลเสีย)</p>
+                            <p class="text-slate-600 mt-1">+ Bare Infinitive (ห้ามมี to)</p>
+                            <p class="text-indigo-600 font-medium mt-1">"You <span class="underline">had better study</span>."</p>
+                            <p class="text-red-500 text-[11px]">ปฏิเสธ: had better <b>not</b> + V.1</p>
+                        </div>
+                        <div class="bg-white p-2.5 rounded border border-emerald-100">
+                            <p class="font-bold text-slate-900">Subjunctive Condition</p>
+                            <p class="text-slate-600 mt-1">If I were you, I would...</p>
+                            <p class="text-indigo-600 font-medium mt-1">"If I <span class="underline">were</span> you, I <span class="underline">would go</span>."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Topic 4: Vocabulary & Reading Strategies -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <h3 class="text-xl font-bold text-amber-900 border-b border-amber-100 pb-3 flex items-center">
+                    <span class="bg-amber-600 text-white w-7 h-7 rounded-full inline-flex items-center justify-center text-sm mr-2">4</span>
+                    Academic Vocabulary & Reading Strategies
+                </h3>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Reading Strategies -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                        <h4 class="font-bold text-slate-900 text-sm">Reading Strategies (เทคนิคการอ่าน)</h4>
+                        <div class="space-y-2 text-xs">
+                            <div class="bg-white p-2.5 rounded border border-slate-200">
+                                <span class="font-bold text-indigo-700">1. Skimming:</span> อ่านข้ามๆ อย่างเร็ว เพื่อหา <b>Main Idea (ใจความสำคัญ) / Gist (ภาพรวม)</b>
+                            </div>
+                            <div class="bg-white p-2.5 rounded border border-slate-200">
+                                <span class="font-bold text-indigo-700">2. Scanning:</span> กวาดสายตาอย่างเร็วเพื่อหา <b>Specific Information (ข้อมูลเฉพาะเจาะจง)</b> เช่น วันที่ ตัวเลข ชื่อคน คำศัพท์
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Target Vocabulary -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                        <h4 class="font-bold text-slate-900 text-sm">Academic Vocabulary Key Terms</h4>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div class="bg-white p-2 rounded border border-slate-200"><b>Mitigate (v.):</b> บรรเทา, ทำให้เบาลง</div>
+                            <div class="bg-white p-2 rounded border border-slate-200"><b>Proactive (adj.):</b> เชิงรุก, ป้องกันไว้ก่อน</div>
+                            <div class="bg-white p-2 rounded border border-slate-200"><b>Disseminate (v.):</b> เผยแพร่ (ข้อมูล/ข่าวสาร)</div>
+                            <div class="bg-white p-2 rounded border border-slate-200"><b>Prioritize (v.):</b> จัดลำดับความสำคัญ</div>
+                            <div class="bg-white p-2 rounded border border-slate-200"><b>Accessible (adj.):</b> เข้าถึงได้ง่าย</div>
+                            <div class="bg-white p-2 rounded border border-slate-200"><b>Subsequent (adj.):</b> ซึ่งตามมาทีหลัง</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= SECTION 2: FLASHCARDS ================= -->
+        <section id="sec-flashcards" class="main-sec hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900 flex items-center">
+                        <i class="fa-solid fa-clone text-indigo-600 mr-3"></i>Interactive Grammar Flashcards
+                    </h2>
+                    <p class="text-sm text-slate-600">คลิกที่การ์ดเพื่อพลิกดูเฉลยและคำอธิบายกฎไวยากรณ์</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="prevFlashcard()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg text-sm font-semibold transition">
+                        <i class="fa-solid fa-chevron-left mr-1"></i> ย้อนกลับ
+                    </button>
+                    <span id="card-counter" class="text-sm font-bold text-indigo-900">1 / 8</span>
+                    <button onclick="nextFlashcard()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition">
+                        ถัดไป <i class="fa-solid fa-chevron-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Flashcard Container -->
+            <div class="max-w-xl mx-auto h-80 perspective-1000 cursor-pointer" onclick="flipCard()">
+                <div id="flashcard-inner" class="relative w-full h-full duration-500 transform-style-3d shadow-xl rounded-2xl">
+                    <!-- Front -->
+                    <div class="absolute w-full h-full bg-indigo-900 text-white p-8 rounded-2xl backface-hidden flex flex-col justify-between border-2 border-indigo-700">
+                        <div class="flex justify-between items-center">
+                            <span id="fc-category" class="bg-amber-400 text-indigo-950 font-bold text-xs px-3 py-1 rounded-full uppercase">Sentence Types</span>
+                            <span class="text-xs text-indigo-300">คลิกเพื่อพลิกการ์ด <i class="fa-solid fa-rotate mr-1"></i></span>
+                        </div>
+                        <div class="text-center my-auto">
+                            <h3 id="fc-question" class="text-lg md:text-xl font-bold leading-relaxed">"The library was closed, however, online services were active." มีโครงสร้างผิดประเภทใด?</h3>
+                        </div>
+                        <div class="text-center text-xs text-indigo-300">EC1 Exam Prep Card</div>
+                    </div>
+                    <!-- Back -->
+                    <div class="absolute w-full h-full bg-white text-slate-900 p-8 rounded-2xl backface-hidden rotate-y-180 flex flex-col justify-between border-2 border-slate-300">
+                        <div class="flex justify-between items-center">
+                            <span class="bg-emerald-100 text-emerald-800 font-bold text-xs px-3 py-1 rounded-full">คำตอบ & คำอธิบาย</span>
+                            <i class="fa-solid fa-circle-check text-emerald-500 text-xl"></i>
+                        </div>
+                        <div class="my-auto space-y-2">
+                            <h4 id="fc-answer" class="text-lg font-bold text-emerald-700">Comma Splice</h4>
+                            <p id="fc-explanation" class="text-sm text-slate-600 leading-relaxed">เพราะ 'however' เป็น Conjunctive Adverb ไม่ใช่ FANBOYS ห้ามใช้ Comma ตัวเดียวเชื่อมประโยค ต้องใช้ Semicolon (; however,)</p>
+                        </div>
+                        <div class="text-center text-xs text-slate-400">คลิกอีกครั้งเพื่อพลิกกลับ</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= SECTION 3: TOPIC QUIZZES ================= -->
+        <section id="sec-topic-quizzes" class="main-sec hidden space-y-8">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center">
+                    <i class="fa-solid fa-list-check text-indigo-600 mr-3"></i>แบบทดสอบแยกตามหัวข้อ (Topic-based Quizzes)
+                </h2>
+                <p class="text-sm text-slate-600">เลือกหัวข้อที่ต้องการทดสอบเพื่อเช็กความเข้าใจรายบท</p>
+
+                <!-- Category Selector -->
+                <div class="flex flex-wrap gap-2 mt-4">
+                    <button onclick="loadTopicQuiz('types')" id="tbtn-types" class="tquiz-btn px-4 py-2 rounded-lg text-sm font-medium border bg-indigo-600 text-white border-indigo-600">Sentence Types</button>
+                    <button onclick="loadTopicQuiz('problems')" id="tbtn-problems" class="tquiz-btn px-4 py-2 rounded-lg text-sm font-medium border bg-white text-slate-700 border-slate-300 hover:bg-slate-50">Sentence Problems</button>
+                    <button onclick="loadTopicQuiz('tenses')" id="tbtn-tenses" class="tquiz-btn px-4 py-2 rounded-lg text-sm font-medium border bg-white text-slate-700 border-slate-300 hover:bg-slate-50">Tenses & Advice</button>
+                </div>
+            </div>
+
+            <!-- Quiz Display Card -->
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 max-w-3xl mx-auto">
+                <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
+                    <span id="tquiz-title" class="font-bold text-indigo-900 text-lg">Sentence Types Quiz</span>
+                    <span id="tquiz-progress" class="text-xs font-semibold bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full">ข้อ 1 จาก 3</span>
+                </div>
+
+                <div id="tquiz-container" class="space-y-6">
+                    <h3 id="tquiz-question" class="text-base md:text-lg font-semibold text-slate-800">โจทย์จะปรากฏที่นี่...</h3>
+                    <div id="tquiz-options" class="space-y-3">
+                        <!-- Options generated dynamically -->
+                    </div>
+                    <div id="tquiz-feedback" class="hidden p-4 rounded-xl text-sm font-medium"></div>
+                    <div class="flex justify-end pt-4">
+                        <button onclick="nextTopicQuestion()" id="tquiz-next-btn" class="hidden px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition">
+                            ข้อถัดไป <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= SECTION 4: MASTER QUIZ (MOCK EXAM) ================= -->
+        <section id="sec-master-quiz" class="main-sec hidden space-y-8">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900 flex items-center">
+                            <i class="fa-solid fa-trophy text-amber-500 mr-3"></i>Comprehensive EC1 Master Mock Exam
+                        </h2>
+                        <p class="text-sm text-slate-600">แบบทดสอบรวมทุกหัวข้อข้อสอบ 10 ข้อ วัดระดับความพร้อมก่อนเข้าห้องสอบจริง</p>
+                    </div>
+                    <button onclick="startMasterQuiz()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl transition shadow">
+                        <i class="fa-solid fa-play mr-1.5"></i> เริ่มทำข้อสอบใหม่
+                    </button>
+                </div>
+            </div>
+
+            <!-- Master Quiz Card -->
+            <div id="mquiz-card" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 max-w-3xl mx-auto">
+                <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
+                    <span class="font-bold text-slate-700 text-sm">EC1 Final Assessment</span>
+                    <span id="mquiz-counter" class="text-xs font-bold bg-amber-100 text-amber-900 px-3 py-1 rounded-full">Question 1 / 10</span>
+                </div>
+
+                <div class="space-y-6">
+                    <h3 id="mquiz-question" class="text-base md:text-lg font-bold text-slate-900 leading-snug">Question text...</h3>
+                    
+                    <div id="mquiz-options" class="space-y-3">
+                        <!-- Options generated dynamically -->
+                    </div>
+
+                    <div id="mquiz-feedback" class="hidden p-4 rounded-xl text-sm leading-relaxed"></div>
+
+                    <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+                        <span id="mquiz-score-live" class="text-xs font-semibold text-slate-500">Score: 0</span>
+                        <button onclick="nextMasterQuestion()" id="mquiz-next-btn" class="hidden px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition">
+                            ข้อถัดไป <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Result Modal / Card (Hidden initially) -->
+            <div id="mquiz-result" class="hidden bg-white p-8 rounded-2xl shadow-md border border-slate-200 max-w-xl mx-auto text-center space-y-6">
+                <div class="w-20 h-20 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto text-3xl">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-900">สรุปผลการทำแบบทดสอบรวม</h3>
+                    <p class="text-sm text-slate-600 mt-1">EC1 Comprehensive Examination Result</p>
+                </div>
+                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                    <p class="text-4xl font-black text-indigo-900" id="result-score-text">0 / 10</p>
+                    <p id="result-eval" class="text-sm font-semibold text-slate-700 mt-2">ระดับความพร้อม: -</p>
+                </div>
+                <div id="result-diagnosis" class="text-xs text-slate-600 text-left bg-indigo-50 p-4 rounded-xl border border-indigo-100 space-y-1">
+                    <!-- Diagnostic details -->
+                </div>
+                <button onclick="startMasterQuiz()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition">
+                    ลองทำข้อสอบอีกครั้ง
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-6 border-t border-slate-800 text-center text-xs">
+        <p>English for Communication 1 (EC1) • Master Preparation Platform</p>
+    </footer>
+
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <script>
+        // --- 1. Navigation Logic ---
+        function switchMainTab(tabId) {
+            document.querySelectorAll('.main-sec').forEach(sec => sec.classList.add('hidden'));
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                btn.classList.remove('bg-indigo-800', 'text-white', 'shadow');
+                btn.classList.add('hover:bg-indigo-900');
+            });
+
+            document.getElementById('sec-' + tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById('btn-tab-' + tabId);
+            activeBtn.classList.add('bg-indigo-800', 'text-white', 'shadow');
+            activeBtn.classList.remove('hover:bg-indigo-900');
+        }
+
+        // --- 2. Flashcard Logic ---
+        const flashcards = [
+            {
+                cat: "Sentence Problems",
+                q: "ประโยคนี้มีความผิดพลาดประเภทใด:\n\"The library was closed during holiday, however, online databases remained open.\"",
+                a: "Comma Splice",
+                exp: "เพราะ 'however' เป็น Conjunctive Adverb ไม่ใช่ FANBOYS การใช้เพียง Comma (,) วางข้างหน้าถือเป็น Comma Splice (ต้องใช้ Semicolon: ; however,)"
+            },
+            {
+                cat: "Sentence Types",
+                q: "ประโยคนี้เป็นประโยคประเภทใด:\n\"Jonathan proofread his assignment and submitted it before midnight.\"",
+                a: "Simple Sentence",
+                exp: "เป็น Compound Predicate (ประธาน Jonathan ทำ 2 กริยา: proofread และ submitted) ไม่มีประธานใหม่หลัง and จึงถือเป็น Simple Sentence"
+            },
+            {
+                cat: "Modals & Advice",
+                q: "โครงสร้าง 'had better' สำหรับการให้คำแนะนำ ตามด้วยกริยารูปแบบใด?",
+                a: "Bare Infinitive (V.1 ไม่เติม to)",
+                exp: "เช่น 'You had better study.' ห้ามใช้ 'had better to study' เด็ดขาด! ส่วนรูปปฏิเสธคือ 'had better not + V.1'"
+            },
+            {
+                cat: "Past Tenses",
+                q: "เติมคำในช่องว่าง:\n\"While I ________ (study) last night, the power suddenly ________ (go) out.\"",
+                a: "was studying / went",
+                exp: "หลัง While ใช้ Past Continuous (was studying) สำหรับเหตุการณ์ที่กำลังดำเนินอยู่ และใช้ Past Simple (went) สำหรับเหตุการณ์แทรกแซง"
+            },
+            {
+                cat: "Present Perfect",
+                q: "หลักการเลือกใช้ 'For' กับ 'Since' ใน Present Perfect ต่างกันอย่างไร?",
+                a: "For + ช่วงเวลา / Since + จุดเริ่มต้นเวลา",
+                exp: "For ใช้กับระยะเวลา เช่น for 3 hours, for 5 years / Since ใช้กับจุดเริ่มต้น เช่น since 2020, since 8 AM"
+            },
+            {
+                cat: "Sentence Problems",
+                q: "ประโยคนี้มีความผิดพลาดประเภทใด:\n\"Having thoroughly analyzed all survey responses and data.\"",
+                a: "Sentence Fragment",
+                exp: "ประโยคนี้เป็นเพียง Participial Phrase ขาด Independent Clause (ประโยคหลักที่มีประธานและกริยาแท้)"
+            },
+            {
+                cat: "Reading Strategy",
+                q: "การกวาดสายตาอ่านอย่างรวดเร็วเพื่อหา 'วันที่ หรือ ตัวเลขเฉพาะ' เรียกว่าอะไร?",
+                a: "Scanning",
+                exp: "Scanning คือการหาข้อมูลเฉพาะเจาะจง (Specific Information) ส่วน Skimming คือการอ่านเพื่อหา Main Idea / ภาพรวม"
+            },
+            {
+                cat: "Vocabulary",
+                q: "คำว่า 'Mitigate' ในบริบทวิชาการมีความหมายตรงกับคำใด?",
+                a: "Alleviate / Reduce (บรรเทา/ทำให้ลดลง)",
+                exp: "มักใช้ในบริบท เช่น 'mitigate the risk' (ลดความเสี่ยง) หรือ 'mitigate the infection' (บรรเทาการติดเชื้อ)"
+            }
+        ];
+
+        let currentFcIndex = 0;
+        let isFlipped = false;
+
+        function updateFlashcardUI() {
+            const card = flashcards[currentFcIndex];
+            document.getElementById('fc-category').innerText = card.cat;
+            document.getElementById('fc-question').innerText = card.q;
+            document.getElementById('fc-answer').innerText = card.a;
+            document.getElementById('fc-explanation').innerText = card.exp;
+            document.getElementById('card-counter').innerText = `${currentFcIndex + 1} / ${flashcards.length}`;
+            
+            // Reset Flip
+            isFlipped = false;
+            document.getElementById('flashcard-inner').classList.remove('rotate-y-180');
+        }
+
+        function flipCard() {
+            isFlipped = !isFlipped;
+            const inner = document.getElementById('flashcard-inner');
+            if (isFlipped) {
+                inner.classList.add('rotate-y-180');
+            } else {
+                inner.classList.remove('rotate-y-180');
+            }
+        }
+
+        function nextFlashcard() {
+            currentFcIndex = (currentFcIndex + 1) % flashcards.length;
+            updateFlashcardUI();
+        }
+
+        function prevFlashcard() {
+            currentFcIndex = (currentFcIndex - 1 + flashcards.length) % flashcards.length;
+            updateFlashcardUI();
+        }
+
+
+        // --- 3. Topic Quizzes Logic ---
+        const topicQuizzesData = {
+            types: [
+                {
+                    q: "Identify the sentence type: 'Although the weather was harsh, the team continued their research, and they completed the project.'",
+                    opts: ["Simple Sentence", "Compound Sentence", "Complex Sentence", "Compound-Complex Sentence"],
+                    ans: 3,
+                    exp: "มี 1 Dependent Clause (Although...) และ 2 Independent Clauses เชื่อมด้วย and จึงเป็น Compound-Complex"
+                },
+                {
+                    q: "Which of the following is a Simple Sentence?",
+                    opts: [
+                        "The professor explained the theory, but students remained confused.",
+                        "Both the manager and her staff attended the seminar and asked questions.",
+                        "Because the class was canceled, we went home early.",
+                        "She studied hard; however, she failed the exam."
+                    ],
+                    ans: 1,
+                    exp: "ข้อ B มี Compound Subject (manager & staff) และ Compound Predicate (attended & asked) แต่ยังเป็น Simple Sentence"
+                }
+            ],
+            problems: [
+                {
+                    q: "Identify the structural error: 'The result was unexpected, therefore, the team repeated the test.'",
+                    opts: ["Fragment", "Run-on Sentence", "Comma Splice", "No Error"],
+                    ans: 2,
+                    exp: "'therefore' เป็น Conjunctive Adverb ใช้ comma เชื่อมหน้าคำนี้ถือเป็น Comma Splice"
+                },
+                {
+                    q: "Identify the structural error: 'Trying to pass the EC1 final exam with a high score.'",
+                    opts: ["Fragment", "Run-on Sentence", "Comma Splice", "No Error"],
+                    ans: 0,
+                    exp: "เป็นเพียง Participial Phrase ขาดประธานและกริยาแท้ ถือเป็น Sentence Fragment"
+                }
+            ],
+            tenses: [
+                {
+                    q: "Choose the correct form: 'While the students ________ the essay, the teacher ________ their attendance.'",
+                    opts: ["wrote / checked", "were writing / was checking", "were writing / checked", "wrote / was checking"],
+                    ans: 2,
+                    exp: "เหตุการณ์ดำเนินอยู่ใช้ Past Continuous (were writing) และเหตุการณ์แทรกใช้ Past Simple (checked)"
+                },
+                {
+                    q: "Which sentence uses 'had better' correctly?",
+                    opts: [
+                        "You had better to complete your assignment.",
+                        "You had better not miss the tutorial session.",
+                        "You had better missing the exam.",
+                        "You had better to not arrive late."
+                    ],
+                    ans: 1,
+                    exp: "had better ตามด้วย Bare Infinitive (V.1) และรูปปฏิเสธคือ 'had better not + V.1'"
+                }
+            ]
+        };
+
+        let currentTopicKey = 'types';
+        let currentTopicIndex = 0;
+
+        function loadTopicQuiz(key) {
+            currentTopicKey = key;
+            currentTopicIndex = 0;
+            
+            document.querySelectorAll('.tquiz-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600');
+                btn.classList.add('bg-white', 'text-slate-700', 'border-slate-300');
+            });
+            document.getElementById('tbtn-' + key).classList.add('bg-indigo-600', 'text-white', 'border-indigo-600');
+
+            renderTopicQuestion();
+        }
+
+        function renderTopicQuestion() {
+            const quizList = topicQuizzesData[currentTopicKey];
+            const qData = quizList[currentTopicIndex];
+
+            document.getElementById('tquiz-title').innerText = `${currentTopicKey.toUpperCase()} Quiz`;
+            document.getElementById('tquiz-progress').innerText = `ข้อ ${currentTopicIndex + 1} จาก ${quizList.length}`;
+            document.getElementById('tquiz-question').innerText = qData.q;
+
+            const optsContainer = document.getElementById('tquiz-options');
+            optsContainer.innerHTML = '';
+            document.getElementById('tquiz-feedback').classList.add('hidden');
+            document.getElementById('tquiz-next-btn').classList.add('hidden');
+
+            qData.opts.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3.5 rounded-xl border border-slate-200 hover:bg-indigo-50 hover:border-indigo-300 transition text-sm font-medium text-slate-700";
+                btn.innerText = opt;
+                btn.onclick = () => checkTopicAnswer(idx);
+                optsContainer.appendChild(btn);
+            });
+        }
+
+        function checkTopicAnswer(selectedIdx) {
+            const qData = topicQuizzesData[currentTopicKey][currentTopicIndex];
+            const feedback = document.getElementById('tquiz-feedback');
+            const optsContainer = document.getElementById('tquiz-options');
+            
+            // Disable all buttons
+            Array.from(optsContainer.children).forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === qData.ans) {
+                    btn.className = "w-full text-left p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 font-bold text-sm";
+                } else if (idx === selectedIdx) {
+                    btn.className = "w-full text-left p-3.5 rounded-xl border-2 border-red-400 bg-red-50 text-red-900 text-sm";
+                }
+            });
+
+            feedback.classList.remove('hidden');
+            if (selectedIdx === qData.ans) {
+                feedback.className = "p-4 rounded-xl text-sm font-medium bg-emerald-100 text-emerald-900 border border-emerald-200";
+                feedback.innerHTML = `<strong>✓ ถูกต้อง!</strong> ${qData.exp}`;
+            } else {
+                feedback.className = "p-4 rounded-xl text-sm font-medium bg-red-100 text-red-900 border border-red-200";
+                feedback.innerHTML = `<strong>❌ ยังไม่ถูกต้อง!</strong> ${qData.exp}`;
+            }
+
+            if (currentTopicIndex < topicQuizzesData[currentTopicKey].length - 1) {
+                document.getElementById('tquiz-next-btn').classList.remove('hidden');
+            }
+        }
+
+        function nextTopicQuestion() {
+            currentTopicIndex++;
+            renderTopicQuestion();
+        }
+
+
+        // --- 4. Master Mock Exam Logic ---
+        const masterQuizData = [
+            {
+                q: "Identify the sentence type:\n\"Neither the department chair nor her research assistants accepted the proposed changes to the project timeline or requested additional funding.\"",
+                opts: ["Simple Sentence", "Compound Sentence", "Complex Sentence", "Compound-Complex Sentence"],
+                ans: 0,
+                exp: "ประโยคนี้มี Compound Subject (department chair & assistants) และ Compound Predicate (accepted & requested) แต่มีใจความหลักเดียว จึงเป็น Simple Sentence"
+            },
+            {
+                q: "Identify the sentence structure error:\n\"The university has invested heavily in online learning resources, consequently, overall student satisfaction scores have increased.\"",
+                opts: ["Fragment", "Run-on Sentence", "Comma Splice", "No Error"],
+                ans: 2,
+                exp: "'consequently' เป็น Conjunctive Adverb ไม่ใช่ FANBOYS การใช้ comma ตัวเดียวเชื่อมหน้าคำนี้ถือเป็น Comma Splice (ต้องใช้ ; consequently,)"
+            },
+            {
+                q: "Identify the structural error:\n\"Having thoroughly analyzed the survey responses and compiled all statistical data into a comprehensive report.\"",
+                opts: ["Fragment", "Run-on Sentence", "Comma Splice", "No Error"],
+                ans: 0,
+                exp: "เป็นเพียง Participial Phrase ขาด Independent Clause (ประโยคหลักที่มีประธานและกริยาแท้) จัดเป็น Sentence Fragment"
+            },
+            {
+                q: "Complete the sentence with correct past tenses:\n\"While the professor ________ the key grammar concepts on the board, the electricity suddenly ________.\"",
+                opts: ["explained / went out", "was explaining / went out", "explained / was going out", "was explaining / was going out"],
+                ans: 1,
+                exp: "เหตุการณ์ที่กำลังทำใช้ Past Continuous (was explaining) หลัง While และเหตุการณ์แทรกแซงใช้ Past Simple (went out)"
+            },
+            {
+                q: "Which sentence correctly applies the Present Perfect Tense?",
+                opts: [
+                    "The university has published the new academic calendar yesterday morning.",
+                    "Our class has already completed three grammar modules this semester.",
+                    "I have submitted my EC1 assignment last night before midnight.",
+                    "She has lived in Chiang Rai in 2019."
+                ],
+                ans: 1,
+                exp: "ข้อ B ใช้ Present Perfect คู่กับ 'already' และ 'this semester' ถูกต้อง ส่วนข้ออื่นระบุเวลาในอดีตชัดเจน (yesterday, last night, in 2019) ต้องใช้ Past Simple"
+            },
+            {
+                q: "Identify the grammatically correct advice sentence using 'had better':",
+                opts: [
+                    "You had better to register for the tutorial session.",
+                    "You had better not miss the upcoming deadline.",
+                    "You had better studying for the final exam.",
+                    "You had better to not ignore the course rules."
+                ],
+                ans: 1,
+                exp: "โครงสร้างปฏิเสธของ had better คือ 'had better not + Bare Infinitive (V.1)'"
+            },
+            {
+                q: "Your peer asks for advice on improving writing. Which expression is grammatically correct?",
+                opts: [
+                    "If I were you, I would practice sentence combining exercises.",
+                    "I suggest you to practice writing every day.",
+                    "How about to join an English workshop?",
+                    "You ought study more grammar rules."
+                ],
+                ans: 0,
+                exp: "ข้อ A ใช้ Subjunctive Condition 'If I were you, I would...' ถูกต้อง (ข้อ B ต้องเป็น 'suggest you practice', C ต้องเป็น 'How about joining', D ต้องเป็น 'ought to study')"
+            },
+            {
+                q: "Vocabulary: Governments must take ________ measures to ________ the risk of pandemic outbreaks.",
+                opts: ["proactive / mitigate", "itchy / disseminate", "severe / prioritize", "ordinary / enhance"],
+                ans: 0,
+                exp: "proactive measures = มาตรการเชิงรุก / mitigate the risk = บรรเทา/ลดความเสี่ยง"
+            },
+            {
+                q: "Reading Strategy: When you need to find a specific phone number or publication date in a text quickly, which technique should you use?",
+                opts: ["Skimming", "Scanning", "Paraphrasing", "Summarizing"],
+                ans: 1,
+                exp: "Scanning คือการกวาดสายตาหาข้อมูลเฉพาะเจาะจง (Specific Information)"
+            },
+            {
+                q: "Which option properly corrects the structural error in: 'The exam was challenging many students requested extra review sessions.'",
+                opts: [
+                    "The exam was challenging, many students requested extra review sessions.",
+                    "The exam was challenging; however, many students requested extra review sessions.",
+                    "Because the exam was challenging, many students requested extra review sessions.",
+                    "The exam was challenging so many students requested extra review sessions."
+                ],
+                ans: 2,
+                exp: "ข้อ C แก้ไข Run-on ด้วยการเปลี่ยนเป็น Complex Sentence โดยเติม Subordinating Conjunction (Because) ได้อย่างสมบูรณ์"
+            }
+        ];
+
+        let mCurrentIdx = 0;
+        let mScore = 0;
+
+        function startMasterQuiz() {
+            mCurrentIdx = 0;
+            mScore = 0;
+            document.getElementById('mquiz-card').classList.remove('hidden');
+            document.getElementById('mquiz-result').classList.add('hidden');
+            renderMasterQuestion();
+        }
+
+        function renderMasterQuestion() {
+            const qData = masterQuizData[mCurrentIdx];
+            document.getElementById('mquiz-counter').innerText = `Question ${mCurrentIdx + 1} / ${masterQuizData.length}`;
+            document.getElementById('mquiz-score-live').innerText = `Score: ${mScore}`;
+            document.getElementById('mquiz-question').innerText = qData.q;
+
+            const optsContainer = document.getElementById('mquiz-options');
+            optsContainer.innerHTML = '';
+            document.getElementById('mquiz-feedback').classList.add('hidden');
+            document.getElementById('mquiz-next-btn').classList.add('hidden');
+
+            qData.opts.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border border-slate-200 hover:bg-indigo-50 hover:border-indigo-300 transition text-sm font-medium text-slate-700";
+                btn.innerText = opt;
+                btn.onclick = () => checkMasterAnswer(idx);
+                optsContainer.appendChild(btn);
+            });
+        }
+
+        function checkMasterAnswer(selectedIdx) {
+            const qData = masterQuizData[mCurrentIdx];
+            const feedback = document.getElementById('mquiz-feedback');
+            const optsContainer = document.getElementById('mquiz-options');
+
+            Array.from(optsContainer.children).forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === qData.ans) {
+                    btn.className = "w-full text-left p-4 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 font-bold text-sm";
+                } else if (idx === selectedIdx) {
+                    btn.className = "w-full text-left p-4 rounded-xl border-2 border-red-400 bg-red-50 text-red-900 text-sm";
+                }
+            });
+
+            feedback.classList.remove('hidden');
+            if (selectedIdx === qData.ans) {
+                mScore++;
+                feedback.className = "p-4 rounded-xl text-sm font-medium bg-emerald-100 text-emerald-900 border border-emerald-200";
+                feedback.innerHTML = `<strong>✓ ถูกต้อง!</strong> ${qData.exp}`;
+            } else {
+                feedback.className = "p-4 rounded-xl text-sm font-medium bg-red-100 text-red-900 border border-red-200";
+                feedback.innerHTML = `<strong>❌ ยังไม่ถูกต้อง!</strong> ${qData.exp}`;
+            }
+
+            document.getElementById('mquiz-score-live').innerText = `Score: ${mScore}`;
+            document.getElementById('mquiz-next-btn').classList.remove('hidden');
+        }
+
+        function nextMasterQuestion() {
+            mCurrentIdx++;
+            if (mCurrentIdx < masterQuizData.length) {
+                renderMasterQuestion();
+            } else {
+                showMasterResult();
+            }
+        }
+
+        function showMasterResult() {
+            document.getElementById('mquiz-card').classList.add('hidden');
+            document.getElementById('mquiz-result').classList.remove('hidden');
+
+            document.getElementById('result-score-text').innerText = `${mScore} / ${masterQuizData.length}`;
+
+            let evalText = "";
+            let diagText = "";
+
+            if (mScore >= 8) {
+                evalText = "ระดับความพร้อม: 🌟 ยอดเยี่ยมมาก (Ready for Exam)";
+                diagText = "<p class='font-bold text-emerald-800'>คุณมีความแม่นยำในไวยากรณ์และโครงสร้างภาษาอังกฤษระดับสูง ทบทวนการ์ด Flashcards สั้นๆ ก่อนสอบเพื่อความมั่นใจ 100%!</p>";
+            } else if (mScore >= 5) {
+                evalText = "ระดับความพร้อม: ⚠️ ปานกลาง (Need Final Review)";
+                diagText = "<p class='font-bold text-amber-800'>คุณเข้าใจหลักการส่วนใหญ่ แต่ยังมีจุดสับสนเรื่อง Comma Splice หรือ Tenses ให้กลับไปอ่านสรุปข้อ 2 และทำ Flashcards เพิ่มเติม</p>";
+            } else {
+                evalText = "ระดับความพร้อม: 🚨 ควรทบทวนด่วน (High Priority Review)";
+                diagText = "<p class='font-bold text-red-800'>แนะนำให้อ่านสรุปเนื้อหาใน Tab 1 อย่างละเอียด เน้นเรื่อง Conjunctive Adverbs (however, therefore) และประเภทประโยค</p>";
+            }
+
+            document.getElementById('result-eval').innerText = evalText;
+            document.getElementById('result-diagnosis').innerHTML = diagText;
+        }
+
+        // Initialize on Load
+        window.onload = function() {
+            updateFlashcardUI();
+            loadTopicQuiz('types');
+            startMasterQuiz();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,1008 @@
+<title>EC1 Quiz Coach</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+/* Layout: one reading column under a sticky tab bar. Organized by the three parts of the EC1 quiz (grammar, vocabulary, reading), then speaking for weeks 14 and 16. */
+:root{
+  --bg:#F2F1EC; --surface:#FFFFFF; --soft:#E9E7DF; --fg:#1E2430; --muted:#5D6472; --line:#D9D6CC;
+  --accent:#2F5DA8; --accent-fg:#FFFFFF; --term:#244C8C;
+  --hl:#FFE066; --hl-fg:#2A2300;
+  --good:#17794A; --good-bg:#DDF3E6; --bad:#B23A2E; --bad-bg:#FBE3DF;
+  --font-display:"Bai Jamjuree","IBM Plex Sans Thai","Noto Sans Thai",system-ui,sans-serif;
+  --font-body:"IBM Plex Sans Thai","Noto Sans Thai","Leelawadee UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#13161C; --surface:#1C2029; --soft:#262B36; --fg:#E6E8EC; --muted:#A3A9B5; --line:#323846;
+  --accent:#86A9E8; --accent-fg:#0E1A30; --term:#A9C2F0;
+  --hl:#7A6410; --hl-fg:#FFF3BF;
+  --good:#63D29A; --good-bg:#143524; --bad:#F2948A; --bad-bg:#40201C; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#13161C; --surface:#1C2029; --soft:#262B36; --fg:#E6E8EC; --muted:#A3A9B5; --line:#323846;
+  --accent:#86A9E8; --accent-fg:#0E1A30; --term:#A9C2F0;
+  --hl:#7A6410; --hl-fg:#FFF3BF;
+  --good:#63D29A; --good-bg:#143524; --bad:#F2948A; --bad-bg:#40201C; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.7;margin:0}
+.wrap{max-width:860px;margin:0 auto;padding-inline:16px;padding-block:20px 64px}
+h1,h2,h3{font-family:var(--font-display);line-height:1.3;text-wrap:balance;margin:0}
+h1{font-size:1.7rem} h2{font-size:1.3rem;margin-top:8px} h3{font-size:1.05rem}
+p{margin:0}
+a{color:var(--accent)}
+b{color:var(--term);font-weight:600}
+mark{background:var(--hl);color:var(--hl-fg);padding:0 .2em;border-radius:3px;font-weight:600}
+.muted{color:var(--muted)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.stack-lg{display:flex;flex-direction:column;gap:26px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.tabs nav{max-width:860px;margin:0 auto;padding-inline:16px;display:flex;gap:4px;overflow-x:auto}
+.tabs button{font:inherit;font-family:var(--font-display);font-weight:600;background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);padding:12px 12px 9px;cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip,.btn{font:inherit;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:6px 14px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.btn{border-radius:8px;font-weight:600}
+.btn.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:default}
+
+.map{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.map a{display:flex;flex-direction:column;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;text-decoration:none;color:var(--fg);min-width:0}
+.map .code{font-family:var(--font-display);font-weight:700;color:var(--accent)}
+.map .q{font-weight:600}
+.map .a{font-size:.9rem;color:var(--muted)}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.note{background:var(--soft);border-radius:8px;padding:12px 14px;font-size:.95rem}
+.trap{background:var(--bad-bg);border-radius:8px;padding:12px 14px;font-size:.95rem}
+.trap strong{color:var(--bad);font-family:var(--font-display)}
+ol,ul{margin:0;padding-left:1.3em}
+li+li{margin-top:4px}
+
+details.tp{background:var(--surface);border:1px solid var(--line);border-radius:10px}
+details.tp>summary{cursor:pointer;padding:12px 16px;font-family:var(--font-display);font-weight:600;list-style-position:inside}
+details.tp>summary small{font-family:var(--font-body);font-weight:400;color:var(--muted);margin-left:6px}
+details.tp>.in{padding:4px 16px 16px;display:flex;flex-direction:column;gap:12px}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.flow span{background:var(--soft);border-radius:6px;padding:4px 10px;font-weight:500}
+.flow span small{display:block;font-weight:400;color:var(--muted);font-size:.85rem;line-height:1.35}
+.flow i{font-style:normal;color:var(--muted)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.box{background:var(--soft);border-radius:8px;padding:10px 12px;min-width:0;font-size:.93rem}
+.box h4{margin:0 0 4px;font-family:var(--font-display);font-size:.98rem;color:var(--term)}
+.box .ex{display:block;margin-top:6px;color:var(--muted)}
+.box.w{border-left:4px solid var(--bad)}
+.box.a{border-left:4px solid var(--accent)}
+.box.g{border-left:4px solid var(--good)}
+
+/* sentence-structure blocks */
+.sent{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.93rem}
+.sent .ic,.sent .dc,.sent .cj{border-radius:6px;padding:4px 10px}
+.sent .ic{background:var(--good-bg);border:1px solid var(--good)}
+.sent .dc{background:var(--soft);border:1px dashed var(--muted)}
+.sent .cj{background:var(--hl);color:var(--hl-fg);font-weight:600}
+.sent .x{color:var(--bad);font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.85rem;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.legend .l1::before{background:var(--good-bg);border:1px solid var(--good)}
+.legend .l2::before{background:var(--soft);border:1px dashed var(--muted)}
+.legend .l3::before{background:var(--hl)}
+
+.cp{background:var(--soft);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.cp h3{font-size:.95rem}
+.cp details{border-top:1px solid var(--line);padding-top:8px}
+.cp summary{cursor:pointer;font-weight:500}
+.cp details p{margin-top:6px;padding-left:14px;border-left:3px solid var(--accent)}
+
+figure.fig{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+figure.fig figcaption{font-size:.95rem}
+.figbox{overflow-x:auto}
+svg.d{display:block;width:100%;height:auto;max-width:640px;min-width:540px}
+.d line,.d path{stroke:var(--fg);stroke-width:1.5;fill:none}
+.d text{fill:var(--fg);stroke:none;font-family:var(--font-body);font-size:13px}
+.d .b{font-weight:600}
+.d .sm{font-size:11px;fill:var(--muted)}
+.d .axis{stroke:var(--muted)}
+.d .long{stroke:var(--accent);stroke-width:10;stroke-linecap:round}
+.d .acct{fill:var(--accent);font-weight:600}
+.d .hit{fill:var(--bad);stroke:none}
+.d .badt{fill:var(--bad);font-weight:600}
+.d .span{stroke:var(--good);stroke-width:3}
+.d .goodt{fill:var(--good);font-weight:600}
+.d .dot{fill:var(--fg);stroke:none}
+
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-family:var(--font-display);font-size:.85rem;color:var(--muted);font-weight:600;white-space:nowrap}
+td:first-child{font-weight:600;color:var(--term);min-width:8em}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px 18px;text-align:center;cursor:pointer;min-height:190px;display:flex;flex-direction:column;justify-content:center;gap:10px;font:inherit;color:var(--fg);width:100%}
+.card .en{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:var(--term)}
+.card .th{font-size:1.1rem}
+.card .hint{color:var(--muted);font-size:.95rem}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.row .grow{flex:1;min-width:0}
+
+.ctx{background:var(--soft);border-radius:8px;padding:12px 14px;font-size:.95rem}
+.ctx b{display:block;margin-bottom:4px}
+.qtext{font-size:1.1rem;font-weight:500}
+.choices{display:flex;flex-direction:column;gap:8px}
+.choice{font:inherit;text-align:left;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:11px 14px;cursor:pointer}
+.choice.ok{background:var(--good-bg);border-color:var(--good)}
+.choice.no{background:var(--bad-bg);border-color:var(--bad)}
+.choice:disabled{cursor:default;opacity:1;color:var(--fg)}
+.exp{border-radius:10px;padding:12px 14px}
+.exp.ok{background:var(--good-bg)} .exp.no{background:var(--bad-bg)}
+.exp strong{font-family:var(--font-display)}
+.exp.ok strong{color:var(--good)} .exp.no strong{color:var(--bad)}
+.score{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.95rem}
+.tag{display:inline-block;font-size:.8rem;border:1px solid var(--line);border-radius:999px;padding:1px 9px;color:var(--muted)}
+</style>
+
+<svg class="d" width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <marker id="m-fill" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" style="fill:var(--fg);stroke:none"/></marker>
+</defs></svg>
+
+<div class="tabs"><nav role="tablist" aria-label="ส่วนของหน้า">
+  <button role="tab" data-tab="start" aria-selected="true">เริ่มที่นี่</button>
+  <button role="tab" data-tab="learn" aria-selected="false">เนื้อหา</button>
+  <button role="tab" data-tab="vocab" aria-selected="false">ท่องศัพท์</button>
+  <button role="tab" data-tab="quiz" aria-selected="false">ฝึกข้อสอบ</button>
+</nav></div>
+
+<div class="wrap">
+
+<!-- ================= START ================= -->
+<section id="tab-start" class="stack-lg">
+  <div class="stack">
+    <h1>ติว Quiz English for Communication 1</h1>
+    <p class="muted">สรุปตาม Grammar Review สัปดาห์ 12 และ Coursebook บทที่ 1–6 · ข้อฝึก 168 ข้อ</p>
+  </div>
+
+  <div class="stack">
+    <h2>Quiz เป็นแบบไหน</h2>
+    <div class="tw"><table>
+      <tr><th>ส่วน</th><th>จำนวน</th><th>ออกอะไร</th></tr>
+      <tr><td>Part 1 Grammar</td><td>40 ข้อ</td><td>Sentence types · Sentence problems · Past simple · Past continuous · Present perfect · Past simple vs Past continuous · Past simple vs Present perfect · Giving advice</td></tr>
+      <tr><td>Part 2 Vocabulary</td><td>20 ข้อ</td><td>คำศัพท์ Coursebook หน้า 59–65 (บทที่ 1–6)</td></tr>
+      <tr><td>Part 3 Reading 1</td><td>5 ข้อ</td><td>บทอ่านสั้น ตอบ True หรือ False</td></tr>
+      <tr><td>Part 3 Reading 2</td><td>5 ข้อ</td><td>บทอ่านยาว ปรนัย 4 ตัวเลือก</td></tr>
+    </table></div>
+    <p class="note">Quiz คิดเป็น 30% ของวิชา ปรนัยทั้งหมด เวลา 1 ชั่วโมง 30 นาที สอบในห้อง (Coursebook ระบุสัปดาห์ที่ 13) ให้เช็กวันและห้องกับอาจารย์</p>
+    <div class="map">
+      <a href="#g2"><span class="code">Grammar · ประโยค</span><span class="q">Sentence types และ problems</span><span class="a">Simple, Compound, Complex · Fragment, Run-on, Comma splice</span></a>
+      <a href="#g4"><span class="code">Grammar · tense</span><span class="q">Past simple, Past continuous, Present perfect</span><span class="a">ดูคำบอกเวลาแล้วเลือก tense</span></a>
+      <a href="#g6"><span class="code">Grammar · advice</span><span class="q">Giving advice</span><span class="a">ตามด้วย V1, to + V1 หรือ V-ing</span></a>
+      <a href="#voc"><span class="code">Vocabulary</span><span class="q">คำศัพท์ 6 บท</span><span class="a">ตารางคำศัพท์ทั้งหมดพร้อมความหมาย</span></a>
+      <a href="#rd"><span class="code">Reading</span><span class="q">True/False และปรนัย</span><span class="a">ขั้นตอนอ่านที่อาจารย์ให้</span></a>
+      <a href="#sp"><span class="code">หลัง Quiz</span><span class="q">Discussion และ Presentation</span><span class="a">ประโยคที่ใช้ในสัปดาห์ 14 และ 16</span></a>
+    </div>
+  </div>
+
+  <div class="stack" data-m="pairs">
+    <h2>คู่ที่สับสนง่าย</h2>
+    <div class="tw"><table class="terms">
+      <tr><th>คู่</th><th>ตัวแรก</th><th>ตัวที่สอง</th></tr>
+      <tr><td>Simple / Compound</td><td>หลัง and ไม่มีประธานใหม่: <i>Eleven has powers, and uses it.</i></td><td>หลัง and มีประธานใหม่: <i>The monster appeared, and everyone screamed.</i></td></tr>
+      <tr><td>Compound / Complex</td><td>เชื่อมด้วย FANBOYS (for, and, nor, but, or, yet, so)</td><td>มี because, although, when, if, before, after, while ขึ้นต้น clause</td></tr>
+      <tr><td>Having finished... / After she had finished...</td><td>เป็นวลี ประโยคนี้ยังเป็น Simple</td><td>มีประธานและกริยา เป็น clause ประโยคนี้เป็น Complex</td></tr>
+      <tr><td>Run-on / Comma splice</td><td>สองประโยคติดกันโดยไม่มีอะไรคั่นเลย</td><td>สองประโยคคั่นด้วย comma อย่างเดียว</td></tr>
+      <tr><td>Fragment</td><td>ขาดประธาน ขาดกริยา หรือมีแค่ Because/When/Although + S + V</td><td>แก้โดยเติมประโยคหลัก</td></tr>
+      <tr><td>Past simple / Past continuous</td><td>เหตุการณ์ที่จบแล้ว หรือเหตุการณ์สั้นที่แทรกเข้ามา (V2)</td><td>เหตุการณ์ที่กำลังทำอยู่ในอดีต (was/were + V-ing)</td></tr>
+      <tr><td>when / while</td><td>when + เหตุการณ์สั้น (Past simple)</td><td>while + เหตุการณ์ยาว (Past continuous)</td></tr>
+      <tr><td>Past simple / Present perfect</td><td>บอกเวลาในอดีตชัด: yesterday, ago, last, in 2022</td><td>ไม่บอกเวลา หรือยังต่อถึงตอนนี้: ever, never, just, already, yet, since, recently, this week</td></tr>
+      <tr><td>for / since</td><td>for + ระยะเวลา: for three years</td><td>since + จุดเริ่มต้น: since 2022, since then</td></tr>
+      <tr><td>was / were</td><td>I, he, she, it, ประธานเอกพจน์</td><td>you, we, they, ประธานพหูพจน์</td></tr>
+      <tr><td>should / ought to</td><td>should + V1 (ไม่มี to)</td><td>ought to + V1 (ต้องมี to)</td></tr>
+      <tr><td>I suggest you / I would advise you</td><td>I suggest you + V1</td><td>I would advise you <b>to</b> + V1</td></tr>
+      <tr><td>Why don't you / How about</td><td>Why don't you + V1?</td><td>How about + V-ing?</td></tr>
+      <tr><td>interested / interesting</td><td>คนรู้สึกสนใจ: I am interested in...</td><td>สิ่งที่น่าสนใจ: an interesting book</td></tr>
+      <tr><td>good / well</td><td>adjective ขยายคำนาม: a good student</td><td>adverb ขยายกริยา: get along well</td></tr>
+      <tr><td>hard / hardly</td><td>hard (adv.) = อย่างหนัก: study hard</td><td>hardly = แทบจะไม่</td></tr>
+      <tr><td>Skimming / Scanning</td><td>อ่านเร็วเพื่อจับใจความหลัก (main idea)</td><td>กวาดตาหาข้อมูลเฉพาะ เช่น ตัวเลข ชื่อ วันที่</td></tr>
+      <tr><td>symptom / diagnosis</td><td>อาการที่ผู้ป่วยรู้สึก เช่น ไข้ ไอ</td><td>การที่หมอบอกว่าเป็นโรคอะไร</td></tr>
+      <tr><td>precaution / precautionary</td><td>(n.) การป้องกันไว้ก่อน</td><td>(adj.) เชิงป้องกัน: precautionary measures</td></tr>
+      <tr><td>remember / remind</td><td>จำได้เอง</td><td>ทำให้คนอื่นนึกถึง: remind me of...</td></tr>
+      <tr><td>witness / intruder</td><td>พยาน คนที่เห็นเหตุการณ์</td><td>ผู้บุกรุก คนที่เข้าบ้านโดยไม่ได้รับอนุญาต</td></tr>
+      <tr><td>look after / catch up / get along</td><td>look after = ดูแล · catch up = ตามให้ทัน</td><td>get along = เข้ากันได้ดี</td></tr>
+      <tr><td>mitigate, alleviate, minimise / disseminate</td><td>สามคำแรกความหมายใกล้กัน: ทำให้เบาลง ลดลง</td><td>disseminate = เผยแพร่ข้อมูล</td></tr>
+    </table></div>
+  </div>
+
+  <div class="stack">
+    <h2>เทคนิคทำ Quiz</h2>
+    <div class="panel"><ul>
+      <li><b>ข้อ tense:</b> หาคำบอกเวลาก่อน (yesterday, ago, last, when, while, since, yet, ever, just) แล้วค่อยเลือก ดูตารางคำบอกเวลาในหัวข้อ tense</li>
+      <li><b>ข้อ was / were และ has / have:</b> ดูประธานก่อน ตัวลวงมักใช้กริยาถูก tense แต่ไม่ตรงกับประธาน</li>
+      <li><b>ข้อ advice:</b> ดูคำที่อยู่หน้าช่องว่าง แล้วถามว่าคำนี้ตามด้วย V1, to + V1 หรือ V-ing</li>
+      <li><b>ข้อ sentence types:</b> หาคำเชื่อมก่อน ถ้าเป็น FANBOYS ให้ดูต่อว่ามีประธานใหม่ไหม</li>
+      <li><b>ข้อ vocabulary:</b> อ่านทั้งประโยคหาคำใบ้ เช่น "vomit" บอกว่าคำตอบคือ nauseous อาจารย์แนะนำให้จำคำที่มักไปด้วยกัน (collocation) เช่น make a decision</li>
+      <li><b>Reading:</b> อ่านคำถามก่อน หา keyword แล้วกลับไปหาในบทอ่าน ตัวเลือกที่ถูกมักใช้คำต่างกันแต่ความหมายเหมือนกัน</li>
+      <li><b>ตอบทุกข้อ</b> และทำข้อง่ายก่อน</li>
+    </ul></div>
+  </div>
+
+  <div class="stack">
+    <h2>ลำดับที่แนะนำ</h2>
+    <div class="panel"><ol>
+      <li>อ่านตารางคู่ที่สับสนง่ายด้านบน</li>
+      <li>แท็บ <b>เนื้อหา</b>: อ่านหัวข้อไวยากรณ์ทีละหัวข้อ แล้วตอบ "เช็กตรงนี้ก่อนไปต่อ"</li>
+      <li>แท็บ <b>ฝึกข้อสอบ</b>: ทำชุด Grammar Review ของอาจารย์ ต่อด้วย Vocabulary Review 50 ข้อ</li>
+      <li>แท็บ <b>ท่องศัพท์</b>: ท่องคำที่ตอบผิด</li>
+      <li>ทำชุด "จำลอง Quiz" ซึ่งสุ่ม 70 ข้อตามสัดส่วนจริง แล้วปิดด้วยชุดข้อที่เคยผิด</li>
+    </ol></div>
+  </div>
+
+  <p class="note">ที่มา: Grammar Review สัปดาห์ 12 และ Vocabulary Review ของอาจารย์ (เฉลยของอาจารย์) กับ Coursebook EC1 2026 ข้อในชุด Coursebook ผมเฉลยเอง ส่วนข้อ Reading ผมแต่งคำถามจากบทอ่านใน Coursebook ซึ่งไม่ใช่บทอ่านใน Quiz จริง อาจารย์ระบุไว้ว่า Vocabulary Review เป็นแค่ข้อฝึก ไม่ใช่ข้อสอบจริง</p>
+</section>
+
+<!-- ================= LEARN ================= -->
+<section id="tab-learn" class="stack-lg" hidden>
+  <div class="chips" id="modchips">
+    <button class="chip" data-mod="g1" aria-pressed="true">Parts of speech</button>
+    <button class="chip" data-mod="g2" aria-pressed="false">Sentence types</button>
+    <button class="chip" data-mod="g3" aria-pressed="false">Sentence problems</button>
+    <button class="chip" data-mod="g4" aria-pressed="false">Past simple / continuous</button>
+    <button class="chip" data-mod="g5" aria-pressed="false">Present perfect</button>
+    <button class="chip" data-mod="g6" aria-pressed="false">Giving advice</button>
+    <button class="chip" data-mod="voc" aria-pressed="false">Vocabulary</button>
+    <button class="chip" data-mod="rd" aria-pressed="false">Reading</button>
+    <button class="chip" data-mod="sp" aria-pressed="false">Discussion &amp; Presentation</button>
+  </div>
+
+  <!-- ---------- G1 PARTS OF SPEECH ---------- -->
+  <div class="mod stack" id="mod-g1" data-m="g1">
+    <h2>Parts of Speech <small class="tag">บทที่ 1</small></h2>
+    <p>รู้ว่าคำแต่ละคำเป็นชนิดไหน จะเลือกรูปคำถูกในข้อสอบ เช่น ต้องใช้ careful หรือ carefully</p>
+
+    <details class="tp" open><summary>8 ชนิดของคำ</summary><div class="in">
+      <table class="terms">
+        <tr><th>English</th><th>ทำหน้าที่</th><th>ตัวอย่าง</th></tr>
+        <tr><td>Noun</td><td>คน สัตว์ สิ่งของ สถานที่ เป็นประธานหรือกรรม</td><td>student, library, deadline</td></tr>
+        <tr><td>Pronoun</td><td>ใช้แทนคำนาม</td><td>I, she, they, it</td></tr>
+        <tr><td>Verb</td><td>บอกการกระทำ หรือเชื่อมประธานกับคุณศัพท์</td><td>submit, study, is</td></tr>
+        <tr><td>Adjective</td><td>ขยายคำนาม</td><td>a <u>challenging</u> project, <u>clear</u> instructions</td></tr>
+        <tr><td>Adverb</td><td>ขยายกริยา คุณศัพท์ หรือ adverb ด้วยกัน มักลงท้าย -ly</td><td>listened <u>attentively</u>, studied <u>diligently</u></td></tr>
+        <tr><td>Preposition</td><td>บอกสถานที่ เวลา หรือความสัมพันธ์</td><td>in, on, at, during, underneath</td></tr>
+        <tr><td>Conjunction</td><td>เชื่อมคำหรือประโยค</td><td>and, but, because, although</td></tr>
+        <tr><td>Interjection</td><td>คำอุทาน</td><td>Wow! Oh!</td></tr>
+      </table>
+      <p>คำเดียวเป็นได้หลายชนิด: I made some <b>mistakes</b> (n.) · You can't <b>mistake</b> (v.) the lab · a birthday <b>present</b> (n.) · I have to <b>present</b> (v.)</p>
+    </div></details>
+
+    <details class="tp"><summary>ตระกูลคำ (word families)</summary><div class="in">
+      <table>
+        <tr><th>Verb</th><th>Noun</th><th>Adjective</th><th>Adverb</th></tr>
+        <tr><td>—</td><td>enthusiasm</td><td>enthusiastic</td><td>enthusiastically</td></tr>
+        <tr><td>communicate</td><td>communication</td><td>communicative</td><td>communicatively</td></tr>
+        <tr><td>develop</td><td>development</td><td>developmental</td><td>developmentally</td></tr>
+        <tr><td>interest</td><td>interest</td><td>interesting / interested</td><td>interestingly</td></tr>
+        <tr><td>educate</td><td>education</td><td>educational</td><td>educationally</td></tr>
+        <tr><td>—</td><td>diligence</td><td>diligent</td><td>diligently</td></tr>
+        <tr><td>prevent / precaution</td><td>precaution</td><td>precautionary</td><td>—</td></tr>
+      </table>
+    </div></details>
+
+    <details class="tp"><summary>จุดที่ข้อสอบชอบหลอก <small>จาก Exercise 1.2</small></summary><div class="in">
+      <div class="grid">
+        <div class="box w"><h4>✗ get along good</h4>ขยายกริยาต้องใช้ adverb<span class="ex">✓ get along <b>well</b></span></div>
+        <div class="box w"><h4>✗ careful proofread</h4>ขยายกริยา proofread<span class="ex">✓ <b>carefully</b> proofread</span></div>
+        <div class="box w"><h4>✗ explained thorough</h4>ขยายกริยา explained<span class="ex">✓ explained <b>thoroughly</b></span></div>
+        <div class="box w"><h4>✗ students are interesting in</h4>คนรู้สึกสนใจใช้ -ed<span class="ex">✓ students are <b>interested</b> in</span></div>
+        <div class="box w"><h4>✗ studying hardly</h4>hardly แปลว่าแทบจะไม่<span class="ex">✓ studying <b>hard</b></span></div>
+        <div class="box w"><h4>✗ deliver a lecture yesterday</h4>มี yesterday ต้องใช้ V2<span class="ex">✓ <b>delivered</b></span></div>
+      </div>
+      <p class="note"><b>-ed กับ -ing:</b> -ed = ความรู้สึกของคน (bored, excited, interested) · -ing = สิ่งที่ทำให้รู้สึก (boring, exciting, interesting) เช่น <i>The lecture was boring, so I was bored.</i></p>
+    </div></details>
+
+    <div class="cp">
+      <h3>เช็กตรงนี้ก่อนไปต่อ</h3>
+      <details><summary>"The professor explained the topic <u>clear</u>." ถูกไหม</summary><p>ผิด ขยายกริยา explained ต้องเป็น <b>clearly</b></p></details>
+      <details><summary>"The movie was so excited." ถูกไหม</summary><p>ผิด หนังเป็นสิ่งที่ทำให้ตื่นเต้น ต้องเป็น <b>exciting</b></p></details>
+    </div>
+  </div>
+
+  <!-- ---------- G2 SENTENCE TYPES ---------- -->
+  <div class="mod stack" id="mod-g2" data-m="g2" hidden>
+    <h2>Sentence Types <small class="tag">Grammar 1.1</small></h2>
+    <p>ประโยคมี 3 แบบ ขึ้นกับว่ามีประโยคสมบูรณ์ (independent clause) กี่ประโยค และมีประโยคไม่สมบูรณ์ (dependent clause) ไหม</p>
+    <div class="legend"><span class="l1">Independent clause (สมบูรณ์ อยู่เดี่ยวได้)</span><span class="l2">Dependent clause (อยู่เดี่ยวไม่ได้)</span><span class="l3">คำเชื่อม</span></div>
+
+    <details class="tp" open><summary>3 แบบในภาพเดียว <small>ออกสอบบ่อย</small></summary><div class="in">
+      <p><b>Simple</b> = ประโยคสมบูรณ์ 1 ประโยค</p>
+      <div class="sent"><span class="ic">We visited Rome last year.</span></div>
+      <p><b>Compound</b> = ประโยคสมบูรณ์ 2 ประโยค เชื่อมด้วย FANBOYS (ต้องมีประธานใหม่หลังคำเชื่อม)</p>
+      <div class="sent"><span class="ic">The monster appeared</span>,<span class="cj">and</span><span class="ic">everyone screamed.</span></div>
+      <p><b>Complex</b> = ประโยคสมบูรณ์ 1 + ประโยคไม่สมบูรณ์ 1</p>
+      <div class="sent"><span class="dc"><b>Although</b> the patient was nervous</span>,<span class="ic">the doctor smiled.</span></div>
+      <div class="sent"><span class="ic">You can ask for help</span><span class="dc"><b>if</b> you have a problem.</span></div>
+      <table>
+        <tr><th>คำเชื่อม</th><th>ทำให้เป็น</th><th>คำ</th></tr>
+        <tr><td>FANBOYS</td><td>Compound</td><td>for, and, nor, but, or, yet, so</td></tr>
+        <tr><td>Subordinators</td><td>Complex</td><td>because, although, when, while, if, before, after, since, until, unless, as soon as</td></tr>
+      </table>
+    </div></details>
+
+    <details class="tp"><summary>ตัดสินใจทีละขั้น</summary><div class="in">
+      <div class="flow"><span>1 มี because / although / when / if / after ... + S + V ไหม<small>มี → Complex</small></span><i>→</i><span>2 มี FANBOYS ไหม<small>ไม่มี → Simple</small></span><i>→</i><span>3 หลัง FANBOYS มีประธานใหม่ไหม<small>มี → Compound · ไม่มี → Simple</small></span></div>
+      <div class="grid">
+        <div class="box g"><h4>Simple ✓</h4>Eleven has special powers<span class="cj">,</span> and uses it to save people.<span class="ex">หลัง and ไม่มีประธานใหม่ comma ไม่ได้ทำให้เป็น Compound</span></div>
+        <div class="box a"><h4>Compound ✓</h4>Eleven has special powers, and <b>her friends</b> help her hide.<span class="ex">มีประธานใหม่ her friends</span></div>
+        <div class="box g"><h4>Simple ✓</h4>Sam and Dean go to the library and do homework.<span class="ex">ประธานสองคน กริยาสองตัว แต่ยังเป็นประโยคเดียว</span></div>
+        <div class="box g"><h4>Simple ✓</h4>Having finished her assignment, Maya submitted it.<span class="ex">Having finished... เป็นวลี ไม่ใช่ clause</span></div>
+        <div class="box a"><h4>Complex ✓</h4>After Maya had finished her assignment, she submitted it.<span class="ex">After + S + V เป็น clause</span></div>
+        <div class="box a"><h4>Compound ✓</h4>She doesn't like horror films, nor does her brother.<span class="ex">nor อยู่ใน FANBOYS</span></div>
+      </div>
+    </div></details>
+
+    <div class="trap"><strong>กับดัก</strong><ul>
+      <li>เห็น comma แล้วตอบ Compound ทันที ต้องดูว่าหลังคำเชื่อมมีประธานใหม่ไหม</li>
+      <li>ประธานสองคน (Emma and Jack) ไม่ได้ทำให้เป็น Compound</li>
+      <li>dependent clause อยู่ท้ายประโยคก็เป็น Complex เช่น ... when you submit your assignments.</li>
+    </ul></div>
+
+    <div class="cp">
+      <h3>เช็กตรงนี้ก่อนไปต่อ</h3>
+      <details><summary>"Emma and Jack are not good at English, so they have to study hard." เป็นแบบไหน</summary><p><b>Compound</b> เพราะหลัง so มีประธานใหม่ they</p></details>
+      <details><summary>"Students shouldn't eat or sleep in a classroom." เป็นแบบไหน</summary><p><b>Simple</b> ประธานเดียว กริยาสองตัว</p></details>
+    </div>
+  </div>
+
+  <!-- ---------- G3 SENTENCE PROBLEMS ---------- -->
+  <div class="mod stack" id="mod-g3" data-m="g3" hidden>
+    <h2>Sentence Problems <small class="tag">Grammar 1.2</small></h2>
+    <p>ประโยคที่ผิดโครงสร้างมี 3 แบบ ข้อสอบให้ประโยคมาแล้วถามว่าผิดแบบไหน</p>
+
+    <details class="tp" open><summary>3 แบบในภาพเดียว <small>ออกสอบบ่อย</small></summary><div class="in">
+      <p><b>Fragment</b> = ประโยคไม่สมบูรณ์ ขาดประธาน ขาดกริยา หรือมีแค่ dependent clause</p>
+      <div class="sent"><span class="dc">Because I was feeling sick.</span><span class="x">✗ ไม่มีประโยคหลัก</span></div>
+      <p><b>Run-on</b> = สองประโยคติดกันโดยไม่มีอะไรคั่น</p>
+      <div class="sent"><span class="ic">Rome is beautiful</span><span class="x">▲ ไม่มีอะไรคั่น</span><span class="ic">it has many ancient buildings.</span></div>
+      <p><b>Comma splice</b> = สองประโยคคั่นด้วย comma อย่างเดียว</p>
+      <div class="sent"><span class="ic">The weather was terrible</span><span class="x">, ← comma อย่างเดียว</span><span class="ic">we stayed at home.</span></div>
+      <p class="note">จำง่าย: ไม่มีอะไรคั่น = Run-on · มีแค่ comma = Comma splice · ครึ่งประโยค = Fragment</p>
+    </div></details>
+
+    <details class="tp"><summary>วิธีแก้</summary><div class="in">
+      <p><b>Run-on และ Comma splice แก้ได้ 4 แบบ</b> (ตัวอย่าง: The weather was terrible, we stayed at home.)</p>
+      <div class="grid">
+        <div class="box g"><h4>1 ใส่จุด</h4>The weather was terrible<b>.</b> We stayed at home.</div>
+        <div class="box g"><h4>2 comma + FANBOYS</h4>The weather was terrible<b>, so</b> we stayed at home.</div>
+        <div class="box g"><h4>3 ใส่ semicolon</h4>The weather was terrible<b>;</b> we stayed at home.</div>
+        <div class="box g"><h4>4 ทำเป็น Complex</h4><b>Because</b> the weather was terrible, we stayed at home.</div>
+      </div>
+      <p><b>Fragment แก้</b> โดยเติมประโยคหลัก: <i>Because I was feeling sick<b>, I stayed at home.</b></i> หรือเติมประธานหรือกริยาที่ขาด</p>
+      <p class="note">เสริม (ไม่อยู่ในสไลด์): however, therefore ไม่ใช่ FANBOYS ถ้าเขียน <i>It rained, however, we went out.</i> ยังเป็น comma splice ต้องเขียน <i>It rained; however, we went out.</i></p>
+    </div></details>
+
+    <div class="trap"><strong>กับดัก</strong><ul>
+      <li>ประโยคที่ขึ้นต้นด้วย Because, When, Although, After แล้วจบด้วยจุดทันที = Fragment</li>
+      <li>"Because of COVID-19 pandemic." ไม่มีกริยาเลย = Fragment</li>
+      <li>ตัวเลือกแก้ที่ยังมีแค่ comma คั่นสองประโยค ยังผิดอยู่ (กลายเป็น comma splice)</li>
+    </ul></div>
+
+    <div class="cp">
+      <h3>เช็กตรงนี้ก่อนไปต่อ</h3>
+      <details><summary>"I forgot my umbrella it started raining heavily." ผิดแบบไหน</summary><p><b>Run-on</b> ไม่มีอะไรคั่นเลย</p></details>
+      <details><summary>"We arrived late, the film had already started." ผิดแบบไหน แก้อย่างไร</summary><p><b>Comma splice</b> แก้เป็น <i>We arrived late, <b>and</b> the film had already started.</i> หรือใส่จุดหรือ semicolon</p></details>
+    </div>
+  </div>
+
+  <!-- ---------- G4 PAST SIMPLE / CONTINUOUS ---------- -->
+  <div class="mod stack" id="mod-g4" data-m="g4" hidden>
+    <h2>Past Simple และ Past Continuous <small class="tag">Grammar 1.3, 1.4, 1.6 · บทที่ 2</small></h2>
+    <div class="flow"><span>Past simple<small>V2 · เหตุการณ์จบแล้ว หรือเหตุการณ์สั้นที่แทรก</small></span><span>Past continuous<small>was/were + V-ing · กำลังทำอยู่ในอดีต</small></span></div>
+
+    <details class="tp" open><summary>ภาพ: เหตุการณ์ยาวถูกแทรก <small>ออกสอบบ่อย</small></summary><div class="in">
+      <figure class="fig"><div class="figbox"><svg class="d" viewBox="0 0 620 170" role="img" aria-label="Timeline of past continuous interrupted by past simple">
+        <line class="axis" x1="20" y1="110" x2="600" y2="110" marker-end="url(#m-fill)"/>
+        <text x="600" y="132" text-anchor="end" class="sm">เวลา</text>
+        <line class="long" x1="120" y1="80" x2="460" y2="80"/>
+        <text x="290" y="60" text-anchor="middle" class="acct">I was walking to school</text>
+        <text x="290" y="100" text-anchor="middle" class="sm">Past continuous: เหตุการณ์ยาว เริ่มก่อน</text>
+        <path class="hit" d="M300 40 L288 78 L302 78 L292 112 L318 70 L304 70 L314 40 Z"/>
+        <text x="330" y="150" class="badt">when it started to rain.</text>
+        <text x="330" y="166" class="sm">Past simple: เหตุการณ์สั้นที่แทรกเข้ามา</text>
+        <line class="axis" x1="300" y1="112" x2="300" y2="140"/>
+      </svg></div>
+      <figcaption>ทั้งสองเหตุการณ์เกิดในช่วงเดียวกัน แต่ Past continuous เริ่มก่อน แล้ว Past simple แทรกเข้ามา</figcaption></figure>
+      <table>
+        <tr><th>รูปแบบ</th><th>ตัวอย่าง</th></tr>
+        <tr><td>Past continuous + <b>when</b> + Past simple</td><td>I <u>was walking</u> to school <b>when</b> it <u>started</u> to rain.</td></tr>
+        <tr><td><b>While</b> + Past continuous, Past simple</td><td><b>While</b> we <u>were watching</u> TV, the lights <u>went</u> out.</td></tr>
+        <tr><td>Past simple + <b>while</b> + Past continuous</td><td>The monster <u>appeared</u> <b>while</b> the children <u>were walking</u> through the forest.</td></tr>
+        <tr><td>เวลาเจาะจงในอดีต + Past continuous</td><td><b>At 8 p.m. last night</b>, I <u>was watching</u> TV. · They <u>were playing</u> football <b>at this time yesterday</b>.</td></tr>
+      </table>
+      <p class="note">จำ: <b>while</b> ตามด้วยเหตุการณ์ยาว (was/were + V-ing) · <b>when</b> มักตามด้วยเหตุการณ์สั้น (V2)</p>
+    </div></details>
+
+    <details class="tp"><summary>Past simple: รูปและคำบอกเวลา</summary><div class="in">
+      <p><b>บอกเล่า</b> V2 · <b>ปฏิเสธ</b> didn't + V1 · <b>คำถาม</b> Did + S + V1?</p>
+      <p><b>คำบอกเวลา:</b> yesterday, last night/week/month/year, two days ago, in 2020, when I was a child, then, just now, an hour ago, the other day</p>
+      <table class="terms">
+        <tr><th>V1</th><th>V2</th><th>V3</th></tr>
+        <tr><td>go</td><td>went</td><td>gone</td></tr>
+        <tr><td>be</td><td>was / were</td><td>been</td></tr>
+        <tr><td>see</td><td>saw</td><td>seen</td></tr>
+        <tr><td>take</td><td>took</td><td>taken</td></tr>
+        <tr><td>feel</td><td>felt</td><td>felt</td></tr>
+        <tr><td>forget</td><td>forgot</td><td>forgotten</td></tr>
+        <tr><td>meet</td><td>met</td><td>met</td></tr>
+        <tr><td>fall</td><td>fell</td><td>fallen</td></tr>
+        <tr><td>hear</td><td>heard</td><td>heard</td></tr>
+        <tr><td>find</td><td>found</td><td>found</td></tr>
+        <tr><td>leave</td><td>left</td><td>left</td></tr>
+        <tr><td>wake up</td><td>woke up</td><td>woken up</td></tr>
+      </table>
+    </div></details>
+
+    <details class="tp"><summary>Past continuous: was หรือ were</summary><div class="in">
+      <div class="grid">
+        <div class="box a"><h4>was + V-ing</h4>I, he, she, it, the doctor, the baby</div>
+        <div class="box a"><h4>were + V-ing</h4>you, we, they, the students, the children</div>
+      </div>
+      <p>คำถาม: <i>What <b>were</b> you <b>doing</b> at 9 p.m. last night?</i></p>
+    </div></details>
+
+    <div class="trap"><strong>กับดัก</strong><ul>
+      <li>didn't went ผิด หลัง did ใช้ V1 เสมอ: didn't go, Did you watch</li>
+      <li>เลือก tense ถูกแต่ was/were ไม่ตรงกับประธาน เช่น the children was walking</li>
+      <li>หลัง while ไม่ใช้เหตุการณ์สั้น: while I met ✗</li>
+    </ul></div>
+
+    <div class="cp">
+      <h3>เช็กตรงนี้ก่อนไปต่อ</h3>
+      <details><summary>While I _____ (walk) home, I _____ (meet) an old friend.</summary><p><b>was walking / met</b></p></details>
+      <details><summary>The students _____ (talk) when the teacher entered the classroom.</summary><p><b>were talking</b> ประธานพหูพจน์ กำลังคุยอยู่แล้วถูกแทรก</p></details>
+    </div>
+  </div>
+
+  <!-- ---------- G5 PRESENT PERFECT ---------- -->
+  <div class="mod stack" id="mod-g5" data-m="g5" hidden>
+    <h2>Present Perfect และ Past Simple <small class="tag">Grammar 1.5, 1.7 · บทที่ 4</small></h2>
+    <div class="flow"><span>Present perfect<small>has/have + V3 · ไม่บอกเวลา ประสบการณ์ เพิ่งเกิด หรือยังต่อถึงตอนนี้</small></span><span>Past simple<small>V2 · มีเวลาในอดีตที่ชัดเจนและจบแล้ว</small></span></div>
+
+    <details class="tp" open><summary>ภาพ: จุดในอดีต เทียบกับช่วงที่ยาวถึงตอนนี้ <small>ออกสอบบ่อย</small></summary><div class="in">
+      <figure class="fig"><div class="figbox"><svg class="d" viewBox="0 0 620 190" role="img" aria-label="Past simple point versus present perfect span">
+        <line class="axis" x1="20" y1="120" x2="600" y2="120" marker-end="url(#m-fill)"/>
+        <text x="560" y="144" text-anchor="middle" class="b">NOW</text><line class="axis" x1="560" y1="112" x2="560" y2="128"/>
+        <circle class="dot" cx="140" cy="120" r="7"/>
+        <text x="140" y="150" text-anchor="middle" class="acct">I went to Italy last year.</text>
+        <text x="140" y="168" text-anchor="middle" class="sm">Past simple: จุดเดียว เวลาชัด จบแล้ว</text>
+        <line class="span" x1="250" y1="70" x2="556" y2="70" marker-end="url(#m-fill)"/>
+        <line class="axis" x1="250" y1="62" x2="250" y2="78"/>
+        <text x="400" y="52" text-anchor="middle" class="goodt">I have never been to Rome.</text>
+        <text x="400" y="96" text-anchor="middle" class="sm">Present perfect: ช่วงตั้งแต่อดีตจนถึงตอนนี้ ไม่บอกเวลา</text>
+      </svg></div>
+      <figcaption>ประโยคจาก Grammar Review: <i>I <b>went</b> to Italy last year, but I <b>have never been</b> to Rome.</i></figcaption></figure>
+      <table>
+        <tr><th>ใช้ Past simple เมื่อเห็น</th><th>ใช้ Present perfect เมื่อเห็น</th></tr>
+        <tr><td>yesterday · last night/week/year · two days ago · in 2022 · this morning (จบแล้ว) · when I was a child</td><td>ever · never · just · already · yet · recently · since · for · so far · this week (ยังไม่จบ) · three times (นับถึงตอนนี้)</td></tr>
+      </table>
+    </div></details>
+
+    <details class="tp"><summary>Present perfect ใช้ 3 แบบ</summary><div class="in">
+      <div class="grid">
+        <div class="box a"><h4>ประสบการณ์ ไม่บอกเวลา</h4><i>Have you ever met a famous person?</i><span class="ex">ever, never</span></div>
+        <div class="box a"><h4>เพิ่งเกิด</h4><i>My sister has just finished her lunch.</i><span class="ex">just, already, yet, recently</span></div>
+        <div class="box a"><h4>ช่วงเวลาที่ยังไม่จบ</h4><i>He has played Roblox every evening this week.</i><span class="ex">this week, since, for</span></div>
+      </div>
+      <p><b>has</b> = he, she, it, ประธานเอกพจน์ · <b>have</b> = I, you, we, they</p>
+      <p><b>for</b> + ระยะเวลา (for three years) · <b>since</b> + จุดเริ่มต้น (since 2022, since then)</p>
+    </div></details>
+
+    <div class="trap"><strong>กับดัก</strong><ul>
+      <li>Present perfect ห้ามใช้กับเวลาในอดีตที่ชัด: I have visited Paris in 2022 ✗ → I visited Paris in 2022</li>
+      <li>ago ใช้กับ Past simple เท่านั้น</li>
+      <li>V3 ไม่ใช่ V2: have saw ✗ → have seen · has went ✗ → has gone</li>
+      <li>this morning ถ้าตอนนี้เป็นตอนบ่ายแล้ว (จบแล้ว) ใช้ Past simple: My friend forgot his umbrella this morning.</li>
+    </ul></div>
+
+    <div class="cp">
+      <h3>เช็กตรงนี้ก่อนไปต่อ</h3>
+      <details><summary>The patient _____ (take) his medicine last night, but he _____ (not/feel) better yet.</summary><p><b>took / has not felt</b> last night → V2 · yet → present perfect</p></details>
+      <details><summary>Eleven _____ (meet) the monster yesterday, but she _____ (not/see) it since then.</summary><p><b>met / has not seen</b></p></details>
+    </div>
+  </div>
+
+  <!-- ---------- G6 ADVICE ---------- -->
+  <div class="mod stack" id="mod-g6" data-m="g6" hidden>
+    <h2>Asking for and Giving Advice <small class="tag">Grammar 1.8 · บทที่ 5</small></h2>
+    <p>ข้อสอบมักเว้นช่องหลังสำนวน แล้วให้เลือกรูปกริยา จึงต้องจำว่าสำนวนไหนตามด้วยอะไร</p>
+
+    <details class="tp" open><summary>จัดกลุ่มตามสิ่งที่ตามมา <small>ออกสอบบ่อย</small></summary><div class="in">
+      <div class="grid">
+        <div class="box a"><h4>+ V1 (ไม่มี to)</h4>should · had better · could · might want to · I think you should · Maybe you should · Why don't you ...? · If I were you, I would · I suggest you<span class="ex">You <b>should see</b> a doctor.</span></div>
+        <div class="box g"><h4>+ to + V1</h4>ought to · I would advise you to · My advice would be to · It might be a good idea to<span class="ex">My advice would be <b>to stay</b> calm.</span></div>
+        <div class="box w"><h4>+ V-ing</h4>How about ...? · You might try ...<span class="ex">How about <b>joining</b> an English club?</span></div>
+      </div>
+      <p class="note">จำง่าย: ought, advise, advice, idea ต้องมี <b>to</b> · How about และ might try ตามด้วย <b>-ing</b> · ที่เหลือตามด้วย V1</p>
+    </div></details>
+
+    <details class="tp"><summary>สำนวนขอคำแนะนำ</summary><div class="in">
+      <table class="terms">
+        <tr><th>English</th><th>ความหมาย</th><th></th></tr>
+        <tr><td>What do you think I should do (about ...)?</td><td>คุณคิดว่าฉันควรทำอย่างไร</td><td></td></tr>
+        <tr><td>What should I do (about ...)?</td><td>ฉันควรทำอย่างไร</td><td></td></tr>
+        <tr><td>What would you suggest I do?</td><td>คุณจะแนะนำให้ฉันทำอะไร</td><td></td></tr>
+        <tr><td>Can/Could you give me some advice (about ...)?</td><td>ช่วยให้คำแนะนำหน่อยได้ไหม</td><td></td></tr>
+      </table>
+      <p>ตัวอย่าง: A: I don't feel confident speaking English. What do you think I should do? · B: You might try listening to a short conversation and repeating after the audio many times.</p>
+    </div></details>
+
+    <div class="trap"><strong>กับดัก</strong><ul>
+      <li>should to ✗ · had better to ✗ · I suggest you to ✗</li>
+      <li>ought ✗ (ขาด to) → ought to</li>
+      <li>How about to join ✗ → How about joining</li>
+      <li>If I were you, I will ✗ → I would · ปฏิเสธของ had better คือ had better not + V1</li>
+    </ul></div>
+
+    <div class="cp">
+      <h3>เช็กตรงนี้ก่อนไปต่อ</h3>
+      <details><summary>"Why don't you _____ an online course?" (take)</summary><p><b>take</b> Why don't you + V1</p></details>
+      <details><summary>"I would advise you _____ more water." (drink)</summary><p><b>to drink</b> advise you + to + V1</p></details>
+    </div>
+  </div>
+
+  <!-- ---------- VOCABULARY ---------- -->
+  <div class="mod stack" id="mod-voc" data-m="voc" hidden>
+    <h2>Vocabulary บทที่ 1–6 <small class="tag">Coursebook หน้า 59–65</small></h2>
+    <p>Quiz ส่วนนี้มี 20 ข้อ ทุกคำอยู่ในตารางด้านล่าง ความหมายไทยผมแปลจากคำอธิบายภาษาอังกฤษในเล่ม ทุกคำอยู่ในแท็บท่องศัพท์ด้วย</p>
+
+    <details class="tp" open><summary>บทที่ 6: อาการ และโรค <small>ภาพช่วยจำ</small></summary><div class="in">
+      <div class="grid">
+        <div class="box a"><h4>a cold</h4>sneezing, blowing my nose<span class="ex">จาม น้ำมูกไหล</span></div>
+        <div class="box a"><h4>food poisoning</h4>throwing up + diarrhea<span class="ex">อาเจียนและท้องเสีย</span></div>
+        <div class="box a"><h4>a twisted ankle</h4>it hurts when I walk<span class="ex">เดินแล้วเจ็บ ข้อเท้าบวม (swell)</span></div>
+        <div class="box a"><h4>diarrhea</h4>stomachache, keep going to the toilet<span class="ex">ปวดท้อง เข้าห้องน้ำบ่อย</span></div>
+        <div class="box a"><h4>a sore throat</h4>glands are swollen, hurts when I swallow<span class="ex">คอบวม กลืนแล้วเจ็บ คอระคาย (scratchy)</span></div>
+        <div class="box a"><h4>the flu</h4>a temperature, whole body aches<span class="ex">มีไข้ ปวดเมื่อยทั้งตัว</span></div>
+        <div class="box a"><h4>a migraine</h4>severe headache, vomiting, difficulty seeing<span class="ex">ปวดหัวรุนแรง</span></div>
+        <div class="box a"><h4>a rash</h4>red spots on the skin, itchy<span class="ex">ผื่นแดง คัน</span></div>
+      </div>
+      <div class="flow"><span>symptom<small>อาการที่รู้สึก</small></span><i>→</i><span>diagnosis<small>หมอวินิจฉัย</small></span><i>→</i><span>prescribe<small>หมอสั่งยา</small></span><i>→</i><span>precaution<small>ป้องกันไม่ให้เป็นอีก</small></span></div>
+    </div></details>
+
+    <details class="tp"><summary>บทที่ 1: The EC1 Academy</summary><div class="in"><table class="terms">
+      <tr><th>Word</th><th>ความหมาย</th><th>ตัวอย่าง</th></tr>
+      <tr><td>mistake</td><td>(n.) ความผิดพลาด · (v.) เข้าใจผิด จำผิด</td><td>make a mistake</td></tr>
+      <tr><td>enthusiasm</td><td>(n.) ความกระตือรือร้น</td><td>enthusiastic (adj.), enthusiastically (adv.)</td></tr>
+      <tr><td>enthusiastic</td><td>(adj.) กระตือรือร้น</td><td></td></tr>
+      <tr><td>enthusiastically</td><td>(adv.) อย่างกระตือรือร้น</td><td></td></tr>
+      <tr><td>various</td><td>(adj.) หลากหลาย</td><td>various subjects</td></tr>
+      <tr><td>participate</td><td>(v.) มีส่วนร่วม</td><td>participate in class discussions</td></tr>
+      <tr><td>effective</td><td>(adj.) ได้ผล</td><td>effective time management</td></tr>
+      <tr><td>visual aids</td><td>(n.) สื่อภาพประกอบ เช่น รูป แผนที่ วิดีโอ</td><td>use visual aids in a presentation</td></tr>
+      <tr><td>assign</td><td>(v.) มอบหมาย</td><td>assign a project</td></tr>
+      <tr><td>assignment</td><td>(n.) งานที่ได้รับมอบหมาย</td><td>submit an assignment</td></tr>
+      <tr><td>deadline</td><td>(n.) กำหนดส่ง</td><td>before the deadline</td></tr>
+      <tr><td>diligently</td><td>(adv.) อย่างขยันและตั้งใจ</td><td>studied diligently · diligence (n.) ความขยัน</td></tr>
+      <tr><td>pursue</td><td>(v.) มุ่งไปสู่ ทำต่อเนื่องเพื่อให้สำเร็จ</td><td>pursue a degree, pursue a career</td></tr>
+      <tr><td>internship</td><td>(n.) การฝึกงาน</td><td></td></tr>
+      <tr><td>enhance</td><td>(v.) ทำให้ดีขึ้น เพิ่มคุณค่า</td><td>enhance their academic experience</td></tr>
+      <tr><td>attentively</td><td>(adv.) อย่างตั้งใจฟัง</td><td>listened attentively</td></tr>
+      <tr><td>challenging</td><td>(adj.) ท้าทาย ยากแต่น่าสนใจ</td><td>a challenging project</td></tr>
+      <tr><td>diversity</td><td>(n.) ความหลากหลาย</td><td>celebrate diversity</td></tr>
+      <tr><td>proofread</td><td>(v.) ตรวจทานแก้คำผิด</td><td>proofread an essay</td></tr>
+      <tr><td>submit</td><td>(v.) ส่ง (งาน เอกสาร)</td><td>submit assignments before the deadline</td></tr>
+      <tr><td>outline</td><td>(n.) โครงร่าง · (v.) สรุปประเด็นหลัก</td><td>outline the main points</td></tr>
+      <tr><td>extracurricular</td><td>(adj.) นอกหลักสูตร</td><td>extracurricular activities</td></tr>
+      <tr><td>constructive</td><td>(adj.) สร้างสรรค์ ช่วยให้ดีขึ้น</td><td>constructive feedback</td></tr>
+      <tr><td>alleviate</td><td>(v.) บรรเทา ทำให้เบาลง</td><td>alleviate the financial burden</td></tr>
+      <tr><td>financial</td><td>(adj.) เกี่ยวกับการเงิน</td><td></td></tr>
+      <tr><td>eagerly</td><td>(adv.) อย่างกระตือรือร้น อยากทำมาก</td><td></td></tr>
+      <tr><td>cafeteria</td><td>(n.) โรงอาหาร</td><td></td></tr>
+      <tr><td>get along</td><td>(v.) เข้ากันได้ดี</td><td>get along well with roommates</td></tr>
+      <tr><td>instructions</td><td>(n.) คำอธิบายวิธีทำ</td><td>clear instructions</td></tr>
+      <tr><td>appointment</td><td>(n.) การนัดหมาย</td><td>make an appointment</td></tr>
+      <tr><td>campus</td><td>(n.) พื้นที่และอาคารของมหาวิทยาลัย</td><td></td></tr>
+      <tr><td>perhaps</td><td>(adv.) บางที</td><td></td></tr>
+      <tr><td>distraction</td><td>(n.) สิ่งที่ทำให้เสียสมาธิ</td><td>a major distraction</td></tr>
+      <tr><td>nervous</td><td>(adj.) ประหม่า กังวล</td><td></td></tr>
+      <tr><td>pandemic</td><td>(adj./n.) โรคระบาดทั่วประเทศหรือทั่วโลก</td><td></td></tr>
+      <tr><td>catch up</td><td>(v.) ตามให้ทัน ทำสิ่งที่พลาดไป</td><td>catch up with the lesson</td></tr>
+    </table></div></details>
+
+    <details class="tp"><summary>บทที่ 2: Stranger Things</summary><div class="in"><table class="terms">
+      <tr><th>Word</th><th>ความหมาย</th><th>ตัวอย่าง</th></tr>
+      <tr><td>cemetery</td><td>(n.) สุสาน</td><td>a pet cemetery</td></tr>
+      <tr><td>backyard</td><td>(n.) สนามหลังบ้าน</td><td></td></tr>
+      <tr><td>abandoned</td><td>(adj.) ถูกทิ้งร้าง</td><td>an old abandoned house</td></tr>
+      <tr><td>lasagna</td><td>(n.) ลาซานญ่า</td><td></td></tr>
+      <tr><td>receive</td><td>(v.) ได้รับ</td><td>receive a text</td></tr>
+      <tr><td>attend</td><td>(v.) เข้าร่วม ไปร่วม</td><td>attend an appointment, attend lectures</td></tr>
+      <tr><td>thirsty</td><td>(adj.) กระหายน้ำ</td><td></td></tr>
+      <tr><td>fetch</td><td>(v.) ไปหยิบมา</td><td>fetch a bottle of water</td></tr>
+      <tr><td>neighbor</td><td>(n.) เพื่อนบ้าน (neighbour)</td><td></td></tr>
+      <tr><td>instruct</td><td>(v.) สั่ง สอน</td><td>instruct him to lock the doors</td></tr>
+      <tr><td>underneath</td><td>(prep.) ข้างใต้</td><td>hide underneath the bed</td></tr>
+      <tr><td>inform</td><td>(v.) แจ้งให้ทราบ</td><td></td></tr>
+      <tr><td>reach</td><td>(v.) ไปถึง</td><td>reach the front door</td></tr>
+      <tr><td>shelter</td><td>(n.) ที่หลบภัย การป้องกัน</td><td>take shelter</td></tr>
+      <tr><td>intruder</td><td>(n.) ผู้บุกรุก</td><td>the police arrested the intruder</td></tr>
+    </table></div></details>
+
+    <details class="tp"><summary>บทที่ 3: When in Rome</summary><div class="in"><table class="terms">
+      <tr><th>Word</th><th>ความหมาย</th><th>ตัวอย่าง</th></tr>
+      <tr><td>appreciate</td><td>(v.) เห็นคุณค่า ซาบซึ้ง</td><td>appreciate cultural differences</td></tr>
+      <tr><td>appropriate</td><td>(adj.) เหมาะสม</td><td>inappropriate gifts</td></tr>
+      <tr><td>assortment</td><td>(n.) ของหลายอย่างรวมกัน</td><td>an assortment of gifts</td></tr>
+      <tr><td>donation</td><td>(n.) การบริจาค เงินบริจาค</td><td>make a donation</td></tr>
+      <tr><td>manner</td><td>(n.) วิธี ลักษณะ</td><td>good manners = มารยาทดี</td></tr>
+      <tr><td>etiquette</td><td>(n.) มารยาททางสังคม</td><td>eating etiquette</td></tr>
+      <tr><td>household</td><td>(n.) ครัวเรือน</td><td></td></tr>
+      <tr><td>severance</td><td>(n.) การตัดขาด</td><td>severance of a relationship</td></tr>
+      <tr><td>obscene</td><td>(adj.) หยาบคาย ลามก</td><td></td></tr>
+      <tr><td>occasion</td><td>(n.) โอกาส เทศกาล งานพิเศษ</td><td>gift-giving occasions</td></tr>
+      <tr><td>misperception</td><td>(n.) การเข้าใจผิด</td><td></td></tr>
+      <tr><td>insult</td><td>(v.) ดูถูก</td><td></td></tr>
+      <tr><td>remarkably</td><td>(adv.) อย่างน่าทึ่ง</td><td>a remarkably nice gesture</td></tr>
+      <tr><td>reciprocal</td><td>(adj.) ซึ่งกันและกัน ตอบแทนกัน</td><td>a reciprocal gift</td></tr>
+      <tr><td>minimise</td><td>(v.) ลดให้น้อยที่สุด</td><td>minimise the risk</td></tr>
+      <tr><td>associate</td><td>(v.) เชื่อมโยงในใจ</td><td>associated with funerals</td></tr>
+    </table></div></details>
+
+    <details class="tp"><summary>บทที่ 4: Been There Done That</summary><div class="in"><table class="terms">
+      <tr><th>Word</th><th>ความหมาย</th><th>ตัวอย่าง</th></tr>
+      <tr><td>disappear</td><td>(v.) หายไป</td><td></td></tr>
+      <tr><td>ordinary</td><td>(adj.) ธรรมดา</td><td>an ordinary trip</td></tr>
+      <tr><td>release</td><td>(v.) ปล่อยออกมา</td><td></td></tr>
+      <tr><td>remember</td><td>(v.) จำได้</td><td></td></tr>
+      <tr><td>remind</td><td>(v.) ทำให้นึกถึง</td><td>Being there reminded me of the first time.</td></tr>
+      <tr><td>suddenly</td><td>(adv.) ทันใดนั้น</td><td></td></tr>
+      <tr><td>surface</td><td>(n.) ผิว พื้นผิว</td><td>the surface of the water</td></tr>
+      <tr><td>underwater</td><td>(adj.) ใต้น้ำ</td><td></td></tr>
+      <tr><td>vanish</td><td>(v.) หายไปทันทีและหมด</td><td>vanished into thin air</td></tr>
+      <tr><td>cautious</td><td>(adj.) ระมัดระวัง</td><td>more cautious on the road</td></tr>
+      <tr><td>witness</td><td>(n.) พยาน ผู้เห็นเหตุการณ์</td><td></td></tr>
+      <tr><td>documentation</td><td>(n.) เอกสารหลักฐาน</td><td></td></tr>
+      <tr><td>estimate</td><td>(v./n.) ประเมินคร่าว ๆ</td><td>an estimate for the repairs</td></tr>
+      <tr><td>manifest</td><td>(v.) แสดงออก ปรากฏให้เห็น</td><td>injuries can take time to manifest</td></tr>
+    </table></div></details>
+
+    <details class="tp"><summary>บทที่ 5: Trouble is a Friend</summary><div class="in"><table class="terms">
+      <tr><th>Word</th><th>ความหมาย</th><th>ตัวอย่าง</th></tr>
+      <tr><td>trouble</td><td>(n.) ปัญหา ความยุ่งยาก</td><td></td></tr>
+      <tr><td>suggest</td><td>(v.) แนะนำ เสนอ</td><td>My teacher suggests that we work in pairs.</td></tr>
+      <tr><td>relationship</td><td>(n.) ความสัมพันธ์</td><td></td></tr>
+      <tr><td>bully</td><td>(v.) กลั่นแกล้ง รังแก</td><td></td></tr>
+      <tr><td>crush on</td><td>(phrasal v.) แอบชอบ</td><td>have a crush on somebody</td></tr>
+      <tr><td>classmate</td><td>(n.) เพื่อนร่วมชั้น</td><td></td></tr>
+      <tr><td>organized</td><td>(adj.) วางแผนเป็น เป็นระเบียบ</td><td></td></tr>
+      <tr><td>look after</td><td>(v.) ดูแล</td><td>look after my friend's cat</td></tr>
+      <tr><td>concern</td><td>(v.) ทำให้กังวล</td><td></td></tr>
+      <tr><td>scenario</td><td>(n.) สถานการณ์ที่อาจเกิดขึ้น</td><td></td></tr>
+      <tr><td>compromise</td><td>(n.) การประนีประนอม ต่างฝ่ายต่างยอม</td><td>reach a compromise</td></tr>
+    </table></div></details>
+
+    <details class="tp"><summary>บทที่ 6: The Good Patient</summary><div class="in"><table class="terms">
+      <tr><th>Word</th><th>ความหมาย</th><th>ตัวอย่าง</th></tr>
+      <tr><td>cold</td><td>(n.) หวัด</td><td>have a cold</td></tr>
+      <tr><td>cough</td><td>(v.) ไอ</td><td></td></tr>
+      <tr><td>diagnosis</td><td>(n.) การวินิจฉัยโรค</td><td>make a diagnosis</td></tr>
+      <tr><td>diarrhea</td><td>(n.) ท้องเสีย</td><td></td></tr>
+      <tr><td>disseminate</td><td>(v.) เผยแพร่ข้อมูล</td><td>disseminate accurate information</td></tr>
+      <tr><td>dizzy</td><td>(adj.) เวียนหัว</td><td></td></tr>
+      <tr><td>emergence</td><td>(n.) การเกิดขึ้น การปรากฏ</td><td>the emergence of pandemics</td></tr>
+      <tr><td>the flu</td><td>(n.) ไข้หวัดใหญ่</td><td></td></tr>
+      <tr><td>food poisoning</td><td>(n.) อาหารเป็นพิษ</td><td></td></tr>
+      <tr><td>headache</td><td>(n.) ปวดหัว</td><td></td></tr>
+      <tr><td>illness</td><td>(n.) ความเจ็บป่วย</td><td></td></tr>
+      <tr><td>infrastructure</td><td>(n.) โครงสร้างพื้นฐาน เช่น ถนน ไฟฟ้า ขนส่ง</td><td>healthcare infrastructure</td></tr>
+      <tr><td>itchy</td><td>(adj.) คัน</td><td></td></tr>
+      <tr><td>migraine</td><td>(n.) ไมเกรน ปวดหัวรุนแรง</td><td></td></tr>
+      <tr><td>mitigate</td><td>(v.) บรรเทา ลดผลเสีย</td><td>mitigate the impact</td></tr>
+      <tr><td>nauseous</td><td>(adj.) คลื่นไส้</td><td></td></tr>
+      <tr><td>outbreak</td><td>(n.) การระบาด</td><td>a disease outbreak</td></tr>
+      <tr><td>precaution</td><td>(n.) การป้องกันไว้ก่อน</td><td>take precautions</td></tr>
+      <tr><td>precautionary</td><td>(adj.) เชิงป้องกัน</td><td>precautionary measures</td></tr>
+      <tr><td>prescribe</td><td>(v.) สั่งยา</td><td>prescribe antibiotics</td></tr>
+      <tr><td>prioritize</td><td>(v.) จัดลำดับความสำคัญ</td><td>prioritize public health education</td></tr>
+      <tr><td>proactive</td><td>(adj.) เชิงรุก ลงมือก่อนเกิดปัญหา</td><td>proactive measures</td></tr>
+      <tr><td>rash</td><td>(n.) ผื่น</td><td></td></tr>
+      <tr><td>scratchy</td><td>(adj.) ระคายเคือง (คอ ตา)</td><td>a scratchy throat</td></tr>
+      <tr><td>severe</td><td>(adj.) รุนแรง</td><td></td></tr>
+      <tr><td>sneeze</td><td>(v.) จาม</td><td></td></tr>
+      <tr><td>sore throat</td><td>(n.) เจ็บคอ</td><td></td></tr>
+      <tr><td>stomachache</td><td>(n.) ปวดท้อง</td><td></td></tr>
+      <tr><td>swallow</td><td>(v.) กลืน</td><td></td></tr>
+      <tr><td>swell</td><td>(v.) บวม</td><td>my ankle started to swell</td></tr>
+      <tr><td>symptom</td><td>(n.) อาการ</td><td>a symptom of an infection</td></tr>
+      <tr><td>throw up</td><td>(v.) อาเจียน</td><td></td></tr>
+      <tr><td>twisted ankle</td><td>(n.) ข้อเท้าพลิก</td><td></td></tr>
+    </table></div></details>
+  </div>
+
+  <!-- ---------- READING ---------- -->
+  <div class="mod stack" id="mod-rd" data-m="rd" hidden>
+    <h2>Reading <small class="tag">Quiz Part 3 · 10 ข้อ</small></h2>
+
+    <details class="tp" open><summary>ขั้นตอนที่อาจารย์ให้ <small>ออกสอบบ่อย</small></summary><div class="in">
+      <p><b>Reading 1: บทอ่านสั้น True / False (5 ข้อ)</b></p>
+      <div class="flow"><span>1 อ่านบทอ่านเร็ว ๆ</span><i>→</i><span>2 อ่านคำถาม หา keyword</span><i>→</i><span>3 หา keyword ในบทอ่าน</span><i>→</i><span>4 ตัดสิน True / False</span></div>
+      <div class="grid">
+        <div class="box g"><h4>True</h4>บทอ่านสนับสนุนข้อความนั้นชัดเจน</div>
+        <div class="box w"><h4>False</h4>บทอ่านให้ข้อมูลที่ขัดกับข้อความ</div>
+      </div>
+      <p><b>Reading 2: บทอ่านยาว ปรนัย (5 ข้อ)</b></p>
+      <div class="flow"><span>1 อ่านเร็ว ๆ</span><i>→</i><span>2 อ่านคำถาม หา keyword</span><i>→</i><span>3 หา keyword ในบทอ่าน</span><i>→</i><span>4 อ่านตัวเลือก a–d หาความหมายเดียวกัน</span><i>→</i><span>5 ความหมายเดียวกัน = คำตอบ</span></div>
+      <p class="note">ตัวเลือกที่ถูกมักใช้คำต่างจากบทอ่านแต่ความหมายเดียวกัน เช่น บทอ่านเขียน environmental changes ตัวเลือกเขียน climate change ส่วนตัวเลือกที่มีคำว่า solely, always, never, irrelevant มักแรงเกินบทอ่าน</p>
+    </div></details>
+
+    <details class="tp"><summary>Skimming และ Scanning</summary><div class="in">
+      <div class="grid">
+        <div class="box a"><h4>Skimming</h4>อ่านเร็วทั้งบทเพื่อจับใจความหลัก (main idea) ใช้ตอบคำถาม main purpose, overall message</div>
+        <div class="box a"><h4>Scanning</h4>กวาดตาหาข้อมูลเฉพาะ เช่น ตัวเลข ชื่อ วันที่ ใช้ตอบคำถาม When, Who, How old</div>
+      </div>
+      <table>
+        <tr><th>คำถามแบบนี้</th><th>ทำอย่างไร</th></tr>
+        <tr><td>What is the main purpose / overall message?</td><td>อ่านย่อหน้าแรกและย่อหน้าสุดท้าย</td></tr>
+        <tr><td>According to the passage, ...</td><td>scan หา keyword แล้วอ่านประโยครอบ ๆ</td></tr>
+        <tr><td>What does "They" in paragraph 4 refer to?</td><td>ดูคำนามพหูพจน์ในประโยคก่อนหน้า</td></tr>
+        <tr><td>What does "vanished into thin air" mean?</td><td>อ่านประโยครอบ ๆ แล้วเดาความหมาย</td></tr>
+      </table>
+    </div></details>
+
+    <details class="tp"><summary>บทอ่านใน Coursebook <small>ใช้ฝึกในแท็บฝึกข้อสอบ</small></summary><div class="in">
+      <p><b>Gift Giving around the World (บทที่ 3)</b></p>
+      <table class="terms">
+        <tr><th>ประเทศ</th><th>ประเด็นหลัก</th><th>ห้ามให้</th></tr>
+        <tr><td>China</td><td>ปฏิเสธของขวัญ 2–3 ครั้งก่อนรับ เพื่อแสดงความถ่อมตัว · คาดหวังการตอบแทน (reciprocal)</td><td>มีด กรรไกร นาฬิกา ผ้าเช็ดหน้า ของชุดละ 4</td></tr>
+        <tr><td>Russia</td><td>ไม่ให้ของแพงเพราะอาจดูเหมือนสินบน · ให้ตอนจบการประชุม</td><td>ดอกไม้จำนวนคู่ ดอกสีเหลือง ลิลลี่ คาร์เนชัน</td></tr>
+        <tr><td>Egypt</td><td>ส่งคำอวยพรช่วงรอมฎอนถือว่าดีมาก</td><td>แอลกอฮอล์ (ถ้าไม่แน่ใจว่าเขาดื่ม)</td></tr>
+        <tr><td>Ghana</td><td>ห่อของขวัญ ให้ด้วยมือขวา · บริจาคเงินช่วยงานศพ</td><td></td></tr>
+        <tr><td>USA</td><td>เปิดของขวัญทันทีต่อหน้าผู้ให้ · ไม่ให้ของกับลูกค้าที่เพิ่งพบครั้งแรก</td><td></td></tr>
+        <tr><td>France</td><td>ให้ของก่อนเริ่มมื้ออาหาร · หนังสือ ดนตรี ช็อกโกแลต</td><td>ของมีโลโก้บริษัท เบญจมาศ กุหลาบแดง คาร์เนชัน</td></tr>
+      </table>
+      <p><b>The Potential of Future Pandemics (บทที่ 6)</b> โครงเรื่อง: ความเสี่ยง → การให้ความรู้ประชาชน → ระบบสาธารณสุข → ตรวจพบเร็ว → ร่วมมือระหว่างประเทศ → สรุปว่าต้องเตรียมพร้อมเชิงรุก (proactive)</p>
+      <p><b>My Unforgettable Trip to the River (บทที่ 4)</b> ตอนอายุ 18 ผู้เขียนถูกจระเข้ลากลงแม่น้ำ Zambezi รอดมาได้ สองปีต่อมาเห็นจระเข้ตัวเดิมอีก ตั้งแต่นั้นเห็นคุณค่าทุกช่วงเวลาของชีวิต</p>
+    </div></details>
+
+    <div class="cp">
+      <h3>เช็กตรงนี้ก่อนไปต่อ</h3>
+      <details><summary>บทอ่านบอกว่า "This does not mean that they do not appreciate the gift." ข้อความ "They do not like the gift." เป็น True หรือ False</summary><p><b>False</b> บทอ่านขัดกับข้อความโดยตรง</p></details>
+      <details><summary>ต้องการหาว่าผู้เขียนอายุเท่าไรตอนเกิดเหตุ ควร skim หรือ scan</summary><p><b>Scan</b> กวาดตาหาตัวเลข</p></details>
+    </div>
+  </div>
+
+  <!-- ---------- SPEAKING ---------- -->
+  <div class="mod stack" id="mod-sp" data-m="sp" hidden>
+    <h2>Discussion และ Presentation <small class="tag">หลัง Quiz · สัปดาห์ 14 และ 16</small></h2>
+    <p>ไม่ออกใน Quiz แต่เป็นคะแนนอีก 30% Group discussion สัปดาห์ 14 (15%) และ Creative product presentation สัปดาห์ 16 (15%)</p>
+
+    <details class="tp" open><summary>Group discussion (15%)</summary><div class="in">
+      <div class="flow"><span>1 แต่ละคนแนะนำไอเดียสินค้าของตัวเอง</span><i>→</i><span>2 ทุกคนแสดงความเห็น</span><i>→</i><span>3 สรุปเลือกสินค้า 1 ชิ้น</span></div>
+      <p class="note">rubric ให้คะแนนตามว่าทำครบ 3 ขั้นนี้ไหม ถ้าขาด 1 ขั้นได้คะแนนระดับกลาง</p>
+      <table class="terms">
+        <tr><th>ใช้เมื่อ</th><th>ประโยค</th><th></th></tr>
+        <tr><td>แสดงความเห็น</td><td>In my opinion, ... · As far as I am concerned, ... · I think/believe that ... · Personally, I think that ... · In my experience, ...</td><td>ตามด้วย because + เหตุผล</td></tr>
+        <tr><td>ถามความเห็น</td><td>What do you think about ...? · What's your opinion on ...? · How do you feel about ...? · Please share your perspective on ...</td><td>อย่าถามแค่ "And you?"</td></tr>
+        <tr><td>เห็นด้วย</td><td>I totally agree. · I couldn't agree more. · You've got a very good point there. · Exactly!</td><td></td></tr>
+        <tr><td>ไม่เห็นด้วยอย่างสุภาพ</td><td>I take your point, but ... · Yes, that may be true, but ... · I see what you mean, but ... · But what about ...?</td><td></td></tr>
+        <tr><td>เปลี่ยนประเด็น</td><td>Can we move on to the next point? · Moving on to ... · Another interesting point is ...</td><td></td></tr>
+      </table>
+      <div class="grid">
+        <div class="box g"><h4>Do</h4>ฟังหัวข้อให้ดี · ให้คนอื่นได้พูด · พูดสุภาพ · ไม่เห็นด้วยอย่างสุภาพ · สรุปถ้ากลุ่มยังไม่ได้ข้อสรุป</div>
+        <div class="box w"><h4>Don't</h4>เถียงหรือตะโกน · มองแต่กรรมการ · พูดนอกเรื่อง · ภาษากายลบ เช่น เอนพิงเก้าอี้ เคาะโต๊ะ · พูดคนเดียวทั้งกลุ่ม</div>
+      </div>
+    </div></details>
+
+    <details class="tp"><summary>Creative product presentation (15%)</summary><div class="in">
+      <div class="flow"><span>Introduction<small>ทักทาย แนะนำตัว บอกหัวข้อและลำดับ</small></span><i>→</i><span>Body<small>สินค้าคืออะไร ใช้อย่างไร ใครใช้ ใช้เมื่อไร ราคาเท่าไรและทำไม</small></span><i>→</i><span>Conclusion<small>สรุป ข้อความชวนให้สนใจ ขอบคุณ รับคำถาม</small></span></div>
+      <p class="note">rubric: ความยาว 10–12 นาที · มีบทนำ เนื้อหา สรุป และคำเชื่อม (signposts) ชัด · คะแนนรายคนดูความชัดของเสียง ความเป็นธรรมชาติ และการสบตาผู้ฟัง</p>
+      <table class="terms">
+        <tr><th>ช่วง</th><th>ประโยค</th><th></th></tr>
+        <tr><td>เปิด</td><td>Good afternoon, ladies and gentlemen. Welcome to our presentation about ... · The purpose of today's presentation is to present our product.</td><td></td></tr>
+        <tr><td>บอกลำดับ</td><td>We'll start by ... Then, we'll move on to ... After that, we'll discuss ... Lastly, we'll have a Q&amp;A session.</td><td></td></tr>
+        <tr><td>เปลี่ยนส่วน</td><td>Now, let's move on to ... · Turning now to ... · That brings me to ... · My final point is ...</td><td></td></tr>
+        <tr><td>สรุป</td><td>That brings us to the end of the presentation. · Let's summarise briefly what we've looked at ...</td><td></td></tr>
+        <tr><td>ขอบคุณ รับคำถาม</td><td>Thank you for your attention. · Would anyone like to ask any questions?</td><td></td></tr>
+        <tr><td>ตอบคำถามยาก</td><td>That's a good question. I don't have the information right now, but I'd be happy to find out and get back to you.</td><td></td></tr>
+      </table>
+    </div></details>
+  </div>
+</section>
+
+<!-- ================= VOCAB ================= -->
+<section id="tab-vocab" class="stack-lg" hidden>
+  <div class="stack">
+    <h2>ท่องศัพท์</h2>
+    <p class="muted">เห็นคำอังกฤษแล้วนึกความหมายก่อน แตะการ์ดเพื่อดูเฉลย</p>
+    <div class="chips" id="vchips"></div>
+  </div>
+  <button class="card" id="vcard" aria-live="polite"></button>
+  <div class="row">
+    <button class="btn" id="vprev">ก่อนหน้า</button>
+    <span class="score grow" id="vcount"></span>
+    <button class="btn" id="vshuf">สุ่มลำดับ</button>
+    <button class="btn primary" id="vnext">คำถัดไป</button>
+  </div>
+</section>
+
+<!-- ================= QUIZ ================= -->
+<section id="tab-quiz" class="stack-lg" hidden>
+  <div class="stack">
+    <h2>ฝึกข้อสอบ</h2>
+    <p class="muted">โจทย์เป็นภาษาอังกฤษแบบ Quiz จริง คำอธิบายเป็นภาษาไทย ตัวเลือกสลับตำแหน่งทุกครั้ง</p>
+    <div class="chips" id="qchips"></div>
+    <div class="row"><span class="grow"></span><button class="btn" id="qreset">ล้างคะแนน</button></div>
+  </div>
+  <div class="panel stack" id="qbox">
+    <p class="score" id="qmeta"></p>
+    <div class="ctx" id="qctx" hidden></div>
+    <p class="qtext" id="qtext"></p>
+    <div class="choices" id="qchoices"></div>
+    <div class="exp" id="qexp" hidden></div>
+    <div class="row">
+      <button class="btn" id="qprev">ข้อก่อนหน้า</button>
+      <span class="grow"></span>
+      <button class="btn primary" id="qnext">ข้อถัดไป</button>
+    </div>
+  </div>
+  <p class="note" id="qempty" hidden>ยังไม่มีข้อในชุดนี้ ลองทำชุดอื่นก่อน</p>
+</section>
+
+</div>
+
+<script>
+(function(){
+var QUIZ = __QUIZ__;
+var MODS = ['g1','g2','g3','g4','g5','g6','voc','rd','sp'];
+var TABS = ['start','learn','vocab','quiz'];
+var $ = function(s){ return document.querySelector(s); };
+var $$ = function(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); };
+var store = {
+  get: function(k,d){ try{ var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set: function(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+function shuffle(a){ a = a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+
+$$('table').forEach(function(t){ if(t.parentNode.className==='tw') return; var d=document.createElement('div'); d.className='tw'; t.parentNode.insertBefore(d,t); d.appendChild(t); });
+
+/* ---------- tabs and modules ---------- */
+function showTab(tab){
+  $$('.tabs button').forEach(function(b){ b.setAttribute('aria-selected', b.dataset.tab===tab ? 'true':'false'); });
+  TABS.forEach(function(t){ $('#tab-'+t).hidden = (t!==tab); });
+  store.set('ec-tab', tab);
+}
+function showMod(m){
+  $$('.mod').forEach(function(s){ s.hidden = (s.dataset.m!==m); });
+  $$('#modchips .chip').forEach(function(c){ c.setAttribute('aria-pressed', c.dataset.mod===m ? 'true':'false'); });
+  store.set('ec-mod', m);
+}
+$$('.tabs button').forEach(function(b){ b.addEventListener('click', function(){ showTab(b.dataset.tab); window.scrollTo(0,0); }); });
+$$('#modchips .chip').forEach(function(c){ c.addEventListener('click', function(){ showMod(c.dataset.mod); }); });
+function route(){
+  var h = (location.hash||'').replace('#','');
+  if(MODS.indexOf(h)>=0){ showTab('learn'); showMod(h); window.scrollTo(0,0); return true; }
+  if(TABS.indexOf(h)>=0){ showTab(h); window.scrollTo(0,0); return true; }
+  return false;
+}
+window.addEventListener('hashchange', route);
+showMod(store.get('ec-mod','g1'));
+if(!route()) showTab(store.get('ec-tab','start'));
+
+/* ---------- flashcards (built from the term tables) ---------- */
+var CARDS = [];
+$$('table.terms').forEach(function(t){
+  var holder = t.closest('[data-m]'); var m = holder ? holder.dataset.m : 'pairs';
+  Array.prototype.forEach.call(t.rows, function(r){
+    if(r.cells.length<2 || r.cells[0].tagName!=='TD') return;
+    CARDS.push({ m:m, en:r.cells[0].innerHTML, th:r.cells[1].innerHTML, hint:r.cells[2] ? r.cells[2].innerHTML : '' });
+  });
+});
+var vSet='voc', vList=[], vPos=0, vOpen=false;
+var vLabels = {voc:'คำศัพท์ 6 บท', pairs:'คู่ที่สับสน', g4:'กริยา 3 ช่อง', g6:'ขอคำแนะนำ', sp:'Discussion/Presentation', all:'ทั้งหมด'};
+function vBuild(doShuffle){
+  vList = CARDS.filter(function(c){ return vSet==='all' || c.m===vSet; });
+  if(doShuffle) vList = shuffle(vList);
+  vPos = 0; vOpen = false; vRender();
+}
+function vRender(){
+  var c = vList[vPos];
+  var h = '<span class="en">'+c.en+'</span>';
+  h += vOpen ? '<span class="th">'+c.th+'</span>'+(c.hint ? '<span class="hint">'+c.hint+'</span>' : '') : '<span class="hint">แตะเพื่อดูความหมาย</span>';
+  $('#vcard').innerHTML = h;
+  $('#vcount').textContent = (vPos+1)+' / '+vList.length+' · '+vLabels[vSet];
+  $('#vprev').disabled = vPos===0;
+}
+Object.keys(vLabels).forEach(function(k){
+  var b = document.createElement('button'); b.className='chip'; b.textContent=vLabels[k]; b.dataset.v=k;
+  b.setAttribute('aria-pressed', k===vSet ? 'true':'false');
+  b.addEventListener('click', function(){ vSet=k; $$('#vchips .chip').forEach(function(x){ x.setAttribute('aria-pressed', x.dataset.v===k ? 'true':'false'); }); vBuild(false); });
+  $('#vchips').appendChild(b);
+});
+$('#vcard').addEventListener('click', function(){ vOpen=!vOpen; vRender(); });
+$('#vnext').addEventListener('click', function(){ vPos=(vPos+1)%vList.length; vOpen=false; vRender(); });
+$('#vprev').addEventListener('click', function(){ if(vPos>0){ vPos--; vOpen=false; vRender(); } });
+$('#vshuf').addEventListener('click', function(){ vBuild(true); });
+vBuild(false);
+
+/* ---------- quiz ---------- */
+var GRAMMAR = ['types','problems','pos','ps','pc','pp','pspc','pspp','advice'];
+var TENSES = ['ps','pc','pp','pspc','pspp'];
+var SRC = {teacher:'อาจารย์', book:'Coursebook', old:'จากไฟล์เดิม'};
+var TOPIC = {types:'Sentence types', problems:'Sentence problems', pos:'Parts of speech', ps:'Past simple', pc:'Past continuous', pp:'Present perfect', pspc:'Past simple vs Past continuous', pspp:'Past simple vs Present perfect', advice:'Giving advice', vocab:'Vocabulary', reading:'Reading'};
+var res = store.get('ec-quiz', {});
+var qSet = store.get('ec-qset','tgram'), qList=[], qPos=0;
+var qLabels = {tgram:'Grammar Review อาจารย์', tvoc:'Vocabulary Review อาจารย์', mock:'จำลอง Quiz 70 ข้อ', types:'Sentence types', problems:'Sentence problems', tenses:'Tenses', advice:'Advice', pos:'Parts of speech', reading:'Reading', all:'ทั้งหมด', wrong:'ข้อที่เคยผิด'};
+function pick(pred, n){ return shuffle(QUIZ.filter(pred)).slice(0, n); }
+function qItems(set){
+  if(set==='mock') return pick(function(q){ return GRAMMAR.indexOf(q.topic)>=0; }, 40).concat(pick(function(q){ return q.topic==='vocab'; }, 20), pick(function(q){ return q.topic==='reading'; }, 10));
+  return QUIZ.filter(function(q){
+    if(set==='all') return true;
+    if(set==='wrong') return res[q.id]===0;
+    if(set==='tgram') return q.src==='teacher' && GRAMMAR.indexOf(q.topic)>=0;
+    if(set==='tvoc') return q.topic==='vocab';
+    if(set==='tenses') return TENSES.indexOf(q.topic)>=0;
+    return q.topic===set;
+  });
+}
+function qChips(){
+  $('#qchips').innerHTML='';
+  Object.keys(qLabels).forEach(function(k){
+    var b=document.createElement('button'); b.className='chip'; b.dataset.q=k;
+    var label=qLabels[k];
+    if(k==='wrong') label+=' '+qItems('wrong').length;
+    else if(k!=='mock'){ var items=qItems(k), ok=0; items.forEach(function(q){ if(res[q.id]===1) ok++; }); label+=' '+ok+'/'+items.length; }
+    b.textContent=label; b.setAttribute('aria-pressed', k===qSet ? 'true':'false');
+    b.addEventListener('click', function(){ qStart(k); });
+    $('#qchips').appendChild(b);
+  });
+}
+var mockScore=null;
+function qStart(set){
+  qSet=set; store.set('ec-qset',set); qList=qItems(set); qPos=0; mockScore = set==='mock' ? {ok:0,done:0} : null;
+  if(set!=='wrong' && set!=='mock'){ for(var i=0;i<qList.length;i++){ if(res[qList[i].id]===undefined){ qPos=i; break; } } }
+  qChips(); qRender();
+}
+function qRender(){
+  var empty = qList.length===0;
+  $('#qbox').hidden = empty; $('#qempty').hidden = !empty;
+  if(empty) return;
+  var q=qList[qPos], past=res[q.id];
+  var meta = '<span class="tag">'+SRC[q.src]+'</span> '+TOPIC[q.topic]+' · ข้อที่ '+(qPos+1)+' จาก '+qList.length;
+  if(mockScore) meta += ' · คะแนนรอบนี้ '+mockScore.ok+'/'+mockScore.done;
+  else meta += (past===1 ? ' · เคยตอบถูก' : past===0 ? ' · เคยตอบผิด' : '');
+  $('#qmeta').innerHTML = meta;
+  var ctx=$('#qctx'); ctx.hidden=!q.ctx; ctx.innerHTML = q.ctx ? '<b>Read the passage</b>'+q.ctx : '';
+  $('#qtext').innerHTML = q.q;
+  $('#qexp').hidden = true;
+  var box=$('#qchoices'); box.innerHTML='';
+  var order = q.topic==='reading' && q.a.length===2 ? [0,1] : shuffle(q.a.map(function(_,i){ return i; }));
+  order.forEach(function(i){
+    var b=document.createElement('button'); b.className='choice'; b.innerHTML=q.a[i]; b.dataset.i=i;
+    b.addEventListener('click', function(){ qAnswer(q,i); });
+    box.appendChild(b);
+  });
+  $('#qprev').disabled = qPos===0;
+  $('#qnext').textContent = qPos===qList.length-1 ? 'กลับไปข้อแรก' : 'ข้อถัดไป';
+}
+function qAnswer(q,i){
+  var ok = (i===q.c);
+  $$('#qchoices .choice').forEach(function(b){
+    b.disabled=true; var bi=Number(b.dataset.i);
+    if(bi===q.c) b.classList.add('ok'); else if(bi===i) b.classList.add('no');
+  });
+  res[q.id] = ok ? 1 : 0; store.set('ec-quiz', res);
+  if(mockScore){ mockScore.done++; if(ok) mockScore.ok++; }
+  var e=$('#qexp'); e.className='exp '+(ok?'ok':'no'); e.hidden=false;
+  e.innerHTML = '<strong>'+(ok?'ถูก':'ยังไม่ถูก')+'</strong> คำตอบคือ: '+q.a[q.c]+(q.ex ? '<br>'+q.ex : '');
+  if(mockScore && mockScore.done===qList.length) e.innerHTML += '<br><b>จบชุดจำลอง: ได้ '+mockScore.ok+' จาก '+qList.length+' ข้อ</b>';
+  qChips();
+}
+$('#qnext').addEventListener('click', function(){ qPos = (qPos+1)%qList.length; qRender(); window.scrollTo(0, $('#qbox').offsetTop-70); });
+$('#qprev').addEventListener('click', function(){ if(qPos>0){ qPos--; qRender(); } });
+var armed=false;
+$('#qreset').addEventListener('click', function(){
+  var b=this;
+  if(!armed){ armed=true; b.textContent='กดอีกครั้งเพื่อยืนยัน'; setTimeout(function(){ armed=false; b.textContent='ล้างคะแนน'; }, 4000); return; }
+  armed=false; b.textContent='ล้างคะแนน'; res={}; store.set('ec-quiz',res); qStart(qSet==='wrong' ? 'tgram' : qSet);
+});
+qStart(qSet);
+})();
+</script>
